@@ -4,8 +4,8 @@
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  --f-mono: var(--f-mono-font, 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace);
-  --f-sans: var(--f-sans-font, 'Inter', -apple-system, system-ui, sans-serif);
+  --f-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --f-sans: 'Inter', -apple-system, system-ui, sans-serif;
 
   /* accent — single oklch hue, shared across variations */
   --accent-h: 145;
@@ -822,7 +822,6 @@ a { color: inherit; text-decoration: none; }
 }
 .v3 .card .ab.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 .v3 .card .ab:hover { transform: translateY(-1px); }
-.v3 .card .ab.disabled { opacity: 0.6; background: transparent; color: var(--fg-4); border-color: var(--line-soft); pointer-events: none; }
 
 /* responsive niceties */
 @media (max-width: 960px) {
@@ -1082,7 +1081,6 @@ a { color: inherit; text-decoration: none; }
 }
 .v4 .card .ab.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 .v4 .card .ab:hover { transform: translateY(-1px); }
-.v4 .card .ab.disabled { opacity: 0.6; background: transparent; color: var(--fg-4); border-color: var(--line-soft); pointer-events: none; }
 
 .v4 .v4-foot {
   margin-top: 48px;
