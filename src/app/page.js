@@ -115,7 +115,7 @@ export default function App() {
 
   useEffect(() => {
     if (!mounted) return;
-    document.body.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
     savePref('theme', theme);
   }, [theme, mounted]);
 
@@ -156,7 +156,7 @@ export default function App() {
     return () => window.removeEventListener('message', onMsg);
   }, []);
 
-  if (!mounted) return null; // Avoid hydration mismatch
+  if (!mounted) return null;
 
   return (
     <React.Fragment>

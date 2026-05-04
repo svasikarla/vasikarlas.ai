@@ -106,8 +106,8 @@ function Heatmap() {
         const r = Math.random();
         const v = r < 0.35 - recency * 0.2 ? 0
           : r < 0.6 ? 1
-          : r < 0.8 ? 2
-          : r < 0.93 ? 3 : 4;
+            : r < 0.8 ? 2
+              : r < 0.93 ? 3 : 4;
         out.push({ w, d, v });
       }
     }
@@ -237,7 +237,7 @@ function V4() {
         <div className="v4-hero-orb" />
         <div className="v4-hero-inner">
           <div className="hero-head">
-            <span>// Index ⟡ Apr 28, 2026</span>
+            <span>// Index ⟡ May 4, 2026</span>
             <span className="line" />
             <button className="cmdk-btn" onClick={() => setPaletteOpen(true)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
@@ -245,36 +245,51 @@ function V4() {
               <kbd>⌘K</kbd>
             </button>
           </div>
+          <div className="hero-role">AI Product Engineer</div>
           <h1>
-            Delivering AI knowledge systems
+            Delivering AI Solutions
             <span className="cursor" />
           </h1>
+          <div className="hero-subhead">LLMs · RAG · Production</div>
           <p className="sub">
-            <b>{profile.name}.</b> Productive apps with AI. Seventeen repositories, fourteen
-            production deployments, measured by ship-rate — not by slides.
+            <b>Satish Vasikarla.</b> Building production LLM applications for high-stakes domains. LLM integration, RAG pipelines, knowledge graphs, and NL-to-SQL — shipped to live users, not just demoed.
           </p>
+          <div className="hero-skills">
+            <div className="hero-skills-row">
+              <span className="hero-skills-label">Stack</span>
+              {['Next.js','TypeScript','Azure OpenAI','LangChain','Supabase','PostgreSQL','Python','RAG'].map((s) => (
+                <span key={s} className="hero-skill-chip">{s}</span>
+              ))}
+            </div>
+            <div className="hero-skills-row">
+              <span className="hero-skills-label">Focus</span>
+              {['InsureTech','EdTech','AI Knowledge','RAG / LLM','NL→SQL','Developer Tools'].map((s) => (
+                <span key={s} className="hero-skill-chip domain">{s}</span>
+              ))}
+            </div>
+          </div>
 
           <div className="hero-grid">
             <div className="stats-strip">
               <div className="cell">
-                <span className="k">Active Projects</span>
+                <span className="k">Live Products</span>
                 <span className="v"><CountUp value={profile.stats.projects} /></span>
-                <span className="d">▲ 4 this quarter</span>
+                <span className="d">Across 5 domains</span>
               </div>
               <div className="cell">
                 <span className="k">Prod Deploys</span>
                 <span className="v"><CountUp value={profile.stats.deploys} /></span>
-                <span className="d">▲ 12 / 30d</span>
+                <span className="d">India · US · Global</span>
               </div>
               <div className="cell">
                 <span className="k">Commits 12mo</span>
                 <span className="v"><CountUp value={profile.stats.commits} /></span>
-                <span className="d">▲ Sustained</span>
+                <span className="d">Shipping, not planning</span>
               </div>
               <div className="cell">
-                <span className="k">Avg Uptime</span>
+                <span className="k">Fleet Uptime</span>
                 <span className="v"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
-                <span className="d">Last 30 days</span>
+                <span className="d">Production SLAs met</span>
               </div>
             </div>
             <div className="hero-heatmap">
@@ -299,16 +314,16 @@ function V4() {
           <div className="group">
             <div className="group-h">Workspace</div>
             <div className="nav-item active">Projects <span className="ct">{projects.length}</span></div>
-            <div className="nav-item">Deployments <span className="ct">149</span></div>
-            <div className="nav-item">Activity <span className="ct">215</span></div>
+            <div className="nav-item">Deployments <span className="ct">{profile.stats.deploys}</span></div>
+            <div className="nav-item">Activity <span className="ct">{profile.stats.commits}</span></div>
             <div className="nav-item">Insights</div>
           </div>
           <div className="group">
             <div className="group-h">Filter by Domain</div>
-            <div className="nav-item">AI & Knowledge <span className="ct">5</span></div>
-            <div className="nav-item">FinTech <span className="ct">3</span></div>
-            <div className="nav-item">EdTech <span className="ct">2</span></div>
-            <div className="nav-item">Infrastructure <span className="ct">3</span></div>
+            <div className="nav-item">AI & Knowledge <span className="ct">{projects.filter(p => p.category.includes('AI')).length}</span></div>
+            <div className="nav-item">FinTech <span className="ct">{projects.filter(p => p.category.includes('FinTech')).length}</span></div>
+            <div className="nav-item">EdTech <span className="ct">{projects.filter(p => p.category.includes('EdTech')).length}</span></div>
+            <div className="nav-item">Infrastructure <span className="ct">{projects.filter(p => p.category.includes('Infrastructure')).length}</span></div>
           </div>
           <ActivityFeed />
           <div className="group">
@@ -453,7 +468,7 @@ function V4() {
           <div className="v4-foot">
             <span>© 2026 Vasikarla · AI</span>
             <span>{profile.email}</span>
-            <span className="tnum">Data refreshed · Apr 28 2026</span>
+            <span className="tnum">Data refreshed · May 4 2026</span>
           </div>
         </main>
       </div>

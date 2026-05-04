@@ -111,8 +111,8 @@ function Heatmap() {
         const r = Math.random();
         const v = r < 0.35 - recency * 0.2 ? 0
           : r < 0.6 ? 1
-          : r < 0.8 ? 2
-          : r < 0.93 ? 3 : 4;
+            : r < 0.8 ? 2
+              : r < 0.93 ? 3 : 4;
         out.push({ w, d, v });
       }
     }
@@ -243,66 +243,96 @@ function V4() {
       <section className="v4-hero">
         <div className="v4-hero-orb" />
         <div className="v4-hero-inner">
-          <div className="hero-head">
-            <span>// Index ⟡ Apr 28, 2026</span>
-            <span className="line" />
-            <button className="cmdk-btn" onClick={() => setPaletteOpen(true)}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
-              Quick jump
-              <kbd>⌘K</kbd>
-            </button>
-          </div>
-          <h1>
-            Delivering AI knowledge systems
-            <span className="cursor" />
-          </h1>
-          <p className="sub">
-            <b>{profile.name}.</b> Productive apps with AI. Seventeen repositories, fourteen
-            production deployments, measured by ship-rate — not by slides.
-          </p>
 
-          <div className="hero-grid">
-            <div className="stats-strip">
-              <div className="cell">
-                <span className="k">Active Projects</span>
-                <span className="v"><CountUp value={profile.stats.projects} /></span>
-                <span className="d">▲ 4 this quarter</span>
-              </div>
-              <div className="cell">
-                <span className="k">Prod Deploys</span>
-                <span className="v"><CountUp value={profile.stats.deploys} /></span>
-                <span className="d">▲ 12 / 30d</span>
-              </div>
-              <div className="cell">
-                <span className="k">Commits 12mo</span>
-                <span className="v"><CountUp value={profile.stats.commits} /></span>
-                <span className="d">▲ Sustained</span>
-              </div>
-              <div className="cell">
-                <span className="k">Avg Uptime</span>
-                <span className="v"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
-                <span className="d">Last 30 days</span>
-              </div>
+          {/* Left identity column — same width & style as sidebar for visual continuity */}
+          <div className="hero-left">
+            <div className="hero-identity">
+              <div className="av">V</div>
+              <div className="hn">{profile.name}</div>
+              <div className="hh">@{profile.handle}</div>
+              <div className="hloc">{profile.location}</div>
             </div>
-            <div className="hero-heatmap">
-              <div className="hh-head">
-                <span className="feed-title">Activity · last 26w</span>
-                <span className="feed-meta tnum">{profile.stats.commits} commits</span>
-              </div>
-              <Heatmap />
+            <div className="hero-tagline-text">{profile.tagline}</div>
+            <div className="hero-left-links">
+              <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <a href={`mailto:${profile.email}`}>Contact ↗</a>
             </div>
           </div>
+
+          {/* Right — hero content */}
+          <div className="hero-right">
+            <div className="hero-head">
+              <span>// Index ⟡ May 4, 2026</span>
+              <span className="line" />
+              <button className="cmdk-btn" onClick={() => setPaletteOpen(true)}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
+                Quick jump
+                <kbd>⌘K</kbd>
+              </button>
+            </div>
+            <div className="hero-role">AI Product Engineer</div>
+            <h1>
+              Delivering AI Solutions
+              <span className="cursor" />
+            </h1>
+            <div className="hero-subhead">LLMs · RAG · Production</div>
+            <p className="sub">
+              <b>Satish Vasikarla.</b> {profile.bio}
+            </p>
+            <div className="hero-skills">
+              <div className="hero-skills-row">
+                <span className="hero-skills-label">Stack</span>
+                {profile.skills.map((s) => (
+                  <span key={s} className="hero-skill-chip">{s}</span>
+                ))}
+              </div>
+              <div className="hero-skills-row">
+                <span className="hero-skills-label">Focus</span>
+                {profile.specializations.map((s) => (
+                  <span key={s} className="hero-skill-chip domain">{s}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="hero-grid">
+              <div className="stats-strip">
+                <div className="cell">
+                  <span className="k">Live Products</span>
+                  <span className="v"><CountUp value={profile.stats.projects} /></span>
+                  <span className="d">Across 5 domains</span>
+                </div>
+                <div className="cell">
+                  <span className="k">Prod Deploys</span>
+                  <span className="v"><CountUp value={profile.stats.deploys} /></span>
+                  <span className="d">India · US · Global</span>
+                </div>
+                <div className="cell">
+                  <span className="k">Commits 12mo</span>
+                  <span className="v"><CountUp value={profile.stats.commits} /></span>
+                  <span className="d">Shipping, not planning</span>
+                </div>
+                <div className="cell">
+                  <span className="k">Fleet Uptime</span>
+                  <span className="v"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
+                  <span className="d">Production SLAs met</span>
+                </div>
+              </div>
+              <div className="hero-heatmap">
+                <div className="hh-head">
+                  <span className="feed-title">Activity · last 26w</span>
+                  <span className="feed-meta tnum">{profile.stats.commits} commits</span>
+                </div>
+                <Heatmap />
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
       {/* Body */}
       <div className="v4-body">
         <aside className="sidebar">
-          <div className="user">
-            <div className="av">V</div>
-            <div className="n">Vasikarla · AI</div>
-            <div className="h">@svasikarla</div>
-          </div>
           <div className="group">
             <div className="group-h">Workspace</div>
             <div className={`nav-item ${filter === 'all' && domain === 'all' && !q ? 'active' : ''}`} onClick={() => { setFilter('all'); setDomain('all'); setQ(''); }}>Projects <span className="ct">{projects.length}</span></div>
@@ -467,7 +497,7 @@ function V4() {
           <div className="v4-foot">
             <span>© 2026 Vasikarla · AI</span>
             <span>{profile.email}</span>
-            <span className="tnum">Data refreshed · Apr 28 2026</span>
+            <span className="tnum">Data refreshed · May 4 2026</span>
           </div>
         </main>
       </div>
