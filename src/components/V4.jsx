@@ -5,6 +5,12 @@ import { Sparkline } from './V3';
 
 /* Variation 4 — Modern hybrid: hero + console with live UX components */
 
+function parseDuration(s) {
+  const unit = { h: 0, d: 1, w: 2, mo: 3, y: 4 };
+  const m = s && s.match(/^(\d+)(h|d|w|mo|y)$/);
+  return m ? parseInt(m[1]) + unit[m[2]] * 1000 : 9999;
+}
+
 function useCountUp(target, duration = 1200, deps = []) {
   const [n, setN] = useState(0);
   useEffect(() => {
@@ -134,16 +140,23 @@ function Heatmap() {
   );
 }
 
-function ActivityFeed() {
-  const items = [
-    { t: '4m', repo: 'BimaBuddyAdvanced', msg: 'feat: add competitive matrix v2', kind: 'commit' },
-    { t: '32m', repo: 'CorePragyaAdvanced', msg: 'Deployment to production · iad1', kind: 'deploy' },
-    { t: '1h', repo: 'IGCSEStudentGuide', msg: 'fix: validation pipeline edge case', kind: 'commit' },
-    { t: '3h', repo: 'NLSQLPro', msg: 'chore: bump @supabase/ssr', kind: 'commit' },
-    { t: '6h', repo: 'BimaBuddyAdvanced', msg: 'Deployment ready · bom1', kind: 'deploy' },
-    { t: '1d', repo: 'health-insurance-india', msg: 'docs: README multilingual notes', kind: 'commit' },
-    { t: '2d', repo: 'LocalRAG', msg: 'experiment: bge-small-en embeddings', kind: 'commit' },
-  ];
+function ActivityFeed({ projects }) {
+  const feed = useMemo(() => {
+    const prefixes = ['feat', 'fix', 'chore', 'refactor', 'feat', 'fix', 'feat'];
+    return [...projects]
+      .sort((a, b) => parseDuration(a.lastUpdate) - parseDuration(b.lastUpdate))
+      .slice(0, 7)
+      .map((p, i) => {
+        const isDeployEvent = p.deploys > 0 && p.region !== '—' &&
+          (p.lastUpdate.endsWith('h') || (p.lastUpdate.endsWith('d') && parseInt(p.lastUpdate) <= 3));
+        const kind = isDeployEvent ? 'deploy' : 'commit';
+        const msg = kind === 'deploy'
+          ? `Deployment ready · ${p.region}`
+          : `${prefixes[i % prefixes.length]}: ${p.tagline.toLowerCase().split(' ').slice(0, 5).join(' ')}`;
+        return { t: p.lastUpdate, repo: p.name, msg, kind };
+      });
+  }, [projects]);
+
   return (
     <div className="feed">
       <div className="feed-head">
@@ -151,7 +164,7 @@ function ActivityFeed() {
         <span className="feed-live"><span className="dot" />Live</span>
       </div>
       <div className="feed-list">
-        {items.map((a, i) => (
+        {feed.map((a, i) => (
           <div key={i} className="feed-row">
             <div className={`feed-icon ${a.kind}`}>
               {a.kind === 'commit' ? '◆' : '↑'}
@@ -198,15 +211,120 @@ function MiniMap({ projects, onPick }) {
   );
 }
 
+function DetailPanel({ project, profile, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  const coverColor = { live: 'var(--accent)', beta: 'var(--info)', wip: 'var(--warn)', archived: 'var(--fg-4)' }[project.status] || 'var(--accent)';
+
+  return (
+    <div className="detail-panel">
+
+      {/* Breadcrumb */}
+      <div className="bread">
+        <span>Workspace</span><span className="s">/</span>
+        <span className="dp-bread-back" onClick={onClose}>Projects</span>
+        <span className="s">/</span><b>{project.name}</b>
+      </div>
+
+      {/* Header */}
+      <div className="dp-header">
+        <button className="dp-back" onClick={onClose}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="13" height="13"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          All Projects
+        </button>
+        <div className="dp-title">
+          <span className="dp-name">{project.name}</span>
+          {project.flagship && <span className="dp-flag">Flagship</span>}
+        </div>
+        <StatusPill status={project.status} />
+      </div>
+
+      {/* Cover */}
+      <div className="dp-cover" style={{ '--dp-color': coverColor }}>
+        {project.screenshot
+          ? <img src={project.screenshot} alt={project.name} className="dp-cover-img" />
+          : (
+            <div className="dp-cover-placeholder">
+              <div className="dp-cover-content">
+                <div className="dp-cover-cat">{project.category}</div>
+                <div className="dp-cover-name">{project.name}</div>
+                <div className="dp-cover-tag">{project.tagline}</div>
+              </div>
+              {project.version !== '—' && (
+                <span className="dp-cover-version">{project.version}</span>
+              )}
+            </div>
+          )
+        }
+      </div>
+
+      {/* Meta strip */}
+      <div className="dp-meta">
+        <span>{project.category}</span>
+        <span className="dp-sep">·</span>
+        <span>{project.version !== '—' ? project.version : 'pre-release'}</span>
+        <span className="dp-sep">·</span>
+        <span>{project.region !== '—' ? project.region : 'local'}</span>
+        <span className="dp-sep">·</span>
+        <span>Updated {project.lastUpdate} ago</span>
+      </div>
+
+      {/* Description */}
+      <p className="dp-desc">{project.description}</p>
+
+      {/* Stack */}
+      <div className="dp-section">
+        <div className="dp-section-label">Tech Stack</div>
+        <div className="dp-stack">
+          {project.stack.map((s) => <span key={s} className="dp-chip">{s}</span>)}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="dp-stats">
+        <div className="dp-stat"><span className="k">Commits</span><span className="v">{project.commits}</span></div>
+        <div className="dp-stat"><span className="k">Deploys</span><span className="v">{project.deploys || '—'}</span></div>
+        <div className="dp-stat"><span className="k">Uptime</span><span className="v">{project.uptime ? `${project.uptime}%` : '—'}</span></div>
+        <div className="dp-stat"><span className="k">Region</span><span className="v">{project.region !== '—' ? project.region : 'local'}</span></div>
+      </div>
+
+      {/* Actions */}
+      <div className="dp-actions">
+        {project.url
+          ? <a className="dp-btn primary" href={project.url} target="_blank" rel="noopener noreferrer">Visit Live ↗</a>
+          : <span className="dp-btn disabled">Offline</span>
+        }
+        {project.repo
+          ? <a className="dp-btn" href={project.repo} target="_blank" rel="noopener noreferrer">View Source ↗</a>
+          : <span className="dp-btn disabled">Private Repo</span>
+        }
+      </div>
+
+      {/* Portfolio footer */}
+      <div className="dp-attribution">
+        <span className="dp-attr-pulse" />
+        Part of <b>Vasikarla · AI</b> · {profile.location}
+        <a className="dp-attr-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+
+    </div>
+  );
+}
+
 function V4() {
   const projects = PROJECTS;
   const profile = PROFILE;
   const [filter, setFilter] = useState('all');
   const [q, setQ] = useState('');
-  const [sort, setSort] = useState('flagship');
+  const [sort, setSort] = useState('recent');
   const [domain, setDomain] = useState('all');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [hovered, setHovered] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const counts = useMemo(() => {
     const c = { all: projects.length };
@@ -225,12 +343,10 @@ function V4() {
     if (sort === 'commits') return b.commits - a.commits;
     if (sort === 'deploys') return b.deploys - a.deploys;
     if (sort === 'recent') {
-      const order = { 'h': 0, 'd': 1, 'w': 2, 'mo': 3, 'y': 4 };
-      const parse = (s) => {
-        const m = s.match(/^(\d+)(h|d|w|mo|y)$/);
-        return m ? parseInt(m[1]) + order[m[2]] * 1000 : 9999;
-      };
-      return parse(a.lastUpdate) - parse(b.lastUpdate);
+      const rank = { live: 0, beta: 1, wip: 2, archived: 3 };
+      const sr = (rank[a.status] ?? 2) - (rank[b.status] ?? 2);
+      if (sr !== 0) return sr;
+      return parseDuration(a.lastUpdate) - parseDuration(b.lastUpdate);
     }
     return 0;
   });
@@ -335,7 +451,7 @@ function V4() {
         <aside className="sidebar">
           <div className="group">
             <div className="group-h">Workspace</div>
-            <div className={`nav-item ${filter === 'all' && domain === 'all' && !q ? 'active' : ''}`} onClick={() => { setFilter('all'); setDomain('all'); setQ(''); }}>Projects <span className="ct">{projects.length}</span></div>
+            <div className={`nav-item ${filter === 'all' && domain === 'all' && !q ? 'active' : ''}`} onClick={() => { setFilter('all'); setDomain('all'); setQ(''); setSort('recent'); }}>Projects <span className="ct">{projects.length}</span></div>
             <div className={`nav-item ${filter === 'live' ? 'active' : ''}`} onClick={() => setFilter('live')}>Deployments <span className="ct">{counts['live'] || 0}</span></div>
             <div className={`nav-item ${sort === 'recent' ? 'active' : ''}`} onClick={() => setSort('recent')}>Activity <span className="ct">{profile.stats.commits}</span></div>
             <div className="nav-item" onClick={() => alert('Insights dashboard coming soon.')}>Insights</div>
@@ -347,7 +463,7 @@ function V4() {
             <div className={`nav-item ${domain === 'EdTech' ? 'active' : ''}`} onClick={() => setDomain(domain === 'EdTech' ? 'all' : 'EdTech')}>EdTech <span className="ct">{projects.filter(p => p.category.includes('EdTech')).length}</span></div>
             <div className={`nav-item ${domain === 'Infrastructure' ? 'active' : ''}`} onClick={() => setDomain(domain === 'Infrastructure' ? 'all' : 'Infrastructure')}>Infrastructure <span className="ct">{projects.filter(p => p.category.includes('Infrastructure')).length}</span></div>
           </div>
-          <ActivityFeed />
+          <ActivityFeed projects={projects} />
           <div className="group">
             <div className="group-h">External</div>
             <a className="nav-item" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
@@ -356,6 +472,14 @@ function V4() {
         </aside>
 
         <main className="main">
+          {selectedProject ? (
+            <DetailPanel
+              project={selectedProject}
+              profile={profile}
+              onClose={() => setSelectedProject(null)}
+            />
+          ) : (
+          <>
           <div className="bread">
             <span>Workspace</span><span className="s">/</span><b>Projects</b>
           </div>
@@ -445,7 +569,7 @@ function V4() {
                 className={`card ${p.flagship ? 'flagship' : ''} ${hovered === p.id ? 'hovered' : ''}`}
                 onMouseEnter={() => setHovered(p.id)}
                 onMouseLeave={() => setHovered(null)}
-                onClick={() => p.url ? window.open(p.url, '_blank') : p.repo && window.open(p.repo, '_blank')}
+                onClick={() => setSelectedProject(p)}
                 style={{ animationDelay: `${i * 30}ms` }}
               >
                 {p.flagship && <span className="flag-tag">FLAGSHIP</span>}
@@ -479,16 +603,18 @@ function V4() {
                   </div>
                 </div>
                 <div className="actions">
-                  {p.url ? (
-                    <a className="ab primary" href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit live deployment for ${p.name}`} onClick={(e) => e.stopPropagation()}>Visit Live ↗</a>
-                  ) : (
-                    <span className="ab disabled" aria-label="No live deployment available">Offline</span>
-                  )}
-                  {p.repo ? (
-                    <a className="ab" href={p.repo} target="_blank" rel="noopener noreferrer" aria-label={`View source code for ${p.name}`} onClick={(e) => e.stopPropagation()}>Source ↗</a>
-                  ) : (
-                    <span className="ab disabled" aria-label="Source code is private">Private Repo</span>
-                  )}
+                  <button
+                    className={`ab primary ${!p.url ? 'disabled' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
+                  >
+                    {p.url ? 'View Details ↗' : 'Offline'}
+                  </button>
+                  <button
+                    className={`ab ${!p.repo ? 'disabled' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
+                  >
+                    {p.repo ? 'Source ↗' : 'Private'}
+                  </button>
                 </div>
               </div>
             ))}
@@ -499,6 +625,8 @@ function V4() {
             <span>{profile.email}</span>
             <span className="tnum">Data refreshed · May 4 2026</span>
           </div>
+          </>
+          )}
         </main>
       </div>
     </div>
