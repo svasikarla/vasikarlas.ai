@@ -5,6 +5,11 @@ window.PROJECTS = [
     name: 'CorePragyaAdvanced',
     tagline: 'AI knowledgebase with graph visualization',
     description: 'AI-powered knowledgebase with knowledge graph visualization, RSS feed ingestion, trending topic identification and personalized learning guidance.',
+    features: [
+      { name: 'Knowledge Graph', desc: 'Interactive 3D visualization of concepts and relationships.' },
+      { name: 'RSS Ingestion', desc: 'Automated ingestion from trending feeds.' },
+      { name: 'Personalized Paths', desc: 'AI-guided learning trajectories.' }
+    ],
     category: 'AI / Knowledge',
     stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Azure OpenAI'],
     status: 'live',
@@ -23,6 +28,11 @@ window.PROJECTS = [
     name: 'BimaBuddyAdvanced',
     tagline: 'Insurance suite with competitive market analysis',
     description: 'Production-grade insurance platform with SaaS architecture, market research integration, and competitive intelligence for the Indian market.',
+    features: [
+      { name: 'SaaS Architecture', desc: 'Scalable multi-tenant infrastructure.' },
+      { name: 'Market Research', desc: 'Integrated research for Indian insurance policies.' },
+      { name: 'Competitive Intel', desc: 'Real-time analytics and competitive benchmarking.' }
+    ],
     category: 'FinTech / Insurance',
     stack: ['Next.js', 'TypeScript', 'Supabase', 'Realtime'],
     status: 'live',
@@ -41,6 +51,11 @@ window.PROJECTS = [
     name: 'IGCSEStudentGuide',
     tagline: 'AI-powered IGCSE exam prep',
     description: 'Democratizing IGCSE education through AI-generated, high-quality study materials with a content generation pipeline and built-in validation.',
+    features: [
+      { name: 'AI Generation', desc: 'Automated creation of high-quality study materials.' },
+      { name: 'Content Pipeline', desc: 'Streamlined workflow from generation to publication.' },
+      { name: 'Built-in Validation', desc: 'Automated accuracy and quality checks.' }
+    ],
     category: 'EdTech',
     stack: ['Next.js', 'TypeScript', 'Supabase'],
     status: 'live',
@@ -59,6 +74,11 @@ window.PROJECTS = [
     name: 'NLSQLPro',
     tagline: 'Natural language to SQL',
     description: 'Translate plain English into production-ready SQL against any schema. Private repo, public demo.',
+    features: [
+      { name: 'Natural Language to SQL', desc: 'Accurate translation of plain English queries.' },
+      { name: 'Schema Agnostic', desc: 'Works against any database schema.' },
+      { name: 'Production Ready', desc: 'Generates optimized and secure SQL.' }
+    ],
     category: 'AI / Developer Tools',
     stack: ['Next.js', 'TypeScript', 'Supabase'],
     status: 'live',
@@ -94,6 +114,11 @@ window.PROJECTS = [
     name: 'health-insurance-india',
     tagline: 'Compare Indian health insurance policies',
     description: 'Multilingual platform (10 Indian languages) for comparing health insurance policies with an AI-powered chatbot for guidance.',
+    features: [
+      { name: 'Multilingual', desc: 'Supports 10 Indian languages for wider reach.' },
+      { name: 'Policy Comparison', desc: 'Detailed side-by-side health insurance comparison.' },
+      { name: 'AI Chatbot', desc: 'Intelligent guidance for policy selection.' }
+    ],
     category: 'FinTech / Insurance',
     stack: ['Next.js', 'Supabase', 'OpenAI'],
     status: 'live',

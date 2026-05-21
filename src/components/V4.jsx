@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { PROJECTS, PROFILE } from '@/data/projects';
 import { StatusPill } from './V1';
 import { Sparkline } from './V3';
+import { getVercelProjects } from '@/actions/vercel';
 
 /* Variation 4 — Modern hybrid: hero + console with live UX components */
 
@@ -276,6 +277,21 @@ function DetailPanel({ project, profile, onClose }) {
       {/* Description */}
       <p className="dp-desc">{project.description}</p>
 
+      {/* Features */}
+      {project.features && project.features.length > 0 && (
+        <div className="dp-section">
+          <div className="dp-section-label">Key Features</div>
+          <div className="dp-features-grid">
+            {project.features.map((f, i) => (
+              <div key={i} className="dp-feature-card">
+                <div className="dp-feature-name">{f.name}</div>
+                <div className="dp-feature-desc">{f.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Stack */}
       <div className="dp-section">
         <div className="dp-section-label">Tech Stack</div>
@@ -316,7 +332,7 @@ function DetailPanel({ project, profile, onClose }) {
 }
 
 function V4() {
-  const projects = PROJECTS;
+  const [projects, setProjects] = useState(PROJECTS);
   const profile = PROFILE;
   const [filter, setFilter] = useState('all');
   const [q, setQ] = useState('');
@@ -325,6 +341,112 @@ function V4() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [hovered, setHovered] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getVercelProjects().then((res) => {
+      if (!mounted || !res.projects) return;
+
+      const formatTimeAgo = (ms) => {
+        const h = Math.floor(ms / 3600000);
+        if (h === 0) return '1h'; // less than 1 hr, say 1h
+        if (h < 24) return h + 'h';
+        const d = Math.floor(h / 24);
+        if (d < 7) return d + 'd';
+        const w = Math.floor(d / 7);
+        if (w < 4) return w + 'w';
+        const mo = Math.floor(d / 30);
+        if (mo < 12) return mo + 'mo';
+        return Math.floor(d / 365) + 'y';
+      };
+
+      setProjects(prev => {
+        const merged = prev.map(p => {
+          const pRepoName = p.repo ? p.repo.split('/').pop().toLowerCase() : '';
+          const pIdName = p.id.toLowerCase();
+          
+          // Find matching project from Vercel API
+          const vp = res.projects.find(v => {
+            const vName = v.name.toLowerCase();
+            const vRepo = v.link?.repo ? v.link.repo.split('/').pop().toLowerCase() : '';
+            return vName === pIdName || vName === pRepoName || vRepo === pIdName || vRepo === pRepoName || vName === p.name.toLowerCase();
+          });
+          
+          if (vp) {
+            const latestDeploy = vp.latestDeployments?.[0];
+            let newStatus = p.status;
+            let lastUpdate = p.lastUpdate;
+            let newUrl = p.url;
+            
+            if (latestDeploy) {
+               const msAgo = Date.now() - latestDeploy.createdAt;
+               lastUpdate = formatTimeAgo(msAgo);
+               if (latestDeploy.readyState === 'READY') {
+                 newStatus = 'live';
+                 if (!newUrl && latestDeploy.url) newUrl = `https://${latestDeploy.url}`;
+               }
+            }
+            return {
+              ...p,
+              lastUpdate,
+              status: newStatus,
+              url: newUrl,
+            };
+          }
+          return p;
+        });
+
+        // Find unknown Vercel projects and append them
+        const existingIds = new Set();
+        merged.forEach(p => {
+          existingIds.add(p.id.toLowerCase());
+          if (p.repo) existingIds.add(p.repo.split('/').pop().toLowerCase());
+        });
+
+        const newProjects = res.projects.filter(vp => {
+          const vName = vp.name.toLowerCase();
+          const vRepo = vp.link?.repo ? vp.link.repo.split('/').pop().toLowerCase() : '';
+          return !existingIds.has(vName) && (!vRepo || !existingIds.has(vRepo));
+        }).map(vp => {
+          const latestDeploy = vp.latestDeployments?.[0];
+          let status = 'wip';
+          let lastUpdate = '1h';
+          let url = null;
+
+          if (latestDeploy) {
+             const msAgo = Date.now() - latestDeploy.createdAt;
+             lastUpdate = formatTimeAgo(msAgo);
+             if (latestDeploy.readyState === 'READY') {
+               status = 'live';
+               url = latestDeploy.url ? `https://${latestDeploy.url}` : null;
+             }
+          }
+
+          return {
+            id: vp.name,
+            name: vp.name.charAt(0).toUpperCase() + vp.name.slice(1),
+            category: vp.framework || 'Web',
+            status,
+            description: `Auto-discovered Vercel deployment: ${vp.name}`,
+            tagline: 'Vercel Deployment',
+            url,
+            repo: vp.link?.repo ? `https://github.com/${vp.link.repo}` : null,
+            stack: [vp.framework || 'Vercel'],
+            version: '—',
+            commits: 0,
+            deploys: 1,
+            uptime: null,
+            region: '—',
+            lastUpdate,
+            flagship: false,
+          };
+        });
+
+        return [...merged, ...newProjects];
+      });
+    }).catch(err => console.error('Failed to update live projects', err));
+    return () => { mounted = false; };
+  }, []);
 
   const counts = useMemo(() => {
     const c = { all: projects.length };
