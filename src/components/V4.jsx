@@ -540,8 +540,7 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
         </div>
 
         <h1>
-          I build AI products that solve<br />
-          real business workflows.
+          I build AI products that solve real business workflows.
           <span className="cursor" />
         </h1>
 

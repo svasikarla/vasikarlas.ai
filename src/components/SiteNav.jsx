@@ -3,8 +3,23 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Button, makeStyles, tokens } from '@fluentui/react-components';
-import { WeatherSunnyRegular, WeatherMoonRegular, SearchRegular } from '@fluentui/react-icons';
+import {
+  Button,
+  Drawer,
+  DrawerHeader,
+  DrawerHeaderTitle,
+  DrawerBody,
+  Divider,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
+import {
+  WeatherSunnyRegular,
+  WeatherMoonRegular,
+  SearchRegular,
+  NavigationRegular,
+  DismissRegular,
+} from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +46,7 @@ const useStyles = makeStyles({
     color: 'var(--fg)',
     textDecoration: 'none',
     textTransform: 'uppercase',
+    flexShrink: 0,
   },
   brandDot: {
     width: '8px',
@@ -40,11 +56,14 @@ const useStyles = makeStyles({
     boxShadow: '0 0 8px var(--accent)',
   },
   brandSub: { color: 'var(--fg-3)' },
-  nav: {
+  navDesktop: {
     display: 'flex',
     alignItems: 'center',
     gap: tokens.spacingHorizontalXS,
     marginLeft: tokens.spacingHorizontalXL,
+    '@media (max-width: 768px)': {
+      display: 'none',
+    },
   },
   navLink: {
     fontFamily: 'var(--f-sans)',
@@ -70,10 +89,51 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gap: tokens.spacingHorizontalS,
   },
-  iconBtn: {
-    minWidth: '32px',
-    height: '32px',
+  searchBtnDesktop: {
+    '@media (max-width: 768px)': {
+      display: 'none',
+    },
+  },
+  contactBtnDesktop: {
+    '@media (max-width: 768px)': {
+      display: 'none',
+    },
+  },
+  hamburger: {
+    display: 'none',
+    minWidth: '36px',
+    height: '36px',
     padding: 0,
+    '@media (max-width: 768px)': {
+      display: 'inline-flex',
+    },
+  },
+  drawerNav: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: tokens.spacingVerticalXS,
+    marginTop: tokens.spacingVerticalM,
+  },
+  drawerLink: {
+    fontFamily: 'var(--f-sans)',
+    fontSize: '15px',
+    fontWeight: 500,
+    color: 'var(--fg-2)',
+    padding: '12px 14px',
+    borderRadius: '8px',
+    textDecoration: 'none',
+    transition: 'color 0.15s ease, background 0.15s ease',
+    ':hover': {
+      color: 'var(--fg)',
+      backgroundColor: 'var(--bg-1)',
+    },
+  },
+  drawerLinkActive: {
+    color: 'var(--fg)',
+    backgroundColor: 'var(--bg-1)',
+  },
+  drawerCta: {
+    marginTop: tokens.spacingVerticalL,
   },
 });
 
@@ -89,12 +149,18 @@ export default function SiteNav() {
   const pathname = usePathname();
   const [theme, setTheme] = useState('dark');
   const [mounted, setMounted] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const current = document.documentElement.getAttribute('data-theme') || 'dark';
     setTheme(current);
   }, []);
+
+  // Close drawer on route change
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
@@ -109,45 +175,119 @@ export default function SiteNav() {
   };
 
   return (
-    <header className={styles.root}>
-      <Link href="/" className={styles.brand}>
-        <span className={styles.brandDot} aria-hidden />
-        VASIKARLA<span className={styles.brandSub}>·AI</span>
-      </Link>
-      <nav className={styles.nav} aria-label="Primary">
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ''}`}
+    <>
+      <header className={styles.root}>
+        <Link href="/" className={styles.brand}>
+          <span className={styles.brandDot} aria-hidden />
+          VASIKARLA<span className={styles.brandSub}>·AI</span>
+        </Link>
+        <nav className={styles.navDesktop} aria-label="Primary">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ''}`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <div className={styles.right}>
+          <Button
+            appearance="subtle"
+            size="small"
+            icon={<SearchRegular />}
+            aria-label="Search projects"
+            as="a"
+            className={styles.searchBtnDesktop}
+            {...{ href: '/projects' }}
           >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-      <div className={styles.right}>
-        <Button
-          appearance="subtle"
-          size="small"
-          icon={<SearchRegular />}
-          aria-label="Search projects"
-          as="a"
-          {...{ href: '/projects' }}
-        >
-          Search
-        </Button>
-        <Button
-          appearance="subtle"
-          size="small"
-          aria-label="Toggle theme"
-          className={styles.iconBtn}
-          icon={mounted && theme === 'dark' ? <WeatherSunnyRegular /> : <WeatherMoonRegular />}
-          onClick={toggleTheme}
-        />
-        <Button appearance="primary" size="small" as="a" {...{ href: '/about#contact' }}>
-          Contact
-        </Button>
-      </div>
-    </header>
+            Search
+          </Button>
+          <Button
+            appearance="subtle"
+            size="small"
+            aria-label="Toggle theme"
+            icon={mounted && theme === 'dark' ? <WeatherSunnyRegular /> : <WeatherMoonRegular />}
+            onClick={toggleTheme}
+          />
+          <Button
+            appearance="primary"
+            size="small"
+            as="a"
+            className={styles.contactBtnDesktop}
+            {...{ href: '/about#contact' }}
+          >
+            Contact
+          </Button>
+          <Button
+            appearance="subtle"
+            aria-label="Open menu"
+            icon={<NavigationRegular />}
+            className={styles.hamburger}
+            onClick={() => setDrawerOpen(true)}
+          />
+        </div>
+      </header>
+
+      <Drawer
+        open={drawerOpen}
+        onOpenChange={(_, { open }) => setDrawerOpen(open)}
+        position="end"
+        size="small"
+      >
+        <DrawerHeader>
+          <DrawerHeaderTitle
+            action={
+              <Button
+                appearance="subtle"
+                aria-label="Close menu"
+                icon={<DismissRegular />}
+                onClick={() => setDrawerOpen(false)}
+              />
+            }
+          >
+            Menu
+          </DrawerHeaderTitle>
+        </DrawerHeader>
+        <DrawerBody>
+          <nav className={styles.drawerNav} aria-label="Mobile">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${styles.drawerLink} ${isActive(item.href) ? styles.drawerLinkActive : ''}`}
+                onClick={() => setDrawerOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <Divider style={{ margin: '16px 0' }} />
+          <Button
+            appearance="primary"
+            size="medium"
+            as="a"
+            className={styles.drawerCta}
+            {...{ href: '/about#contact' }}
+            onClick={() => setDrawerOpen(false)}
+            style={{ width: '100%' }}
+          >
+            Contact
+          </Button>
+          <Button
+            appearance="subtle"
+            size="medium"
+            as="a"
+            {...{ href: '/projects' }}
+            onClick={() => setDrawerOpen(false)}
+            style={{ width: '100%', marginTop: '8px' }}
+            icon={<SearchRegular />}
+          >
+            Search projects
+          </Button>
+        </DrawerBody>
+      </Drawer>
+    </>
   );
 }

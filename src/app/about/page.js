@@ -18,8 +18,7 @@ export default function AboutPage() {
             <span>{profile.location}</span>
           </div>
           <h1>
-            I&apos;m Satish Vasikarla — <br />
-            an AI Product Engineer.
+            I&apos;m Satish Vasikarla — an AI Product Engineer.
           </h1>
           <p className="hero-sub">
             I build usable, production-grade software across AI, full-stack systems, insurance, education, and knowledge platforms. Twenty-one shipped products, one hundred forty-nine production deploys, four years of iteration.
