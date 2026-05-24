@@ -212,6 +212,148 @@ function MiniMap({ projects, onPick }) {
   );
 }
 
+function FlagshipVisual({ id }) {
+  if (id === 'bima-buddy-advanced') {
+    return (
+      <div className="dashboard-widget-container">
+        <div className="voice-claim-widget">
+          <div className="widget-row">
+            <span className="widget-label">AI Claim Evaluator</span>
+            <span className="widget-header-badge">Online</span>
+          </div>
+          
+          <div className="claims-gauge-container">
+            <svg className="claims-circle-svg">
+              <circle className="claims-circle-bg" cx="50" cy="50" r="40" />
+              <circle className="claims-circle-fill" cx="50" cy="50" r="40" />
+            </svg>
+            <div className="gauge-center-text">
+              <span className="gauge-percent">85%</span>
+              <span className="gauge-lbl">Approval</span>
+            </div>
+          </div>
+
+          <div className="widget-row" style={{ marginTop: '4px' }}>
+            <span className="widget-label" style={{ fontSize: '9px' }}>Voice Analyzer (10 Langs)</span>
+          </div>
+
+          <div className="voice-wave">
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+            <div className="wave-bar" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (id === 'core-pragya-advanced') {
+    return (
+      <div className="dashboard-widget-container">
+        <div className="knowledge-graph-widget">
+          <span className="graph-widget-title">Knowledge Graph Web</span>
+          <svg className="graph-svg">
+            <line className="graph-line" x1="40" y1="120" x2="160" y2="60" />
+            <line className="graph-line" x1="160" y1="60" x2="280" y2="130" />
+            <line className="graph-line" x1="160" y1="60" x2="160" y2="190" />
+            <line className="graph-line" x1="40" y1="120" x2="160" y2="190" />
+            <line className="graph-line" x1="160" y1="190" x2="280" y2="130" />
+            
+            <g className="graph-node">
+              <circle className="node-pulse" cx="160" cy="60" r="14" fill="var(--accent)" opacity="0.3" />
+              <circle className="graph-node-circle" cx="160" cy="60" r="7" />
+              <text className="graph-label" x="160" y="44" textAnchor="middle">AI CORE</text>
+            </g>
+
+            <g className="graph-node">
+              <circle className="graph-node-circle" cx="40" cy="120" r="6" />
+              <text className="graph-label" x="40" y="105" textAnchor="middle">RAG Feed</text>
+            </g>
+
+            <g className="graph-node">
+              <circle className="graph-node-circle" cx="160" cy="190" r="6" />
+              <text className="graph-label" x="160" y="210" textAnchor="middle">Vector DB</text>
+            </g>
+
+            <g className="graph-node">
+              <circle className="graph-node-circle" cx="280" cy="130" r="6" />
+              <text className="graph-label" x="280" y="115" textAnchor="middle">Graph View</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    );
+  }
+
+  if (id === 'nlsql-pro') {
+    return (
+      <div className="dashboard-widget-container">
+        <div className="sql-translator-widget">
+          <div className="editor-header">
+            <span className="editor-dot r" />
+            <span className="editor-dot y" />
+            <span className="editor-dot g" />
+            <span className="editor-title">NLSQL-PRO Translator</span>
+          </div>
+          <div className="pane-nl">
+            <span>Show me live health policies in region &apos;bom1&apos; with uptime &gt; 99%</span>
+            <span className="typing-cursor" />
+          </div>
+          <div className="pane-sql">
+            <span className="sql-keyword">SELECT</span> * <span className="sql-keyword">FROM</span> policies <br />
+            <span className="sql-keyword">WHERE</span> region = <span className="sql-string">&apos;bom1&apos;</span> <br />
+            <span className="sql-keyword">AND</span> uptime &gt; <span className="sql-keyword">99</span>;
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (id === 'igcse-student-guide') {
+    return (
+      <div className="dashboard-widget-container">
+        <div className="study-card-widget">
+          <div className="study-card-header">
+            <span className="study-card-badge">Physics Grade 10</span>
+            <span className="study-card-accent-pill" />
+          </div>
+          <div className="study-card-body">
+            <h4 className="study-card-question">What is Newton&apos;s Second Law of Motion?</h4>
+            <p className="study-card-answer-preview">
+              <span className="study-card-check">✓</span> F = ma (Force = mass x acceleration)
+            </p>
+          </div>
+          <div className="study-card-footer">
+            <div className="study-card-stats">
+              <div className="study-stat">
+                <label>Confidence</label>
+                <span>94%</span>
+              </div>
+              <div className="study-stat">
+                <label>Adaptive Score</label>
+                <span>Grade A*</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="dashboard-widget-container">
+      <div className="study-card-widget" style={{ minHeight: '180px', justifyContent: 'center', alignItems: 'center' }}>
+        <span className="study-card-badge">PROTOTYPE DEPLOYMENT</span>
+      </div>
+    </div>
+  );
+}
+
 function DetailPanel({ project, profile, onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
@@ -557,6 +699,11 @@ function V4() {
 
   return (
     <div className="v4">
+      <div className="cosmic-glow-container">
+        <div className="cosmic-glow-orb orb-1" />
+        <div className="cosmic-glow-orb orb-2" />
+        <div className="cosmic-glow-orb orb-3" />
+      </div>
       <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} projects={projects} />
 
       {/* Hero */}
@@ -711,12 +858,7 @@ function V4() {
                 return (
                   <div key={p.id} className="flagship-editorial-card">
                     <div className="flagship-cover">
-                      <div className="flagship-cover-bg" style={{ backgroundColor: 'var(--bg-2)' }} />
-                      <div className="flagship-cover-content">
-                        <div className="flagship-cover-cat">{p.category}</div>
-                        <div className="flagship-cover-name">{p.name}</div>
-                        <div className="flagship-cover-tag">{p.tagline}</div>
-                      </div>
+                      <FlagshipVisual id={p.id} />
                     </div>
                     <div className="flagship-content">
                       <div className="flagship-head">
