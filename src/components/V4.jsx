@@ -336,7 +336,7 @@ function V4() {
   const profile = PROFILE;
   const [filter, setFilter] = useState('all');
   const [q, setQ] = useState('');
-  const [sort, setSort] = useState('recent');
+  const [sort, setSort] = useState('flagship');
   const [domain, setDomain] = useState('all');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [hovered, setHovered] = useState(null);
@@ -349,7 +349,7 @@ function V4() {
 
       const formatTimeAgo = (ms) => {
         const h = Math.floor(ms / 3600000);
-        if (h === 0) return '1h'; // less than 1 hr, say 1h
+        if (h === 0) return '1h';
         if (h < 24) return h + 'h';
         const d = Math.floor(h / 24);
         if (d < 7) return d + 'd';
@@ -365,7 +365,6 @@ function V4() {
           const pRepoName = p.repo ? p.repo.split('/').pop().toLowerCase() : '';
           const pIdName = p.id.toLowerCase();
           
-          // Find matching project from Vercel API
           const vp = res.projects.find(v => {
             const vName = v.name.toLowerCase();
             const vRepo = v.link?.repo ? v.link.repo.split('/').pop().toLowerCase() : '';
@@ -396,7 +395,6 @@ function V4() {
           return p;
         });
 
-        // Find unknown Vercel projects and append them
         const existingIds = new Set();
         merged.forEach(p => {
           existingIds.add(p.id.toLowerCase());
@@ -470,6 +468,93 @@ function V4() {
     return 0;
   });
 
+  const flagshipNarratives = {
+    'bima-buddy-advanced': {
+      problem: "Health insurance evaluation in India is historically complex, fragmented across dozens of providers, and lacks local-language accessibility for over 80% of families, leading to high claim rejection rates.",
+      solution: "Designed India's first AI-powered health insurance intelligence suite. Integrates automated comparisons across 50+ policies, a claim predictor analyzing 50+ factors with 85%+ accuracy, and a native voice assistant supporting 10 Indian languages.",
+      constraint: "Fusing highly irregular insurance policy PDFs into structural query models, and designing sub-second multilingual voice processing with emotion-aware feedback loops."
+    },
+    'core-pragya-advanced': {
+      problem: "Personal learning materials, feeds, and articles are highly fragmented and noisy. Traditional bookmarking systems lack semantic context and fail to convert raw reading history into structured personal knowledge.",
+      solution: "Built a personal intelligence system that ingests RSS feeds, PDF libraries, and articles. Features an interactive 3D concept graph visualization, autonomous deep research agents, and a multi-agent blog and social writing studio.",
+      constraint: "Constructing dynamic, scalable graph coordinates in real-time, and orchestrating multiple parallel autonomous agents to write and format publications for 6 platforms without rate-limit lockouts."
+    },
+    'nlsql-pro': {
+      problem: "Databases are inaccessible to non-technical business decision-makers without SQL proficiency, creating severe operational bottlenecks and query backlogs for development teams.",
+      solution: "Developed a secure natural language to SQL translation query engine. Features 24-hour schema caching, a custom Business Glossary terminology mapper, and Golden Query feedback memory that learns continuously.",
+      constraint: "Mitigating LLM SQL hallucinations on highly nested production database schemas while ensuring advanced prompt injection shielding against 30+ jailbreak patterns."
+    },
+    'igcse-student-guide': {
+      problem: "High-quality secondary school exam prep materials are locked behind expensive paywalls, creating severe inequality of educational access for millions of IGCSE Grade 9-10 students.",
+      solution: "Engineered a fully automated content generation and revision pipeline. Delivers curriculum-aligned, high-fidelity study cards, adaptive revision quizzes, and topic study guides designed for low-bandwidth access.",
+      constraint: "Ensuring absolute academic accuracy of generated test answers through automated evaluation and multi-step sanity verification pipelines."
+    }
+  };
+
+  const flagshipProjects = useMemo(() => {
+    return projects.filter(p => ['bima-buddy-advanced', 'core-pragya-advanced', 'nlsql-pro', 'igcse-student-guide'].includes(p.id));
+  }, [projects]);
+
+  const problems = [
+    {
+      icon: '📊',
+      title: 'Business Users Cannot Query Complex Data',
+      desc: 'Bypassing technical bottlenecks by transforming conversational plain English into secure, highly optimized, production-ready SQL queries across diverse production schemas.',
+      solution: 'NL-to-SQL Engines · Golden Query Memory · Security Sandboxing'
+    },
+    {
+      icon: '📂',
+      title: 'Unstructured Knowledge is Hard to Search',
+      desc: 'Connecting fragmented reading lists, raw documents, and RSS feeds into an organized 3D knowledge map with personal AI agents summarizing trending concepts.',
+      solution: '3D Knowledge Graphs · RAG Pipelines · Autonomous Agents'
+    },
+    {
+      icon: '🏥',
+      title: 'Complex Workflows Create Friction & Low Trust',
+      desc: 'Translating dense, confusing regulatory domains like insurance comparisons into simplified guided wizards, multilingual voice assistant loops, and smart claim predictions.',
+      solution: 'Decision Support UX · Multilingual UI · Automated Calculators'
+    },
+    {
+      icon: '🔒',
+      title: 'Private Enterprise Assets Need Secure AI',
+      desc: 'Ensuring zero cloud leakage for highly sensitive documents by orchestrating local retrieval pipelines that execute entirely on-device using offline models.',
+      solution: 'On-Device Embeddings · Local LLMs · Zero-Cloud Retrieval'
+    }
+  ];
+
+  const capabilityPillars = [
+    {
+      title: 'LLM & Semantic Systems',
+      tagline: 'Context-Aware Intelligence',
+      skills: [
+        'Advanced Retrieval-Augmented Generation (RAG)',
+        'Contextual Vector Search & Semantic Chunking',
+        'Autonomous Multi-Agent Collaboration Pipelines',
+        'Knowledge Graph 3D Mapping & Concept Linking'
+      ]
+    },
+    {
+      title: 'Product & Database Engineering',
+      tagline: 'Scale & Performance Discipline',
+      skills: [
+        'Production Next.js & React Frameworks',
+        'Secure Schema-Aware NL-to-SQL Translators',
+        'Relational Database Design (PostgreSQL, Supabase)',
+        'Caching & sub-100ms Query Latency Tuning'
+      ]
+    },
+    {
+      title: 'Observability & Execution',
+      tagline: 'Observable Production SLAs',
+      skills: [
+        'Continuous Delivery (140+ Production Deploys)',
+        'Jailbreak Protection & Guardrails for LLMs',
+        'Multilingual Interface Support (10+ Languages)',
+        'High Fleet Availability & Performance Monitoring'
+      ]
+    }
+  ];
+
   return (
     <div className="v4">
       <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} projects={projects} />
@@ -497,67 +582,58 @@ function V4() {
           {/* Right — hero content */}
           <div className="hero-right">
             <div className="hero-head">
-              <span>// Index ⟡ May 4, 2026</span>
+              <span>// Portfolio ⟡ Deployed Work</span>
               <span className="line" />
               <button className="cmdk-btn" onClick={() => setPaletteOpen(true)}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
-                Quick jump
+                Quick search
                 <kbd>⌘K</kbd>
               </button>
             </div>
-            <div className="hero-role">AI Product Engineer</div>
+            <div className="hero-subhead">AI Product Engineer · Full-Stack Builder</div>
             <h1>
-              Delivering AI Solutions
+              I build AI and full-stack products that solve real business workflows.
               <span className="cursor" />
             </h1>
-            <div className="hero-subhead">LLMs · RAG · Production</div>
-            <p className="sub">
-              <b>Satish Vasikarla.</b> {profile.bio}
+            <p className="sub" style={{ fontSize: '15px', color: 'var(--fg-2)', lineHeight: '1.5' }}>
+              From RAG knowledge systems and NL-to-SQL interfaces to health insurance and education platforms — I build production systems with real deployment, observability, and iteration discipline.
             </p>
-            <div className="hero-skills">
-              <div className="hero-skills-row">
-                <span className="hero-skills-label">Stack</span>
-                {profile.skills.map((s) => (
-                  <span key={s} className="hero-skill-chip">{s}</span>
-                ))}
-              </div>
-              <div className="hero-skills-row">
-                <span className="hero-skills-label">Focus</span>
-                {profile.specializations.map((s) => (
-                  <span key={s} className="hero-skill-chip domain">{s}</span>
-                ))}
-              </div>
+
+            <div className="hero-ctas">
+              <button className="btn primary" onClick={() => {
+                const el = document.getElementById('flagships');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                View Flagship Case Studies ↓
+              </button>
+              <button className="btn secondary" onClick={() => {
+                const el = document.getElementById('archive');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                See Live Products
+              </button>
             </div>
 
-            <div className="hero-grid">
-              <div className="stats-strip">
-                <div className="cell">
-                  <span className="k">Live Products</span>
-                  <span className="v"><CountUp value={profile.stats.projects} /></span>
-                  <span className="d">Across 5 domains</span>
-                </div>
-                <div className="cell">
-                  <span className="k">Prod Deploys</span>
-                  <span className="v"><CountUp value={profile.stats.deploys} /></span>
-                  <span className="d">India · US · Global</span>
-                </div>
-                <div className="cell">
-                  <span className="k">Commits 12mo</span>
-                  <span className="v"><CountUp value={profile.stats.commits} /></span>
-                  <span className="d">Shipping, not planning</span>
-                </div>
-                <div className="cell">
-                  <span className="k">Fleet Uptime</span>
-                  <span className="v"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
-                  <span className="d">Production SLAs met</span>
-                </div>
+            <div className="outcome-proof-strip">
+              <div className="outcome-cell">
+                <span className="outcome-number"><CountUp value={profile.stats.projects} /></span>
+                <span className="outcome-label">Live Products Built</span>
+                <span className="outcome-desc">Across 5 high-stakes domains</span>
               </div>
-              <div className="hero-heatmap">
-                <div className="hh-head">
-                  <span className="feed-title">Activity · last 26w</span>
-                  <span className="feed-meta tnum">{profile.stats.commits} commits</span>
-                </div>
-                <Heatmap />
+              <div className="outcome-cell">
+                <span className="outcome-number"><CountUp value={profile.stats.deploys} /></span>
+                <span className="outcome-label">Production Deploys</span>
+                <span className="outcome-desc">India · US · Global markets</span>
+              </div>
+              <div className="outcome-cell">
+                <span className="outcome-number"><CountUp value={profile.stats.commits} /></span>
+                <span className="outcome-label">Commits 12mo</span>
+                <span className="outcome-desc">Continuous shipping discipline</span>
+              </div>
+              <div className="outcome-cell">
+                <span className="outcome-number"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
+                <span className="outcome-label">Fleet Live Uptime</span>
+                <span className="outcome-desc">Production SLAs consistently met</span>
               </div>
             </div>
           </div>
@@ -577,10 +653,10 @@ function V4() {
           </div>
           <div className="group">
             <div className="group-h">Filter by Domain</div>
-            <div className={`nav-item ${domain === 'AI' ? 'active' : ''}`} onClick={() => setDomain(domain === 'AI' ? 'all' : 'AI')}>AI & Knowledge <span className="ct">{projects.filter(p => p.category.includes('AI')).length}</span></div>
-            <div className={`nav-item ${domain === 'FinTech' ? 'active' : ''}`} onClick={() => setDomain(domain === 'FinTech' ? 'all' : 'FinTech')}>FinTech <span className="ct">{projects.filter(p => p.category.includes('FinTech')).length}</span></div>
+            <div className={`nav-item ${domain === 'AI' ? 'active' : ''}`} onClick={() => setDomain(domain === 'AI' ? 'all' : 'AI')}>AI Knowledge Systems <span className="ct">{projects.filter(p => p.category.includes('AI')).length}</span></div>
+            <div className={`nav-item ${domain === 'FinTech' ? 'active' : ''}`} onClick={() => setDomain(domain === 'FinTech' ? 'all' : 'FinTech')}>Decision Support Platforms <span className="ct">{projects.filter(p => p.category.includes('FinTech')).length}</span></div>
             <div className={`nav-item ${domain === 'EdTech' ? 'active' : ''}`} onClick={() => setDomain(domain === 'EdTech' ? 'all' : 'EdTech')}>EdTech <span className="ct">{projects.filter(p => p.category.includes('EdTech')).length}</span></div>
-            <div className={`nav-item ${domain === 'Infrastructure' ? 'active' : ''}`} onClick={() => setDomain(domain === 'Infrastructure' ? 'all' : 'Infrastructure')}>Infrastructure <span className="ct">{projects.filter(p => p.category.includes('Infrastructure')).length}</span></div>
+            <div className={`nav-item ${domain === 'Infrastructure' ? 'active' : ''}`} onClick={() => setDomain(domain === 'Infrastructure' ? 'all' : 'Infrastructure')}>Private AI Infrastructure <span className="ct">{projects.filter(p => p.category.includes('Infrastructure')).length}</span></div>
           </div>
           <ActivityFeed projects={projects} />
           <div className="group">
@@ -599,145 +675,253 @@ function V4() {
             />
           ) : (
           <>
-          <div className="bread">
-            <span>Workspace</span><span className="s">/</span><b>Projects</b>
-          </div>
-          <div className="pghead">
-            <div>
-              <h1>Projects</h1>
-              <div className="sub">
-                All applications, research, and infrastructure — indexed.
-                <span className="live"><span className="d" />SYSTEMS NOMINAL</span>
-              </div>
+          {/* Section 2: Problems I Solve */}
+          <section className="v4-section">
+            <div className="section-header-group">
+              <span className="section-tagline">Consultative Value</span>
+              <h2 className="section-headline">Real-World Problems I Solve</h2>
             </div>
-            <div className="pghead-actions">
-              <span className="last-sync">Last sync · {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-              <button className="cmdk-btn small" onClick={() => setPaletteOpen(true)}>
-                <kbd>⌘K</kbd>
-              </button>
-            </div>
-          </div>
-
-          <div className="kpi-row">
-            <div className="kpis">
-              <div className="kpi">
-                <span className="k">Prod Deploys / 30d</span>
-                <span className="v"><CountUp value={42} /></span>
-                <span className="d">▲ 12 vs prev</span>
-                <Sparkline seed={4} />
-              </div>
-              <div className="kpi">
-                <span className="k">Commits / 12mo</span>
-                <span className="v"><CountUp value={profile.stats.commits} /></span>
-                <span className="d">Sustained</span>
-                <Sparkline seed={7} />
-              </div>
-              <div className="kpi">
-                <span className="k">Fleet Uptime</span>
-                <span className="v"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
-                <span className="d">All green · 30d</span>
-                <Sparkline seed={10} color="var(--info)" />
-              </div>
-              <div className="kpi">
-                <span className="k">Live Apps</span>
-                <span className="v"><CountUp value={counts.live || 0} /></span>
-                <span className="d">of {projects.length} total</span>
-                <Sparkline seed={13} />
-              </div>
-            </div>
-            <MiniMap projects={projects} onPick={(p) => setQ(p.name)} />
-          </div>
-
-          <div className="tools">
-            <div className="search">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
-              <input placeholder="Search projects…" value={q} onChange={(e) => setQ(e.target.value)} />
-              {q && <button className="clear" onClick={() => setQ('')}>×</button>}
-            </div>
-            <div className="filter-pills">
-              {['all', 'live', 'beta', 'wip', 'archived'].map((s) =>
-                <button key={s} className="pill-btn" aria-pressed={filter === s} onClick={() => setFilter(s)}>
-                  {s === 'all' ? 'All' : s.toUpperCase()} · {counts[s] || 0}
-                </button>
-              )}
-            </div>
-            <div className="sort-control">
-              <span className="sort-label">Sort</span>
-              <select value={sort} onChange={(e) => setSort(e.target.value)}>
-                <option value="flagship">Flagship</option>
-                <option value="recent">Recent</option>
-                <option value="commits">Commits</option>
-                <option value="deploys">Deploys</option>
-              </select>
-            </div>
-          </div>
-
-          {visible.length === 0 && (
-            <div className="empty-state">
-              <div className="empty-icon">⌘</div>
-              <div className="empty-title">No projects match</div>
-              <div className="empty-sub">Try clearing filters or a different search term.</div>
-              <button className="ab" onClick={() => { setQ(''); setFilter('all'); }}>Reset filters</button>
-            </div>
-          )}
-
-          <div className="cards">
-            {visible.map((p, i) => (
-              <div
-                key={p.id}
-                className={`card ${p.flagship ? 'flagship' : ''} ${hovered === p.id ? 'hovered' : ''}`}
-                onMouseEnter={() => setHovered(p.id)}
-                onMouseLeave={() => setHovered(null)}
-                onClick={() => setSelectedProject(p)}
-                style={{ animationDelay: `${i * 30}ms` }}
-              >
-                {p.flagship && <span className="flag-tag">FLAGSHIP</span>}
-                <div className="top">
-                  <div>
-                    <div className="name">{p.name}</div>
-                    <div className="cat">{p.category}</div>
-                  </div>
-                  <StatusPill status={p.status} />
-                </div>
-                <div className="desc">{p.description}</div>
-                <div className="stack-row">
-                  {p.stack.map((s) => <span key={s} className="chip">{s}</span>)}
-                </div>
-                <div className="mini">
-                  <div>
-                    <div className="k">Commits</div>
-                    <div className="v tnum">{p.commits}</div>
-                  </div>
-                  <div>
-                    <div className="k">Deploys</div>
-                    <div className="v tnum">{p.deploys || '—'}</div>
-                  </div>
-                  <div>
-                    <div className="k">Uptime</div>
-                    <div className="v tnum">{p.uptime ? `${p.uptime}%` : '—'}</div>
-                  </div>
-                  <div>
-                    <div className="k">Updated</div>
-                    <div className="v">{p.lastUpdate}</div>
+            <div className="problems-grid">
+              {problems.map((p, idx) => (
+                <div key={idx} className="problem-card">
+                  <div className="problem-icon">{p.icon}</div>
+                  <h3 className="problem-title">{p.title}</h3>
+                  <p className="problem-desc">{p.desc}</p>
+                  <div className="problem-solution">
+                    <span>Engineering Focus:</span> <b>{p.solution}</b>
                   </div>
                 </div>
-                <div className="actions">
-                  <button
-                    className={`ab primary ${!p.url ? 'disabled' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
-                  >
-                    {p.url ? 'View Details ↗' : 'Offline'}
+              ))}
+            </div>
+          </section>
+
+          {/* Section 3: Flagship Case Studies */}
+          <section id="flagships" className="v4-section">
+            <div className="section-header-group">
+              <span className="section-tagline">Selected High-Impact Work</span>
+              <h2 className="section-headline">Flagship Case Studies</h2>
+            </div>
+            <div className="flagships-grid">
+              {flagshipProjects.map((p) => {
+                const narrative = flagshipNarratives[p.id] || {
+                  problem: p.description,
+                  solution: "Designed and engineered clean modern system integration.",
+                  constraint: "Scalability and structural integrity."
+                };
+                return (
+                  <div key={p.id} className="flagship-editorial-card">
+                    <div className="flagship-cover">
+                      <div className="flagship-cover-bg" style={{ backgroundColor: 'var(--bg-2)' }} />
+                      <div className="flagship-cover-content">
+                        <div className="flagship-cover-cat">{p.category}</div>
+                        <div className="flagship-cover-name">{p.name}</div>
+                        <div className="flagship-cover-tag">{p.tagline}</div>
+                      </div>
+                    </div>
+                    <div className="flagship-content">
+                      <div className="flagship-head">
+                        <div className="flagship-title-area">
+                          <span className="flagship-editorial-title">{p.name}</span>
+                          <span className="flagship-tag">FLAGSHIP</span>
+                        </div>
+                        <StatusPill status={p.status} />
+                      </div>
+                      <div className="flagship-story-grid">
+                        <div className="story-block">
+                          <label>The Bottleneck</label>
+                          <p>{narrative.problem}</p>
+                        </div>
+                        <div className="story-block">
+                          <label>The Architecture</label>
+                          <p>{narrative.solution}</p>
+                        </div>
+                        <div className="story-block">
+                          <label>Engineering Challenge</label>
+                          <p><b>Constraint:</b> {narrative.constraint}</p>
+                        </div>
+                      </div>
+                      <div className="flagship-bottom-strip">
+                        <div className="flagship-stack-chips">
+                          {p.stack.slice(0, 4).map(s => <span key={s}>{s}</span>)}
+                        </div>
+                        <div className="flagship-action-group">
+                          {p.url && <a className="flagship-btn primary" href={p.url} target="_blank" rel="noopener noreferrer">Visit Live ↗</a>}
+                          <button className="flagship-btn" onClick={() => setSelectedProject(p)}>Architecture Details</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Section 4: Technical Capabilities */}
+          <section className="v4-section">
+            <div className="section-header-group">
+              <span className="section-tagline">Architectural pillars</span>
+              <h2 className="section-headline">Technical Capabilities & Focus</h2>
+            </div>
+            <div className="capabilities-grid">
+              {capabilityPillars.map((c, idx) => (
+                <div key={idx} className="capability-pillar">
+                  <h3 className="capability-pillar-title">
+                    <span>◆</span> {c.title}
+                  </h3>
+                  <span className="capability-tagline">{c.tagline}</span>
+                  <ul className="capability-list">
+                    {c.skills.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Section 5: Selected Product Archive */}
+          <section id="archive" className="v4-section">
+            <div className="section-header-group">
+              <span className="section-tagline">Indexed Inventory</span>
+              <h2 className="section-headline">Selected Project Archive</h2>
+            </div>
+
+            <div className="kpi-row">
+              <div className="kpis">
+                <div className="kpi">
+                  <span className="k">Prod Deploys / 30d</span>
+                  <span className="v"><CountUp value={42} /></span>
+                  <span className="d">▲ 12 vs prev</span>
+                  <Sparkline seed={4} />
+                </div>
+                <div className="kpi">
+                  <span className="k">Commits / 12mo</span>
+                  <span className="v"><CountUp value={profile.stats.commits} /></span>
+                  <span className="d">Sustained</span>
+                  <Sparkline seed={7} />
+                </div>
+                <div className="kpi">
+                  <span className="k">Fleet Uptime</span>
+                  <span className="v"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
+                  <span className="d">All green · 30d</span>
+                  <Sparkline seed={10} color="var(--info)" />
+                </div>
+                <div className="kpi">
+                  <span className="k">Live Apps</span>
+                  <span className="v"><CountUp value={counts.live || 0} /></span>
+                  <span className="d">of {projects.length} total</span>
+                  <Sparkline seed={13} />
+                </div>
+              </div>
+              <MiniMap projects={projects} onPick={(p) => setQ(p.name)} />
+            </div>
+
+            <div className="tools">
+              <div className="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
+                <input placeholder="Search archive..." value={q} onChange={(e) => setQ(e.target.value)} />
+                {q && <button className="clear" onClick={() => setQ('')}>×</button>}
+              </div>
+              <div className="filter-pills">
+                {['all', 'live', 'beta', 'wip', 'archived'].map((s) =>
+                  <button key={s} className="pill-btn" aria-pressed={filter === s} onClick={() => setFilter(s)}>
+                    {s === 'all' ? 'All' : s.toUpperCase()} · {counts[s] || 0}
                   </button>
-                  <button
-                    className={`ab ${!p.repo ? 'disabled' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
-                  >
-                    {p.repo ? 'Source ↗' : 'Private'}
-                  </button>
-                </div>
+                )}
               </div>
-            ))}
-          </div>
+              <div className="sort-control">
+                <span className="sort-label">Sort</span>
+                <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                  <option value="flagship">Flagship</option>
+                  <option value="recent">Recent</option>
+                  <option value="commits">Commits</option>
+                  <option value="deploys">Deploys</option>
+                </select>
+              </div>
+            </div>
+
+            {visible.length === 0 && (
+              <div className="empty-state">
+                <div className="empty-icon">⌘</div>
+                <div className="empty-title">No projects match</div>
+                <div className="empty-sub">Try clearing filters or a different search term.</div>
+                <button className="ab" onClick={() => { setQ(''); setFilter('all'); }}>Reset filters</button>
+              </div>
+            )}
+
+            <div className="cards">
+              {visible.map((p, i) => (
+                <div
+                  key={p.id}
+                  className={`card ${p.flagship ? 'flagship' : ''} ${hovered === p.id ? 'hovered' : ''}`}
+                  onMouseEnter={() => setHovered(p.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => setSelectedProject(p)}
+                  style={{ animationDelay: `${i * 20}ms` }}
+                >
+                  {p.flagship && <span className="flag-tag">FLAGSHIP</span>}
+                  <div className="top">
+                    <div>
+                      <div className="name">{p.name}</div>
+                      <div className="cat">{p.category}</div>
+                    </div>
+                    <StatusPill status={p.status} />
+                  </div>
+                  <div className="desc">{p.description}</div>
+                  <div className="stack-row">
+                    {p.stack.slice(0, 3).map((s) => <span key={s} className="chip">{s}</span>)}
+                  </div>
+                  <div className="mini">
+                    <div>
+                      <div className="k">Commits</div>
+                      <div className="v tnum">{p.commits}</div>
+                    </div>
+                    <div>
+                      <div className="k">Deploys</div>
+                      <div className="v tnum">{p.deploys || '—'}</div>
+                    </div>
+                    <div>
+                      <div className="k">Uptime</div>
+                      <div className="v tnum">{p.uptime ? `${p.uptime}%` : '—'}</div>
+                    </div>
+                    <div>
+                      <div className="k">Updated</div>
+                      <div className="v">{p.lastUpdate}</div>
+                    </div>
+                  </div>
+                  <div className="actions">
+                    <button
+                      className={`ab primary ${!p.url ? 'disabled' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
+                    >
+                      {p.url ? 'Details ↗' : 'Offline'}
+                    </button>
+                    <button
+                      className={`ab ${!p.repo ? 'disabled' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
+                    >
+                      {p.repo ? 'Source ↗' : 'Private'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Section 6: Contact & Discuss */}
+          <section className="contact-cta-section">
+            <div className="contact-card">
+              <span className="contact-badge">Collaborations & Roles</span>
+              <h2 className="contact-headline">Discuss an AI Product Pipeline</h2>
+              <p className="contact-subtext">
+                Looking for an engineer who builds functional, high-observability systems rather than wraps wrappers? Let's connect and solve your business workflow bottlenecks.
+              </p>
+              <a href={`mailto:${profile.email}`} className="contact-btn">
+                Get in Touch
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" style={{ marginLeft: '4px' }}><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </section>
 
           <div className="v4-foot">
             <span>© 2026 Vasikarla · AI</span>
