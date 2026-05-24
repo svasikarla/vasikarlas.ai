@@ -236,10 +236,15 @@ export const PROJECTS = [
   {
     id: 'concept-forge',
     name: 'ConceptForge',
-    tagline: 'AI concept generation and ideation',
-    description: 'AI-powered brainstorming and concept generation tool for rapid ideation and creative exploration.',
-    category: 'AI / Creative',
-    stack: ['Next.js', 'TypeScript'],
+    tagline: 'Adaptive learning for IIT JEE',
+    description: 'Personalized adaptive learning platform for IIT JEE students that tracks concept mastery, identifies blocking prerequisites, and serves targeted practice questions.',
+    features: [
+      { name: 'Mastery Algorithm', desc: 'Calculates mastery using recent performance, overall accuracy, difficulty, and recency decay.' },
+      { name: 'Intelligent Paths', desc: 'Automatically identifies blocking prerequisites and prioritizes weak concepts.' },
+      { name: 'Adaptive Difficulty', desc: 'Questions dynamically adjust based on user performance and streak detection.' }
+    ],
+    category: 'EdTech / AI',
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'AI'],
     status: 'beta',
     repo: null,
     url: 'https://concept-forge-iota.vercel.app',
