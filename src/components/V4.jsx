@@ -144,7 +144,7 @@ export function useProjectsData() {
 
 /* ─── Static content ─── */
 
-export const FLAGSHIP_IDS = ['bima-buddy-advanced', 'core-pragya-advanced', 'nlsql-pro', 'igcse-student-guide', 'concept-forge'];
+export const FLAGSHIP_IDS = ['core-pragya-advanced', 'nlsql-pro', 'concept-forge', 'bima-buddy-advanced', 'igcse-student-guide'];
 
 export const FLAGSHIP_NARRATIVES = {
   'bima-buddy-advanced': {
