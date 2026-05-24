@@ -175,24 +175,24 @@ export const FLAGSHIP_IDS = ['core-pragya-advanced', 'nlsql-pro', 'concept-forge
 
 export const FLAGSHIP_NARRATIVES = {
   'bima-buddy-advanced': {
-    challenge: "Health insurance in India is fragmented across dozens of providers and lacks local-language accessibility, leading to high claim rejection rates.",
-    solution: "AI-powered insurance intelligence suite with automated 50+ policy comparisons, an 85%+ accuracy claim predictor, and voice assistant supporting 10 Indian languages."
+    challenge: "Health insurance in India spans dozens of providers with no local-language accessibility — driving high claim rejection among users who don't understand their own coverage.",
+    solution: "AI suite with automated comparison across 50+ policies, an 85%+ accuracy claim predictor, and a voice interface supporting 10 Indian languages."
   },
   'core-pragya-advanced': {
-    challenge: "Personal knowledge from articles, feeds, and PDFs is fragmented — and the full loop of curating, researching, and publishing across platforms is a full-time job.",
-    solution: "Three AI agents in one workspace — a Curator that personalizes your RSS feeds, an autonomous Research Agent that synthesizes the web into structured reports, and a multi-agent Content Studio that drafts, refines, and formats content for 6 publishing platforms."
+    challenge: "Personal knowledge from articles, feeds, and PDFs is siloed — and the loop from curation to multi-platform publishing is a manual, full-time effort.",
+    solution: "Three coordinated AI agents: a Curator that personalizes feeds, a Research Agent that synthesizes web sources into structured reports, and a Content Studio that formats output for 6 publishing platforms."
   },
   'nlsql-pro': {
-    challenge: "Non-technical decision-makers can't query databases without SQL expertise, creating severe operational bottlenecks.",
-    solution: "Secure NL-to-SQL engine with 24-hour schema caching, Business Glossary mapping, Golden Query memory learning, and prompt injection protection against 30+ jailbreak patterns."
+    challenge: "Non-technical stakeholders can't query their own data without SQL expertise, creating a permanent dependency on the engineering team.",
+    solution: "NL-to-SQL engine with 24-hour schema caching, Business Glossary term mapping, Golden Query memory, and prompt injection protection across 30+ jailbreak patterns."
   },
   'igcse-student-guide': {
-    challenge: "Quality exam prep materials are locked behind paywalls, creating inequality of educational access for millions of IGCSE students.",
-    solution: "Fully automated content generation pipeline delivering curriculum-aligned study cards, adaptive quizzes, and topic guides with multi-step accuracy verification."
+    challenge: "Quality IGCSE exam prep sits behind paywalls, creating an access gap for millions of students who can't pay for structured study resources.",
+    solution: "Automated pipeline delivering curriculum-aligned study cards, adaptive quizzes, and topic guides — with multi-step accuracy verification built in."
   },
   'concept-forge': {
-    challenge: "IIT JEE preparation requires mastering thousands of interconnected concepts — most platforms serve content linearly and ignore the prerequisite gaps that actually block a student's progress.",
-    solution: "Adaptive learning engine that scores concept mastery from four signals — recent performance, overall accuracy, question difficulty, and recency decay — then identifies prerequisite blockers and serves targeted practice that adjusts difficulty in real time."
+    challenge: "IIT JEE prep requires mastering thousands of interconnected concepts. Most platforms ignore prerequisite gaps — the actual reason students plateau.",
+    solution: "Adaptive engine scoring mastery from four live signals — performance, accuracy, difficulty, and recency decay — then serving prerequisite-targeted practice with real-time difficulty adjustment."
   }
 };
 
@@ -385,22 +385,14 @@ export function FlagshipVisual({ id }) {
 
   if (id === 'nlsql-pro') {
     return (
-      <div className="widget-mini">
-        <div className="sql-translator-widget">
-          <div className="editor-header">
-            <span className="editor-dot r" /><span className="editor-dot y" /><span className="editor-dot g" />
-            <span className="editor-title">NL→SQL</span>
-          </div>
-          <div className="pane-nl">
-            <span>Show live policies in &apos;bom1&apos; with uptime &gt; 99%</span>
-            <span className="typing-cursor" />
-          </div>
-          <div className="pane-sql">
-            <span className="sql-keyword">SELECT</span> * <span className="sql-keyword">FROM</span> policies <br />
-            <span className="sql-keyword">WHERE</span> region = <span className="sql-string">&apos;bom1&apos;</span> <br />
-            <span className="sql-keyword">AND</span> uptime &gt; <span className="sql-keyword">99</span>;
-          </div>
-        </div>
+      <div className="widget-mini nlsql-demo-widget">
+        <iframe
+          src="/demos/nlsql-pro-demo.html"
+          title="NLSQL Pro interactive demo"
+          className="nlsql-demo-iframe"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+        />
       </div>
     );
   }
@@ -581,7 +573,7 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
         </h1>
 
         <p className="hero-sub">
-          From RAG knowledge systems and NL-to-SQL interfaces to insurance and education platforms — production systems with real deployment and iteration discipline.
+          I design and ship AI-native products across knowledge systems, data interfaces, and domain workflows — with production-grade deployment and iteration discipline.
         </p>
 
         <div className="hero-ctas">
@@ -591,18 +583,21 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
         </div>
 
         {showStats && (
-          <div className="hero-stats">
-            <div className="stat-cell">
-              <span className="stat-num"><CountUp value={profile.stats.projects} /></span>
-              <span className="stat-lbl">Live Products</span>
-            </div>
-            <div className="stat-cell">
-              <span className="stat-num"><CountUp value={profile.stats.deploys} /></span>
-              <span className="stat-lbl">Production Deploys</span>
-            </div>
-            <div className="stat-cell">
-              <span className="stat-num"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
-              <span className="stat-lbl">Fleet Uptime</span>
+          <div className="hero-stats-wrap">
+            <span className="hero-stats-eyebrow">Shipped &amp; proven</span>
+            <div className="hero-stats">
+              <div className="stat-cell">
+                <span className="stat-num"><CountUp value={profile.stats.projects} /></span>
+                <span className="stat-lbl">Products Shipped</span>
+              </div>
+              <div className="stat-cell">
+                <span className="stat-num"><CountUp value={profile.stats.deploys} /></span>
+                <span className="stat-lbl">Production Deploys</span>
+              </div>
+              <div className="stat-cell">
+                <span className="stat-num"><CountUp value={profile.stats.uptime} decimals={2} suffix="%" /></span>
+                <span className="stat-lbl">System Uptime</span>
+              </div>
             </div>
           </div>
         )}
@@ -616,7 +611,6 @@ export function ProblemsSection() {
   return (
     <section className="v4-section problems-section">
       <div className="section-header">
-        <span className="section-label">What I Build For</span>
         <h2>Problems I Solve</h2>
       </div>
       <div className="problems-grid">
@@ -654,7 +648,7 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
           const isEven = idx % 2 === 1;
           return (
             <div key={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
-              <div className="flagship-visual">
+              <div className={`flagship-visual${p.id === 'nlsql-pro' ? ' flagship-visual--iframe' : ''}`}>
                 <FlagshipVisual id={p.id} />
               </div>
               <div className="flagship-body">
@@ -826,9 +820,9 @@ export function ContactSection({ profile }) {
   return (
     <section className="contact-section">
       <div className="contact-inner">
-        <span className="contact-label">Collaborations & Roles</span>
+        <span className="contact-label">Work With Me</span>
         <h2>Let&apos;s build something that ships.</h2>
-        <p>Looking for an engineer who builds functional, high-observability AI systems? Let&apos;s connect.</p>
+        <p>I build AI products, internal tools, and decision systems for teams that need working software, not demos.</p>
         <a href={`mailto:${profile.email}`} className="btn-primary">
           Get in Touch →
         </a>
