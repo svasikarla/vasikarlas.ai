@@ -8,9 +8,9 @@
   --f-sans: 'Inter', -apple-system, system-ui, sans-serif;
 
   /* accent — single oklch hue, shared across variations */
-  --accent-h: 145;
-  --accent: oklch(0.72 0.17 var(--accent-h));
-  --accent-dim: oklch(0.55 0.13 var(--accent-h));
+  --accent-h: 258;
+  --accent: oklch(0.68 0.22 var(--accent-h));
+  --accent-dim: oklch(0.52 0.17 var(--accent-h));
   --warn: oklch(0.78 0.16 75);
   --danger: oklch(0.68 0.2 25);
   --info: oklch(0.72 0.14 235);
@@ -18,32 +18,32 @@
 
 /* DARK */
 [data-theme="dark"] {
-  --bg: oklch(0.16 0.006 250);
-  --bg-1: oklch(0.19 0.007 250);
-  --bg-2: oklch(0.22 0.008 250);
-  --bg-3: oklch(0.26 0.009 250);
-  --fg: oklch(0.96 0.004 250);
-  --fg-2: oklch(0.78 0.006 250);
-  --fg-3: oklch(0.58 0.008 250);
-  --fg-4: oklch(0.42 0.008 250);
-  --line: oklch(0.3 0.008 250);
-  --line-soft: oklch(0.24 0.007 250);
-  --hl: oklch(0.28 0.01 250);
+  --bg: oklch(0.13 0.008 260);
+  --bg-1: oklch(0.17 0.009 260);
+  --bg-2: oklch(0.21 0.01 260);
+  --bg-3: oklch(0.25 0.011 260);
+  --fg: oklch(0.96 0.004 258);
+  --fg-2: oklch(0.78 0.006 258);
+  --fg-3: oklch(0.56 0.008 258);
+  --fg-4: oklch(0.40 0.008 258);
+  --line: oklch(0.28 0.01 260);
+  --line-soft: oklch(0.22 0.008 260);
+  --hl: oklch(0.26 0.012 260);
 }
 
 /* LIGHT */
 [data-theme="light"] {
-  --bg: oklch(0.985 0.003 90);
-  --bg-1: oklch(0.97 0.004 90);
-  --bg-2: oklch(0.945 0.005 90);
-  --bg-3: oklch(0.92 0.006 90);
-  --fg: oklch(0.2 0.008 250);
-  --fg-2: oklch(0.36 0.008 250);
-  --fg-3: oklch(0.52 0.007 250);
-  --fg-4: oklch(0.68 0.006 250);
-  --line: oklch(0.87 0.006 90);
-  --line-soft: oklch(0.92 0.005 90);
-  --hl: oklch(0.93 0.006 90);
+  --bg: oklch(0.99 0.002 260);
+  --bg-1: oklch(0.975 0.003 260);
+  --bg-2: oklch(0.955 0.004 260);
+  --bg-3: oklch(0.935 0.005 260);
+  --fg: oklch(0.16 0.01 260);
+  --fg-2: oklch(0.34 0.009 260);
+  --fg-3: oklch(0.52 0.007 260);
+  --fg-4: oklch(0.68 0.005 260);
+  --line: oklch(0.88 0.005 260);
+  --line-soft: oklch(0.93 0.004 260);
+  --hl: oklch(0.94 0.006 260);
 }
 
 * { box-sizing: border-box; }
@@ -848,16 +848,17 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   border-bottom: 1px solid var(--line);
   background:
-    radial-gradient(ellipse 900px 350px at 50% -5%, color-mix(in oklab, var(--accent) 6%, transparent), transparent 60%),
+    radial-gradient(ellipse 1100px 420px at 50% -10%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 65%),
+    radial-gradient(ellipse 600px 300px at 80% 110%, color-mix(in oklab, var(--accent) 4%, transparent), transparent 60%),
     var(--bg);
 }
 .v4 .v4-hero-glow {
   position: absolute;
-  top: -250px; right: -150px;
-  width: 600px; height: 600px;
+  top: -300px; right: -200px;
+  width: 700px; height: 700px;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 10%, transparent) 0%, transparent 60%);
-  filter: blur(60px);
+  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 14%, transparent) 0%, transparent 65%);
+  filter: blur(80px);
   pointer-events: none;
 }
 .v4 .v4-hero-inner {
@@ -968,8 +969,8 @@ a { color: inherit; text-decoration: none; }
   padding: 10px 22px;
   border-radius: 8px;
   cursor: pointer;
-  background: var(--accent);
-  color: var(--bg);
+  background: linear-gradient(135deg, oklch(0.72 0.22 258) 0%, oklch(0.58 0.26 276) 100%);
+  color: #fff;
   border: 1px solid var(--accent);
   display: inline-flex;
   align-items: center;
@@ -979,7 +980,8 @@ a { color: inherit; text-decoration: none; }
 }
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px color-mix(in oklab, var(--accent) 30%, transparent);
+  box-shadow: 0 4px 18px color-mix(in oklab, var(--accent) 40%, transparent);
+  filter: brightness(1.08);
 }
 .btn-primary.small { font-size: 12px; padding: 6px 14px; }
 
@@ -1052,11 +1054,12 @@ a { color: inherit; text-decoration: none; }
   border-radius: 16px;
   overflow: hidden;
   background: var(--bg-1);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 .flagship-card:hover {
-  border-color: color-mix(in oklab, var(--accent) 40%, var(--line));
-  box-shadow: 0 8px 30px -12px rgba(0,0,0,0.25);
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--line));
+  box-shadow: 0 12px 40px -16px color-mix(in oklab, var(--accent) 25%, rgba(0,0,0,0.3));
+  transform: translateY(-2px);
 }
 .flagship-card.reversed {
   grid-template-columns: 1.1fr 0.9fr;

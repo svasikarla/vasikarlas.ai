@@ -38,7 +38,7 @@ export default function ThemeProvider({ children }) {
     const compute = () => {
       const html = document.documentElement;
       const mode = html.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-      const hue = parseInt(html.style.getPropertyValue('--accent-h') || '235', 10);
+      const hue = parseInt(html.style.getPropertyValue('--accent-h') || '258', 10);
       const brand = buildBrandRamp(hue);
       const base = mode === 'light' ? createLightTheme(brand) : createDarkTheme(brand);
       // Override neutral surface tokens to our CSS variables so Fluent surfaces
