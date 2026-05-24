@@ -1,6 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
+
+const ParallaxBubbles = lazy(() => import('./ParallaxBubbles'));
+const ParticleField   = lazy(() => import('./ParticleField'));
 import { PROJECTS, PROFILE } from '@/data/projects';
 import { getVercelProjects } from '@/actions/vercel';
 import {
@@ -37,6 +40,30 @@ function useCountUp(target, duration = 1200, deps = []) {
     // eslint-disable-next-line
   }, [target, duration, ...deps]);
   return n;
+}
+
+function useTypewriter(text, { startDelay = 500, baseSpeed = 50 } = {}) {
+  const [displayed, setDisplayed] = useState('');
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayed(text); setDone(true); return;
+    }
+    let tid;
+    let i = 0;
+    const type = () => {
+      if (i >= text.length) { setDone(true); return; }
+      i++;
+      setDisplayed(text.slice(0, i));
+      const ch = text[i - 1];
+      const extra = '.!?'.includes(ch) ? 150 : ',;:'.includes(ch) ? 70 : 0;
+      tid = setTimeout(type, baseSpeed + Math.random() * 30 + extra);
+    };
+    tid = setTimeout(type, startDelay);
+    return () => clearTimeout(tid);
+    // eslint-disable-next-line
+  }, []);
+  return { displayed, done };
 }
 
 export function CountUp({ value, decimals = 0, suffix = '' }) {
@@ -520,11 +547,20 @@ export function DetailPanel({ project, profile, onClose }) {
   );
 }
 
+const HERO_HEADING = 'I build AI products that solve real business workflows.';
+
 /* ─── Hero ─── */
 export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'View Case Studies →', showStats = true, compact = false }) {
+  const { displayed, done } = useTypewriter(HERO_HEADING);
   return (
     <section className={`v4-hero ${compact ? 'compact' : ''}`}>
       <div className="v4-hero-glow" />
+      {!compact && (
+        <Suspense fallback={null}>
+          <ParticleField />
+          <ParallaxBubbles />
+        </Suspense>
+      )}
       <div className="v4-hero-inner">
         <div className="hero-topline">
           <span>Vasikarla · AI</span>
@@ -539,9 +575,9 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
           )}
         </div>
 
-        <h1>
-          I build AI products that solve real business workflows.
-          <span className="cursor" />
+        <h1 suppressHydrationWarning>
+          {displayed}
+          <span className={`cursor${done ? '' : ' typing'}`} />
         </h1>
 
         <p className="hero-sub">
@@ -599,7 +635,7 @@ export function ProblemsSection() {
 /* ─── Flagships ─── */
 export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel = 'Selected Work', headerTitle = 'Flagship Case Studies' }) {
   const flagshipProjects = useMemo(() => {
-    const list = projects.filter(p => FLAGSHIP_IDS.includes(p.id));
+    const list = FLAGSHIP_IDS.map(id => projects.find(p => p.id === id)).filter(Boolean);
     return typeof limit === 'number' ? list.slice(0, limit) : list;
   }, [projects, limit]);
 

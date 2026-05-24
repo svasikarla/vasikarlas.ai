@@ -2,6 +2,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SiteNav from "@/components/SiteNav";
+import CursorGlow from "@/components/CursorGlow";
 
 const inter = Inter({
   variable: "--f-sans-font",
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
+          <CursorGlow />
           <div className="grid-bg" />
           <SiteNav />
           <main>{children}</main>
