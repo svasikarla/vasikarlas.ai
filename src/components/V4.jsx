@@ -465,9 +465,6 @@ function V4() {
     if (sort === 'commits') return b.commits - a.commits;
     if (sort === 'deploys') return b.deploys - a.deploys;
     if (sort === 'recent') {
-      const rank = { live: 0, beta: 1, wip: 2, archived: 3 };
-      const sr = (rank[a.status] ?? 2) - (rank[b.status] ?? 2);
-      if (sr !== 0) return sr;
       return parseDuration(a.lastUpdate) - parseDuration(b.lastUpdate);
     }
     return 0;
