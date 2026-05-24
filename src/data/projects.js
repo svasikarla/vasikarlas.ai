@@ -3,15 +3,15 @@ export const PROJECTS = [
   {
     id: 'core-pragya-advanced',
     name: 'CorePragyaAdvanced',
-    tagline: 'AI knowledgebase with graph visualization',
-    description: 'AI-powered knowledgebase with knowledge graph visualization, RSS feed ingestion, trending topic identification and personalized learning guidance.',
+    tagline: 'AI Knowledge Base with Multi-Agent Research & Writing',
+    description: 'Transform articles, emails, and PDFs into an intelligent knowledge base with AI-curated trending feeds, deep insights, instant Q&A, and a multi-agent content creation studio.',
     features: [
-      { name: 'Knowledge Graph', desc: 'Interactive 3D visualization of concepts and relationships.' },
-      { name: 'RSS Ingestion', desc: 'Automated ingestion from trending feeds.' },
-      { name: 'Personalized Paths', desc: 'AI-guided learning trajectories.' }
+      { name: 'AI-Curated Feed', desc: 'Personalizes and ranks RSS articles based on your unique interest profile.' },
+      { name: 'Content Studio', desc: 'Multi-agent pipeline that drafts, refines, and formats content for 6 blogging and social platforms.' },
+      { name: 'Research Agent', desc: 'Autonomous agent that searches the web, synthesizes sources, and delivers structured reports.' }
     ],
     category: 'AI / Knowledge',
-    stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Azure OpenAI'],
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'OpenAI', 'Claude', 'Groq'],
     status: 'live',
     flagship: true,
     repo: 'https://github.com/svasikarla/CorePragyaAdvanced',
@@ -26,15 +26,15 @@ export const PROJECTS = [
   {
     id: 'bima-buddy-advanced',
     name: 'BimaBuddyAdvanced',
-    tagline: 'Insurance suite with competitive market analysis',
-    description: 'Production-grade insurance platform with SaaS architecture, market research integration, and competitive intelligence for the Indian market.',
+    tagline: 'AI-Powered Health Insurance Suite',
+    description: 'Compare 50+ health insurance plans, predict claim approvals with AI Claim Intelligence, speak in your native language across 10 Indian languages using voice assistant, and earn wellness rewards.',
     features: [
-      { name: 'SaaS Architecture', desc: 'Scalable multi-tenant infrastructure.' },
-      { name: 'Market Research', desc: 'Integrated research for Indian insurance policies.' },
-      { name: 'Competitive Intel', desc: 'Real-time analytics and competitive benchmarking.' }
+      { name: 'Claim Intelligence', desc: 'Predicts claim approval with 85%+ accuracy before filing policies using 50+ factor analysis.' },
+      { name: 'Multilingual Voice Assistant', desc: 'Speak in your native language across 10 Indian languages with 95%+ accuracy and emotion-aware responses.' },
+      { name: 'Wellness Rewards', desc: 'Connect 150+ fitness trackers, earn points for physical activities, and get up to 12% off premium discounts.' }
     ],
     category: 'FinTech / Insurance',
-    stack: ['Next.js', 'TypeScript', 'Supabase', 'Realtime'],
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'TailwindCSS', 'AI'],
     status: 'live',
     flagship: true,
     repo: 'https://github.com/svasikarla/BimaBuddyAdvanced',
@@ -49,12 +49,12 @@ export const PROJECTS = [
   {
     id: 'igcse-student-guide',
     name: 'IGCSEStudentGuide',
-    tagline: 'AI-powered IGCSE exam prep',
-    description: 'Democratizing IGCSE education through AI-generated, high-quality study materials with a content generation pipeline and built-in validation.',
+    tagline: 'Comprehensive IGCSE Grade 9-10 Learning Platform',
+    description: 'A comprehensive learning platform for IGCSE Grade 9-10 students, featuring interactive flashcards, adaptive quizzes, and high-quality study materials designed to democratize exam prep.',
     features: [
-      { name: 'AI Generation', desc: 'Automated creation of high-quality study materials.' },
-      { name: 'Content Pipeline', desc: 'Streamlined workflow from generation to publication.' },
-      { name: 'Built-in Validation', desc: 'Automated accuracy and quality checks.' }
+      { name: 'Interactive Study Cards', desc: 'Fast, structured reviews across core IGCSE subjects.' },
+      { name: 'Smart Revision Quizzes', desc: 'Adaptive quizzes with instant feedback to test comprehension.' },
+      { name: 'Curated Topic Guides', desc: 'In-depth study guides aligned with the latest IGCSE syllabus standards.' }
     ],
     category: 'EdTech',
     stack: ['Next.js', 'TypeScript', 'Supabase'],
@@ -72,15 +72,15 @@ export const PROJECTS = [
   {
     id: 'nlsql-pro',
     name: 'NLSQLPro',
-    tagline: 'Natural language to SQL',
-    description: 'Translate plain English into production-ready SQL against any schema. Private repo, public demo.',
+    tagline: 'Natural Language to SQL Database Query Engine',
+    description: 'Transform natural language into secure, production-ready SQL queries for PostgreSQL, MySQL, SQLite, and SQL Server. Features intelligent 24-hour schema caching, Business Glossary mapping, and Golden Query Memory learning.',
     features: [
-      { name: 'Natural Language to SQL', desc: 'Accurate translation of plain English queries.' },
-      { name: 'Schema Agnostic', desc: 'Works against any database schema.' },
-      { name: 'Production Ready', desc: 'Generates optimized and secure SQL.' }
+      { name: 'Smart Domain Translation', desc: 'Maps user-defined business terms (Business Glossary) and feedback (Golden Query Memory) directly to database schemas.' },
+      { name: 'Lightning-Fast Generation', desc: 'Leverages production-hardened caching to achieve 50–200ms sub-second response times (10-100x faster).' },
+      { name: 'Enterprise Security', desc: 'Advanced prompt injection protection blocks 30+ jailbreak patterns, alongside read-only sandboxing and AES-256 encryption.' }
     ],
     category: 'AI / Developer Tools',
-    stack: ['Next.js', 'TypeScript', 'Supabase'],
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'Claude', 'Vector Embeddings'],
     status: 'live',
     flagship: true,
     repo: null,
@@ -95,8 +95,13 @@ export const PROJECTS = [
   {
     id: 'core-pragya',
     name: 'CorePragya',
-    tagline: 'AI knowledgebase — foundation',
-    description: 'The foundational AI-powered knowledgebase that evolved into CorePragyaAdvanced.',
+    tagline: 'AI-Powered Knowledge Assistant Prototype',
+    description: 'The foundational AI-powered knowledgebase prototype featuring a contextual Q&A bot, dynamic concept mapping, and flashcard generation.',
+    features: [
+      { name: 'AI Q&A Bot', desc: 'Ask questions about uploaded materials and receive contextual, summarized answers.' },
+      { name: 'Concept Mapping', desc: 'Visualized connection maps to explore relationships between overlapping study concepts.' },
+      { name: 'Auto Flashcards', desc: 'Automated note-to-flashcard generation built for spaced repetition learning.' }
+    ],
     category: 'AI / Knowledge',
     stack: ['Next.js', 'TypeScript', 'OpenAI'],
     status: 'archived',
@@ -112,12 +117,12 @@ export const PROJECTS = [
   {
     id: 'health-insurance-india',
     name: 'health-insurance-india',
-    tagline: 'Compare Indian health insurance policies',
-    description: 'Multilingual platform (10 Indian languages) for comparing health insurance policies with an AI-powered chatbot for guidance.',
+    tagline: 'Multilingual Indian Health Insurance Finder',
+    description: 'Compare Indian health insurance policies, understand complex policy benefits, and receive personalized recommendations with an interactive 3-step recommendation form and chatbot.',
     features: [
-      { name: 'Multilingual', desc: 'Supports 10 Indian languages for wider reach.' },
-      { name: 'Policy Comparison', desc: 'Detailed side-by-side health insurance comparison.' },
-      { name: 'AI Chatbot', desc: 'Intelligent guidance for policy selection.' }
+      { name: 'Plan Finder Form', desc: 'Interactive 3-step recommendation wizard mapping age, location, and family size to Indian insurance benefits.' },
+      { name: 'Policy School', desc: 'Educational modules distilling complex insurance terms into simple, readable guides.' },
+      { name: 'Claim Predictor', desc: 'Initial prototype of an AI claim rejection evaluator.' }
     ],
     category: 'FinTech / Insurance',
     stack: ['Next.js', 'Supabase', 'OpenAI'],
@@ -134,8 +139,13 @@ export const PROJECTS = [
   {
     id: 'local-rag',
     name: 'LocalRAG',
-    tagline: 'Local RAG for private documents',
-    description: 'Private, on-device retrieval-augmented generation for sensitive document processing.',
+    tagline: 'Local RAG for Private Documents',
+    description: 'Private, on-device retrieval-augmented generation engine utilizing lightweight local models for secure, zero-cloud sensitive document analysis.',
+    features: [
+      { name: 'On-Device Inference', desc: 'Completely private execution ensuring sensitive data never leaves your environment.' },
+      { name: 'Multi-Format Ingestion', desc: 'Seamlessly extract and chunk text from PDFs, DOCX, and plain text files.' },
+      { name: 'Contextual Retrieval', desc: 'High-accuracy search utilizing vector embeddings for optimal prompt enrichment.' }
+    ],
     category: 'AI / Infrastructure',
     stack: ['Python', 'LangChain', 'Local LLMs'],
     status: 'beta',
@@ -151,8 +161,13 @@ export const PROJECTS = [
   {
     id: 'wisecache-pro',
     name: 'wisecachepro',
-    tagline: 'Production cache solutions',
-    description: 'Production-grade knowledge caching and optimization layer for AI systems.',
+    tagline: 'Production Knowledge Caching and Optimization',
+    description: 'High-performance, enterprise-grade semantic and exact caching layer designed specifically to optimize latency and minimize token costs for LLM applications.',
+    features: [
+      { name: 'Semantic Caching', desc: 'Avoids redundant API calls by matching semantically equivalent queries using embeddings.' },
+      { name: 'Exact Key Caching', desc: 'Ultra-fast exact string matching achieving sub-millisecond retrieval times.' },
+      { name: 'TTL & Eviction', desc: 'Intelligent cache lifecycle management preventing stale responses and resource bloat.' }
+    ],
     category: 'AI / Infrastructure',
     stack: ['TypeScript', 'Node.js'],
     status: 'beta',
@@ -168,8 +183,13 @@ export const PROJECTS = [
   {
     id: 'wisecache',
     name: 'WiseCache',
-    tagline: 'Knowledge cache repo',
-    description: 'Foundation for knowledge caching research and optimization experiments.',
+    tagline: 'Foundational Knowledge Caching and Optimization',
+    description: 'Research prototype exploring semantic and exact caching mechanisms to establish baseline patterns for AI application speedups.',
+    features: [
+      { name: 'Prototype Cache Layer', desc: 'Experimental testing ground for embedding-based text caching.' },
+      { name: 'Token Savings Analysis', desc: 'Built-in logging to measure and visualize API cost reductions.' },
+      { name: 'Baseline Evaluation', desc: 'Establishes performance benchmarks that evolved into wisecache-pro.' }
+    ],
     category: 'AI / Infrastructure',
     stack: ['Python'],
     status: 'archived',
@@ -185,10 +205,15 @@ export const PROJECTS = [
   {
     id: 'ai-roadmap',
     name: 'AI_RoadMap',
-    tagline: 'Personal AI learning roadmap',
-    description: 'Structured roadmap and notes tracking frontier AI topics, papers, and implementations.',
+    tagline: 'Oracle Utilities AI Strategic Briefing',
+    description: 'Interactive strategic briefing showcasing Oracle AI capabilities, competitive analysis, and architectural blueprints for energy and water utility systems.',
+    features: [
+      { name: 'Competitive Intelligence', desc: 'Detailed comparison of utility AI solutions across top enterprise platforms.' },
+      { name: 'Interactive Briefing', desc: 'Self-contained strategic briefing dashboard with accordion guides and tables.' },
+      { name: 'Architectural Blueprints', desc: 'Technology selection matrices and technical reference systems for utilities.' }
+    ],
     category: 'Research',
-    stack: ['Markdown'],
+    stack: ['HTML', 'CSS', 'Vanilla JS'],
     status: 'wip',
     repo: 'https://github.com/svasikarla/AI_RoadMap',
     url: 'https://ai-road-map-rho.vercel.app',
@@ -202,10 +227,15 @@ export const PROJECTS = [
   {
     id: 'adi-shankaracharya',
     name: 'adishankaracharysite',
-    tagline: 'Wisdom of Adi Shankaracharya',
-    description: 'Content site distilling the philosophical teachings of Adi Shankaracharya.',
+    tagline: 'Wisdom of Adi Shankaracharya and Advaita Vedanta',
+    description: 'Comprehensive digital knowledge base dedicated to the timeless non-dual wisdom of Advaita Vedanta philosophy, featuring biographical accounts, sacred texts study, interactive learning paths, and a digital chant counter.',
+    features: [
+      { name: 'Sacred Texts Study', desc: 'Verse-by-verse translation and philosophical analysis of works like Bhaja Govindam and Atma Bodha.' },
+      { name: 'Interactive Study Paths', desc: 'Guided educational journeys mapped from foundational concepts (Atman, Brahman, Maya) to advanced non-dual contemplation.' },
+      { name: 'Digital Chant Counter', desc: 'An interactive practice tool designed for tracking mantra chanting and spiritual sadhana.' }
+    ],
     category: 'Content',
-    stack: ['Next.js'],
+    stack: ['Next.js', 'TailwindCSS'],
     status: 'beta',
     repo: 'https://github.com/svasikarla/adishankaracharysite',
     url: 'https://adishankaracharysite.vercel.app',
@@ -219,8 +249,13 @@ export const PROJECTS = [
   {
     id: 'bima-buddy',
     name: 'bimabuddy',
-    tagline: 'Original insurance product',
-    description: 'Earlier generation of the BimaBuddy insurance product line.',
+    tagline: 'Foundational Health Insurance Interface',
+    description: 'Foundational health insurance interface prototype for the Indian market, succeeded by the high-performance BimaBuddyAdvanced platform.',
+    features: [
+      { name: 'Interface Prototype', desc: 'Early layout explorations for digital health policy visualizers.' },
+      { name: 'Concept Validation', desc: 'Initial research validating multilingual policy accessibility in local communities.' },
+      { name: 'Structural Base', desc: 'Design architecture and user feedback loops that shaped advanced products.' }
+    ],
     category: 'FinTech / Insurance',
     stack: ['Next.js', 'Supabase'],
     status: 'archived',
@@ -236,7 +271,7 @@ export const PROJECTS = [
   {
     id: 'concept-forge',
     name: 'ConceptForge',
-    tagline: 'Adaptive learning for IIT JEE',
+    tagline: 'Adaptive Learning for IIT JEE',
     description: 'Personalized adaptive learning platform for IIT JEE students that tracks concept mastery, identifies blocking prerequisites, and serves targeted practice questions.',
     features: [
       { name: 'Mastery Algorithm', desc: 'Calculates mastery using recent performance, overall accuracy, difficulty, and recency decay.' },
@@ -258,15 +293,15 @@ export const PROJECTS = [
   {
     id: 'us-insurance-details',
     name: 'USInsuranceDetails',
-    tagline: 'US insurance policy explorer',
-    description: 'Comprehensive US insurance details platform with AI-powered policy comparison and coverage guidance.',
+    tagline: 'InsureAI - AI-Powered US Policy Analyst',
+    description: 'Transform complex insurance documents into actionable insights. Upload, analyze, and manage your policies with intelligent document processing, red flag detection, and coverage analysis.',
     features: [
-      { name: 'AI Comparison', desc: 'Intelligent side-by-side policy comparison.' },
-      { name: 'Coverage Guidance', desc: 'Personalized coverage recommendations.' },
-      { name: 'Comprehensive Data', desc: 'Extensive details on US insurance markets.' }
+      { name: 'Document Processing', desc: 'Automatically extracts policy information from PDF, DOCX, and TXT documents using advanced OCR technology.' },
+      { name: 'Red Flag Detection', desc: 'Identifies potential coverage gaps, exclusions, severity levels, and regulatory limitations that impact claims.' },
+      { name: 'Policy Lifecycle Management', desc: 'Full lifecycle management to track premiums, deductibles, benefits, and carrier operations.' }
     ],
     category: 'FinTech / Insurance',
-    stack: ['Next.js', 'TypeScript'],
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'Fluent UI'],
     status: 'live',
     repo: null,
     url: 'https://us-insurance-details.vercel.app',
@@ -280,10 +315,15 @@ export const PROJECTS = [
   {
     id: 'telugu-sahityam',
     name: 'TeluguSahityam',
-    tagline: 'Telugu literature and culture',
-    description: 'Content platform celebrating Telugu literary heritage, curating classical and contemporary works.',
+    tagline: 'Preserving Classical Telugu Literary Heritage',
+    description: 'Explore authentic moral and philosophical teachings of classical Telugu literature through Yogi Vemana\'s verses and Sumathi Shatakam, complete with original Telugu text, standard IAST transliterated guides, English translations, and modern contextual relevance.',
+    features: [
+      { name: 'Authentic Telugu Text', desc: 'Original verses rendered in high-quality Unicode Telugu script alongside standard IAST transliteration.' },
+      { name: 'Bilingual Study Guides', desc: 'Verse-by-verse English translation and structural breakdown preserving the poetic beauty.' },
+      { name: 'Contemporary Relevance', desc: 'In-depth analysis mapping ancient literary wisdom to contemporary life situations.' }
+    ],
     category: 'Content',
-    stack: ['Next.js'],
+    stack: ['Next.js', 'TailwindCSS'],
     status: 'beta',
     repo: null,
     url: 'https://telugu-sahityam.vercel.app',
@@ -297,10 +337,15 @@ export const PROJECTS = [
   {
     id: 'ami-2-0-road-map',
     name: 'AMI2RoadMap',
-    tagline: 'Artificial Machine Intelligence 2.0 roadmap',
-    description: 'Structured roadmap for next-generation AI milestones, research tracks, and implementation planning.',
+    tagline: 'AMI 2.0 Strategic Grid Modernization Framework',
+    description: 'A comprehensive strategic framework for utility service providers transitioning from AMI 1.0 to AMI 2.0, enabling real-time grid intelligence, AI-driven analytics, distributed edge computing, and NERC/FERC-compliant DER integration.',
+    features: [
+      { name: 'Grid-Edge Intelligence', desc: 'Distributed edge computing enabling real-time, sub-second processing directly at utility smart meters.' },
+      { name: 'DER/EV Integration', desc: 'Bidirectional optimization platforms supporting rooftop solar, storage systems, and flexible EV charging loads.' },
+      { name: 'Predictive Outage Management', desc: 'Advanced outage intelligence predicting equipment faults and optimizing field maintenance schedules.' }
+    ],
     category: 'Research',
-    stack: ['Next.js'],
+    stack: ['Next.js', 'TailwindCSS'],
     status: 'wip',
     repo: null,
     url: 'https://ami-2-0-road-map.vercel.app',
@@ -314,8 +359,13 @@ export const PROJECTS = [
   {
     id: 'v0-health-insurance-homepage',
     name: 'v0HealthInsuranceHome',
-    tagline: 'Health insurance landing page prototype',
-    description: 'v0-generated health insurance homepage prototype exploring UI/UX patterns for insurance onboarding.',
+    tagline: 'Health Insurance Simplified Prototype',
+    description: 'v0-designed interactive prototype of the BhimaBuddy homepage, exploring user-centric layout options and initial policy onboarding flows.',
+    features: [
+      { name: 'Policy Onboarding', desc: 'Simplified interactive flow to help users explore coverage choices.' },
+      { name: '24/7 AI Chatbot Guidance', desc: 'Concept prototype for real-time virtual guidance and support.' },
+      { name: 'Existing Policy Evaluator', desc: 'Initial design layout to analyze coverage and maximize benefits.' }
+    ],
     category: 'FinTech / Insurance',
     stack: ['Next.js', 'v0'],
     status: 'beta',
@@ -331,8 +381,13 @@ export const PROJECTS = [
   {
     id: 'sukriti-hub',
     name: 'SukritiHub',
-    tagline: 'Community resource hub',
-    description: 'Sukriti Hub — community platform for aggregating and sharing curated knowledge and resources.',
+    tagline: 'Community Resource and Knowledge Hub',
+    description: 'An interactive community-focused platform for aggregating, organizing, and sharing curated educational resources and local knowledge bases.',
+    features: [
+      { name: 'Resource Aggregation', desc: 'Easily collect and categorize educational links, documentation, and tools.' },
+      { name: 'Interactive Discussion Hubs', desc: 'Community forum space designed to share ideas and coordinate learning resources.' },
+      { name: 'Tailored Access', desc: 'Custom filtering and search tools to pinpoint relevant tools instantly.' }
+    ],
     category: 'AI / Knowledge',
     stack: ['Vite', 'TypeScript'],
     status: 'beta',
@@ -348,8 +403,13 @@ export const PROJECTS = [
   {
     id: 'v0-student-guide-application',
     name: 'v0StudentGuideApp',
-    tagline: 'Student guide app prototype',
-    description: 'v0-generated student guide application prototype for study material navigation and exam preparation UX.',
+    tagline: 'Complete Learning Companion and Study Planner',
+    description: 'v0-designed student guide application prototype featuring study planning, community groups, and resource libraries to empower academic excellence.',
+    features: [
+      { name: 'Schedule Planner', desc: 'Organize classes, assignments, and study sessions with interactive calendar features.' },
+      { name: 'Study Groups Hub', desc: 'Space for classmates to connect, share guides, and form collaborative revision teams.' },
+      { name: 'Resource Library', desc: 'Integrated database for textbooks, syllabus references, and study materials.' }
+    ],
     category: 'EdTech',
     stack: ['Next.js', 'v0'],
     status: 'beta',
@@ -365,8 +425,13 @@ export const PROJECTS = [
   {
     id: 'v0-core-pragya-landing-page',
     name: 'v0CorePragyaLanding',
-    tagline: 'CorePragya marketing landing page',
-    description: 'v0-designed marketing landing page for CorePragya AI knowledgebase, showcasing key features and onboarding.',
+    tagline: 'CorePragya Marketing Landing Page',
+    description: 'v0-designed marketing landing page prototype for the CorePragya AI knowledgebase, showcasing key features, statistics, and interactive user onboarding.',
+    features: [
+      { name: 'Interactive Walkthrough', desc: 'Sleek, step-by-step introduction of the core knowledge visualization.' },
+      { name: 'Feature Highlights', desc: 'Tabbed section introducing graph view, RSS sync, and personalized maps.' },
+      { name: 'Pricing & Call to Actions', desc: 'Beautiful conversion elements designed to drive prospective student registrations.' }
+    ],
     category: 'AI / Knowledge',
     stack: ['Next.js', 'v0'],
     status: 'beta',
@@ -382,10 +447,15 @@ export const PROJECTS = [
   {
     id: 'gauthama-buddha',
     name: 'GauthamaBuddha',
-    tagline: 'Teachings of Gautama Buddha',
-    description: 'Content site on the life, teachings, and philosophy of Gautama Buddha with curated sutras and commentaries.',
+    tagline: 'Teachings and Philosophy of Gautama Buddha',
+    description: 'Content platform dedicated to the life, teachings, and core philosophy of Gautama Buddha, featuring bilingual sutras, structured commentaries, and philosophical maps.',
+    features: [
+      { name: 'Bilingual Sutras', desc: 'Verse-by-verse original translation alongside modern English explanations.' },
+      { name: 'Structured Commentaries', desc: 'In-depth analytical reviews of classical Buddhist concepts (Four Noble Truths, Eightfold Path).' },
+      { name: 'Philosophical Navigation', desc: 'Interactive guidance through spiritual pathways and teachings.' }
+    ],
     category: 'Content',
-    stack: ['Next.js'],
+    stack: ['Next.js', 'TailwindCSS'],
     status: 'beta',
     repo: null,
     url: 'https://gauthama-buddha.vercel.app',
