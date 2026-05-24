@@ -1,5 +1,7 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import ThemeProvider from "@/components/ThemeProvider";
+import SiteNav from "@/components/SiteNav";
 
 const inter = Inter({
   variable: "--f-sans-font",
@@ -12,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Vasikarla · AI — Projects",
-  description: "Productive apps with AI. Twenty-one repositories, sixteen production deployments.",
+  title: "Vasikarla · AI — AI Product Engineer",
+  description: "AI Product Engineer. Building production AI and full-stack systems for insurance, education, and knowledge platforms.",
 };
 
 export default function RootLayout({ children }) {
@@ -34,7 +36,13 @@ export default function RootLayout({ children }) {
           } catch(e) {}
         `}} />
       </head>
-      <body>{children}</body>
+      <body>
+        <ThemeProvider>
+          <div className="grid-bg" />
+          <SiteNav />
+          <main>{children}</main>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

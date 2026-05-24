@@ -22,6 +22,22 @@ export const PROJECTS = [
     uptime: 99.98,
     version: 'v2.1.0',
     region: 'iad1',
+    caseStudy: {
+      problem: "Personal knowledge from articles, feeds, emails, and PDFs is fragmented across tools that don't talk to each other. Note apps store text; bookmark managers store URLs; reader apps store articles. None of them understand what you're trying to learn, and none can take the next step — synthesize, write, or publish. The full loop from input to output is broken.",
+      solution: "Three AI agents in one workspace. A Curator that personalizes RSS feeds based on a learned interest profile. An autonomous Research Agent that synthesizes web sources into structured reports. A multi-agent Content Studio that drafts, refines, and formats content for 6 publishing platforms.",
+      architecture: "Next.js + TypeScript on Supabase. Multi-LLM routing across OpenAI, Claude, and Groq based on task profile. Vector embeddings for semantic recall, a graph database for concept relationships, and an RSS ingestion pipeline with deduplication.",
+      hardParts: [
+        "Multi-agent coordination — Curator, Research, and Studio agents share context without stepping on each other.",
+        "Building a personalization model that learns from sparse interest signals.",
+        "Formatting content for 6 different platform conventions (length, tone, structure) from one draft.",
+      ],
+      outcomes: [
+        "99.98% production uptime",
+        "Personalized feed ranking across thousands of RSS sources",
+        "Autonomous research reports synthesizing 10+ web sources per query",
+        "6 platform formats: Twitter, LinkedIn, Medium, blog, newsletter, video script",
+      ],
+    },
   },
   {
     id: 'bima-buddy-advanced',
@@ -45,6 +61,22 @@ export const PROJECTS = [
     uptime: 99.99,
     version: 'v3.0.2',
     region: 'bom1',
+    caseStudy: {
+      problem: "Health insurance in India is fragmented across dozens of providers, each with opaque policy documents in English. For a population speaking 22+ official languages, this creates two compounding failures: people pick the wrong plan, and even when they pick correctly, they file claims that get rejected for procedural reasons they couldn't have predicted. The customer-service safety net is thin and language-blocked.",
+      solution: "Three integrated AI capabilities that meet users at their actual decision points. A comparison engine that normalizes 50+ heterogeneous policies into a single schema. A claim-approval model that predicts approval probability before submission using 50+ factors. A multilingual voice assistant in 10 Indian languages with emotion-aware responses for high-stress claim conversations.",
+      architecture: "Next.js + TypeScript front-end on Supabase. Vector store for semantic policy retrieval. Claim model is a 50+ factor classifier trained on historical filings. Voice pipeline uses streaming ASR + TTS with regional language models.",
+      hardParts: [
+        "Reconciling 50+ providers' inconsistent policy schemas into a single comparable structure.",
+        "Reaching 95%+ ASR accuracy across 10 Indian languages including code-mixed speech.",
+        "Modeling claim rejection in a domain where ground-truth data is partial and adversarial.",
+      ],
+      outcomes: [
+        "41 production deploys · 49 commits · 99.99% uptime",
+        "85%+ claim approval prediction accuracy before filing",
+        "10 Indian languages with 95%+ voice recognition accuracy",
+        "Up to 12% premium discounts via 150+ wearable integrations",
+      ],
+    },
   },
   {
     id: 'igcse-student-guide',
@@ -68,6 +100,22 @@ export const PROJECTS = [
     uptime: 99.97,
     version: 'v1.8.0',
     region: 'bom1',
+    caseStudy: {
+      problem: "Quality IGCSE Grade 9–10 exam prep is paywalled, leaving millions of students from middle and lower-income families dependent on inconsistent free resources. The free content that exists is often factually wrong, off-syllabus, or shallow — and there's no scalable way for human authors to keep up with the breadth of subjects multiplied by curriculum updates.",
+      solution: "A fully automated content generation pipeline that produces curriculum-aligned study cards, adaptive quizzes, and topic guides — with multi-step accuracy verification baked in. The output is free, structured, and broad enough to cover the full IGCSE syllabus.",
+      architecture: "Next.js + TypeScript on Supabase. Content pipeline runs in stages: syllabus mapping → generation → fact-check → adversarial review → publish. Adaptive quiz engine tracks per-student confidence and routes to weak areas.",
+      hardParts: [
+        "Multi-step factual verification that catches LLM hallucinations before publication.",
+        "Mapping generated content to the latest official IGCSE syllabus revisions.",
+        "Scaling content quality without scaling human review headcount.",
+      ],
+      outcomes: [
+        "99.97% production uptime · 22 deploys · 31 commits",
+        "Free access to Grade 9–10 IGCSE prep",
+        "Full subject coverage across core IGCSE syllabus",
+        "Adaptive quizzes with instant feedback and confidence tracking",
+      ],
+    },
   },
   {
     id: 'nlsql-pro',
@@ -91,6 +139,22 @@ export const PROJECTS = [
     uptime: 99.95,
     version: 'v1.2.0',
     region: 'iad1',
+    caseStudy: {
+      problem: "Most NL-to-SQL demos work in clean test schemas and fail under three production realities: schema drift, business vocabulary that doesn't match column names, and adversarial users probing for jailbreaks. The result is tools that are pitched to non-technical users but unsafe to put in front of them.",
+      solution: "A production-hardened NL→SQL engine designed around the failure modes that kill demo-grade tools. A 24-hour schema cache to absorb drift. A Business Glossary mapping that lets users speak in domain terms. Golden Query Memory that learns from validated past queries. Prompt-injection defense against 30+ known jailbreak patterns plus read-only sandboxing and AES-256 encryption.",
+      architecture: "Next.js + TypeScript on Supabase. Claude for natural language understanding. Vector embeddings power the glossary and query memory. Pluggable adapters generate dialect-specific SQL for PostgreSQL, MySQL, SQLite, and SQL Server.",
+      hardParts: [
+        "Defending against 30+ prompt-injection patterns without breaking legitimate complex queries.",
+        "Hitting 50–200ms response times — 10-100x faster than uncached generation.",
+        "Cross-RDBMS dialect generation from a single canonical AST.",
+      ],
+      outcomes: [
+        "30+ jailbreak patterns blocked · AES-256 encryption · read-only sandboxing",
+        "50–200ms response times (10-100x faster than uncached)",
+        "Production-ready for PostgreSQL, MySQL, SQLite, SQL Server",
+        "Business Glossary + Golden Query Memory close the user-vocabulary-to-schema gap",
+      ],
+    },
   },
   {
     id: 'core-pragya',
@@ -281,6 +345,7 @@ export const PROJECTS = [
     category: 'EdTech / AI',
     stack: ['Next.js', 'TypeScript', 'Supabase', 'AI'],
     status: 'beta',
+    flagship: true,
     repo: null,
     url: 'https://concept-forge-iota.vercel.app',
     commits: 5,
@@ -289,6 +354,22 @@ export const PROJECTS = [
     uptime: 99.80,
     version: 'v0.3.0',
     region: 'iad1',
+    caseStudy: {
+      problem: "IIT JEE preparation requires mastering thousands of interconnected concepts across physics, chemistry, and math. Most prep platforms serve content linearly — chapter 1, then chapter 2 — ignoring the prerequisite gaps that actually block a student's progress. A student stuck on rotational dynamics doesn't need more rotational dynamics; they need angular momentum first.",
+      solution: "An adaptive learning engine that scores concept mastery from four signals — recent performance, overall accuracy, question difficulty, and recency decay. The engine maps a prerequisite DAG across the syllabus and automatically routes students to the blocking prerequisite when mastery stalls. Difficulty adjusts in real time based on streak.",
+      architecture: "Next.js + TypeScript on Supabase. Per-user mastery state stored as a sparse matrix over concepts. Prerequisite graph encoded as a DAG. Question difficulty calibrated against item response theory baselines.",
+      hardParts: [
+        "Calibrating the 4-factor mastery model so it tracks real understanding, not just recent activity.",
+        "Detecting blocking prerequisites without trapping students in remedial loops.",
+        "Adjusting difficulty in real time without breaking the practice flow.",
+      ],
+      outcomes: [
+        "Live production deployment with 99.80% uptime",
+        "Four-factor mastery scoring: performance, accuracy, difficulty, recency",
+        "Auto-routing to prerequisite concepts when mastery stalls",
+        "Adaptive difficulty with streak detection",
+      ],
+    },
   },
   {
     id: 'us-insurance-details',
