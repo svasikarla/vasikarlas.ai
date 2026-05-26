@@ -320,138 +320,31 @@ export function CommandPalette({ open, setOpen, projects }) {
   );
 }
 
-/* ─── Flagship Visual Widgets ─── */
+/* ─── Flagship Screenshot Demos ─── */
+
+// All 5 flagship apps now have real screenshot-based demo slideshows
+export const DEMO_IDS = new Set([
+  'core-pragya-advanced',
+  'bima-buddy-advanced',
+  'igcse-student-guide',
+  'nlsql-pro',
+  'concept-forge',
+]);
+
 export function FlagshipVisual({ id }) {
-  if (id === 'bima-buddy-advanced') {
+  if (DEMO_IDS.has(id)) {
     return (
-      <div className="widget-mini">
-        <div className="voice-claim-widget">
-          <div className="widget-row">
-            <span className="widget-label">Claim Evaluator</span>
-            <span className="widget-header-badge">Online</span>
-          </div>
-          <div className="claims-gauge-container">
-            <svg className="claims-circle-svg">
-              <circle className="claims-circle-bg" cx="50" cy="50" r="40" />
-              <circle className="claims-circle-fill" cx="50" cy="50" r="40" />
-            </svg>
-            <div className="gauge-center-text">
-              <span className="gauge-percent">85%</span>
-              <span className="gauge-lbl">Approval</span>
-            </div>
-          </div>
-          <div className="voice-wave">
-            <div className="wave-bar" /><div className="wave-bar" /><div className="wave-bar" />
-            <div className="wave-bar" /><div className="wave-bar" /><div className="wave-bar" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (id === 'core-pragya-advanced') {
-    return (
-      <div className="widget-mini">
-        <div className="knowledge-graph-widget">
-          <span className="graph-widget-title">Knowledge Graph</span>
-          <svg className="graph-svg">
-            <line className="graph-line" x1="40" y1="120" x2="160" y2="60" />
-            <line className="graph-line" x1="160" y1="60" x2="280" y2="130" />
-            <line className="graph-line" x1="160" y1="60" x2="160" y2="190" />
-            <line className="graph-line" x1="40" y1="120" x2="160" y2="190" />
-            <line className="graph-line" x1="160" y1="190" x2="280" y2="130" />
-            <g className="graph-node">
-              <circle className="node-pulse" cx="160" cy="60" r="14" fill="var(--accent)" opacity="0.3" />
-              <circle className="graph-node-circle" cx="160" cy="60" r="7" />
-              <text className="graph-label" x="160" y="44" textAnchor="middle">AI CORE</text>
-            </g>
-            <g className="graph-node">
-              <circle className="graph-node-circle" cx="40" cy="120" r="6" />
-              <text className="graph-label" x="40" y="105" textAnchor="middle">RAG</text>
-            </g>
-            <g className="graph-node">
-              <circle className="graph-node-circle" cx="160" cy="190" r="6" />
-              <text className="graph-label" x="160" y="210" textAnchor="middle">Vector DB</text>
-            </g>
-            <g className="graph-node">
-              <circle className="graph-node-circle" cx="280" cy="130" r="6" />
-              <text className="graph-label" x="280" y="115" textAnchor="middle">Graph</text>
-            </g>
-          </svg>
-        </div>
-      </div>
-    );
-  }
-
-  if (id === 'nlsql-pro') {
-    return (
-      <div className="widget-mini nlsql-demo-widget">
+      <div className="widget-mini flagship-demo-widget">
         <iframe
-          src="/demos/nlsql-pro-demo.html"
-          title="NLSQL Pro interactive demo"
-          className="nlsql-demo-iframe"
+          src={`/demos/${id}-demo.html`}
+          title={`${id} live app demo`}
+          className="flagship-demo-iframe"
           loading="lazy"
           sandbox="allow-scripts allow-same-origin"
         />
       </div>
     );
   }
-
-  if (id === 'concept-forge') {
-    return (
-      <div className="widget-mini">
-        <div className="mastery-widget">
-          <div className="mastery-header">
-            <span className="mastery-badge">IIT JEE · Physics</span>
-            <span className="mastery-rank">Active Concept</span>
-          </div>
-          <div className="mastery-concept">Rotational Dynamics</div>
-          <div className="mastery-progress">
-            <div className="mastery-bar"><div className="mastery-fill" style={{ width: '68%' }} /></div>
-            <span className="mastery-pct">68%</span>
-          </div>
-          <div className="mastery-factors">
-            <div className="factor"><span>Performance</span><b>72%</b></div>
-            <div className="factor"><span>Accuracy</span><b>81%</b></div>
-            <div className="factor"><span>Difficulty</span><b>L4</b></div>
-            <div className="factor"><span>Recency</span><b>2d</b></div>
-          </div>
-          <div className="mastery-next">→ Next: Angular Momentum <span className="mastery-tag">prerequisite</span></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (id === 'igcse-student-guide') {
-    return (
-      <div className="widget-mini">
-        <div className="study-card-widget">
-          <div className="study-card-header">
-            <span className="study-card-badge">Physics · Grade 10</span>
-          </div>
-          <div className="study-card-body">
-            <h4 className="study-card-question">Newton&apos;s Second Law?</h4>
-            <p className="study-card-answer-preview">
-              <span className="study-card-check">✓</span> F = ma
-            </p>
-          </div>
-          <div className="study-card-footer">
-            <div className="study-card-stats">
-              <div className="study-stat">
-                <label>Confidence</label>
-                <span>94%</span>
-              </div>
-              <div className="study-stat">
-                <label>Grade</label>
-                <span>A*</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return null;
 }
 
@@ -648,7 +541,7 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
           const isEven = idx % 2 === 1;
           return (
             <div key={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
-              <div className={`flagship-visual${p.id === 'nlsql-pro' ? ' flagship-visual--iframe' : ''}`}>
+              <div className={`flagship-visual${DEMO_IDS.has(p.id) ? ' flagship-visual--iframe' : ''}`}>
                 <FlagshipVisual id={p.id} />
               </div>
               <div className="flagship-body">

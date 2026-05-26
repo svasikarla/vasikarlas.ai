@@ -1,0 +1,34 @@
+[
+  {
+    "text": "Dashboard",
+    "href": "https://core-pragya-advanced.vercel.app/dashboard"
+  },
+  {
+    "text": "Knowledge Base",
+    "href": "https://core-pragya-advanced.vercel.app/knowledge-base"
+  },
+  {
+    "text": "Personal RAG Bot",
+    "href": "https://core-pragya-advanced.vercel.app/personal-rag-bot"
+  },
+  {
+    "text": "Subscriptions",
+    "href": "https://core-pragya-advanced.vercel.app/knowledge-base/subscriptions"
+  },
+  {
+    "text": "Research",
+    "href": "https://core-pragya-advanced.vercel.app/research"
+  },
+  {
+    "text": "Tech Research",
+    "href": "https://core-pragya-advanced.vercel.app/tech-research"
+  },
+  {
+    "text": "Content Studio",
+    "href": "https://core-pragya-advanced.vercel.app/content-creation"
+  },
+  {
+    "text": "Automations",
+    "href": "https://core-pragya-advanced.vercel.app/automations"
+  }
+]

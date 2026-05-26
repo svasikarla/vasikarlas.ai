@@ -1,0 +1,440 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Outfit:wght@300;400;500;600;700&display=swap');
+.cp-root{background:#0b0a14;color:#e8e4f0;font-family:'Outfit',sans-serif;min-height:530px;border-radius:12px;overflow:hidden;position:relative;}
+.scene{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 0.55s ease;display:flex;flex-direction:column;padding:22px 24px 88px;}
+.scene.active{opacity:1;pointer-events:all;}
+.s-chip{font-size:9px;letter-spacing:2px;color:#a78bfa;font-family:'DM Mono',monospace;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.s-chip::before{content:'';width:16px;height:1px;background:#a78bfa;}
+.s-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#f1eeff;margin-bottom:3px;line-height:1.2;}
+.s-sub{font-size:11px;color:rgba(167,139,250,0.55);margin-bottom:14px;}
+
+.ctrl-wrap{position:absolute;bottom:0;left:0;right:0;z-index:100;background:#0b0a14;border-top:1px solid rgba(167,139,250,0.1);padding:10px 18px 12px;}
+.prog-track{height:2px;background:rgba(167,139,250,0.12);border-radius:1px;margin-bottom:10px;cursor:pointer;}
+.prog-fill{height:100%;background:#a78bfa;border-radius:1px;transition:width 0.1s linear;}
+.ctrl-row{display:flex;align-items:center;gap:10px;}
+.pbtn{width:28px;height:28px;border-radius:50%;background:#a78bfa;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#0b0a14;font-size:10px;flex-shrink:0;}
+.sdots{display:flex;gap:5px;align-items:center;}
+.sdot{width:5px;height:5px;border-radius:3px;background:rgba(167,139,250,0.2);cursor:pointer;transition:all 0.3s;}
+.sdot.on{background:#a78bfa;width:16px;}
+.tlbl{font-size:10px;color:rgba(167,139,250,0.4);font-family:'DM Mono',monospace;margin-left:auto;}
+.slbl{font-size:10px;color:rgba(167,139,250,0.45);}
+
+.sc0{background:#0b0a14;justify-content:center;align-items:center;padding-bottom:80px;}
+.sc0-hex{position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(60deg,#a78bfa 0,#a78bfa 1px,transparent 1px,transparent 30px),repeating-linear-gradient(120deg,#a78bfa 0,#a78bfa 1px,transparent 1px,transparent 30px),repeating-linear-gradient(0deg,#a78bfa 0,#a78bfa 1px,transparent 1px,transparent 30px);}
+.sc0-badge{font-size:10px;letter-spacing:2px;color:#a78bfa;border:1px solid rgba(167,139,250,0.25);padding:4px 14px;border-radius:20px;margin-bottom:18px;font-family:'DM Mono',monospace;}
+.sc0-logo{font-family:'Fraunces',serif;font-size:40px;font-weight:700;text-align:center;color:#f1eeff;line-height:1;margin-bottom:4px;}
+.sc0-logo span{color:#a78bfa;}
+.sc0-tagline{font-size:13px;color:rgba(232,228,240,0.45);text-align:center;margin-bottom:24px;font-weight:300;}
+.agent-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.ap{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;}
+.ap-curator{background:rgba(167,139,250,0.12);color:#c4b5fd;border:1px solid rgba(167,139,250,0.2);}
+.ap-research{background:rgba(52,211,153,0.1);color:#6ee7b7;border:1px solid rgba(52,211,153,0.2);}
+.ap-content{background:rgba(251,191,36,0.1);color:#fcd34d;border:1px solid rgba(251,191,36,0.18);}
+.ap-rag{background:rgba(96,165,250,0.1);color:#93c5fd;border:1px solid rgba(96,165,250,0.18);}
+
+.feed-list{display:flex;flex-direction:column;gap:7px;flex:1;}
+.feed-item{background:#13111f;border:1px solid rgba(167,139,250,0.1);border-radius:8px;padding:10px 13px;display:flex;gap:10px;align-items:flex-start;opacity:0;transform:translateY(6px);transition:opacity 0.4s,transform 0.4s;}
+.feed-item.in{opacity:1;transform:translateY(0);}
+.fi-score{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:36px;}
+.fi-num{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#a78bfa;}
+.fi-label{font-size:8px;color:rgba(167,139,250,0.4);letter-spacing:0.5px;}
+.fi-body{flex:1;}
+.fi-src{font-size:9px;color:rgba(167,139,250,0.45);letter-spacing:0.5px;margin-bottom:3px;text-transform:uppercase;}
+.fi-head{font-size:12px;color:#e8e4f0;font-weight:500;line-height:1.4;margin-bottom:4px;}
+.fi-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.fi-tag{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(167,139,250,0.1);color:#c4b5fd;}
+.fi-tag.match{background:rgba(52,211,153,0.1);color:#6ee7b7;}
+.fi-bar-wrap{height:3px;background:rgba(167,139,250,0.1);border-radius:2px;margin-top:6px;overflow:hidden;}
+.fi-bar{height:100%;background:#a78bfa;border-radius:2px;}
+
+.agent-pipeline{display:flex;flex-direction:column;gap:6px;flex:1;}
+.ap-step{background:#13111f;border:1px solid rgba(52,211,153,0.12);border-radius:8px;padding:10px 13px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateX(-8px);transition:opacity 0.4s,transform 0.4s;}
+.ap-step.in{opacity:1;transform:translateX(0);}
+.ap-step.done .as-dot{background:#34d399;}
+.ap-step.running .as-dot{background:#fbbf24;animation:pulseDot 1s ease-in-out infinite;}
+@keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.as-dot{width:8px;height:8px;border-radius:50%;background:rgba(52,211,153,0.2);flex-shrink:0;transition:background 0.4s;}
+.as-agent{font-size:9px;color:rgba(52,211,153,0.5);letter-spacing:1px;min-width:80px;}
+.as-step{font-size:11px;color:#e8e4f0;font-weight:500;flex:1;}
+.as-result{font-size:10px;color:rgba(232,228,240,0.35);font-family:'DM Mono',monospace;}
+.report-preview{background:#0d0c19;border:1px solid rgba(52,211,153,0.15);border-radius:8px;padding:12px 14px;margin-top:8px;}
+.rp-head{font-size:11px;color:#6ee7b7;font-weight:500;margin-bottom:6px;}
+.rp-line{font-size:10px;color:rgba(232,228,240,0.5);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between;}
+.rp-line:last-child{border-bottom:none;}
+.rp-src{color:rgba(52,211,153,0.5);font-family:'DM Mono',monospace;}
+
+.pub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+.pub-card{background:#13111f;border:1px solid rgba(251,191,36,0.1);border-radius:8px;padding:10px;text-align:center;opacity:0;transform:scale(0.96);transition:opacity 0.3s,transform 0.3s;}
+.pub-card.in{opacity:1;transform:scale(1);}
+.pub-card.active-pub{border-color:rgba(251,191,36,0.4);background:#1a1608;}
+.pc-icon{font-size:18px;color:#fcd34d;margin-bottom:4px;}
+.pc-name{font-size:11px;font-weight:500;color:#e8e4f0;margin-bottom:2px;}
+.pc-status{font-size:9px;color:rgba(232,228,240,0.35);}
+.pc-status.ready{color:#34d399;}
+.phase-track{display:flex;flex-direction:column;gap:5px;}
+.pt-phase{display:flex;align-items:center;gap:8px;padding:7px 11px;background:#13111f;border-radius:6px;border:1px solid rgba(251,191,36,0.08);opacity:0;transition:opacity 0.4s;}
+.pt-phase.in{opacity:1;}
+.pt-num{width:18px;height:18px;border-radius:50%;background:rgba(251,191,36,0.1);color:#fcd34d;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;}
+.pt-name{font-size:11px;color:#e8e4f0;font-weight:500;flex:1;}
+.pt-badge{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(251,191,36,0.1);color:#fcd34d;}
+.pt-badge.go{background:rgba(52,211,153,0.1);color:#6ee7b7;}
+
+.chat-thread{display:flex;flex-direction:column;gap:8px;flex:1;overflow:hidden;}
+.msg{border-radius:8px;padding:9px 12px;max-width:90%;opacity:0;transform:translateY(6px);transition:opacity 0.4s,transform 0.4s;}
+.msg.in{opacity:1;transform:translateY(0);}
+.msg.user{background:#1e1630;border:1px solid rgba(167,139,250,0.15);align-self:flex-end;font-size:12px;color:#e8e4f0;}
+.msg.ai{background:#0f1a12;border:1px solid rgba(52,211,153,0.12);align-self:flex-start;font-size:11px;color:#e8e4f0;line-height:1.6;}
+.msg-ai-label{font-size:9px;color:rgba(52,211,153,0.5);letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.rag-meta{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+.rag-src{font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(52,211,153,0.08);color:rgba(52,211,153,0.6);font-family:'DM Mono',monospace;}
+.typing{display:flex;gap:3px;align-items:center;padding:6px 10px;}
+.typing span{width:5px;height:5px;border-radius:50%;background:rgba(52,211,153,0.5);animation:typingBounce 1.2s ease-in-out infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typingBounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-4px);}}
+
+.interest-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;flex:1;}
+.int-card{background:#13111f;border:1px solid rgba(167,139,250,0.1);border-radius:8px;padding:12px 14px;opacity:0;transform:translateY(6px);transition:opacity 0.4s,transform 0.4s;}
+.int-card.in{opacity:1;transform:translateY(0);}
+.ic-topic{font-size:12px;font-weight:500;color:#c4b5fd;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.ic-pct{font-family:'DM Mono',monospace;font-size:11px;color:#a78bfa;}
+.ic-bar-t{height:4px;background:rgba(167,139,250,0.1);border-radius:2px;overflow:hidden;margin-bottom:8px;}
+.ic-bar-f{height:100%;border-radius:2px;background:#a78bfa;}
+.ic-sub{font-size:10px;color:rgba(232,228,240,0.35);line-height:1.5;}
+.ic-trend{font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(52,211,153,0.1);color:#6ee7b7;}
+.stat-row{display:flex;gap:8px;margin-bottom:10px;}
+.stat-c{flex:1;background:#13111f;border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(167,139,250,0.08);}
+.stat-n{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:#a78bfa;}
+.stat-l{font-size:9px;color:rgba(232,228,240,0.35);margin-top:2px;}
+</style>
+
+<div class="cp-root" id="cpRoot">
+  <h2 class="sr-only">CorePragya Advanced product demo — three AI agents: Curator, Research, and Content Studio for personal knowledge management</h2>
+
+  <!-- Scene 0: Hero -->
+  <div class="scene sc0 active" id="s0">
+    <div class="sc0-hex"></div>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;">
+      <div class="sc0-badge">PRODUCT DEMO</div>
+      <div class="sc0-logo">Core<span>Pragya</span></div>
+      <div style="font-family:'Fraunces',serif;font-size:13px;color:rgba(167,139,250,0.4);font-style:italic;margin-bottom:6px;">Advanced</div>
+      <div class="sc0-tagline">Three coordinated AI agents — from raw content to published insight</div>
+      <div class="agent-pills">
+        <div class="ap ap-curator"><i class="ti ti-rss" aria-hidden="true"></i>Curator Agent</div>
+        <div class="ap ap-research"><i class="ti ti-microscope" aria-hidden="true"></i>Research Agent</div>
+        <div class="ap ap-content"><i class="ti ti-writing" aria-hidden="true"></i>Content Studio</div>
+        <div class="ap ap-rag"><i class="ti ti-message-circle" aria-hidden="true"></i>Knowledge Q&A</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 1: Curator Agent -->
+  <div class="scene" id="s1">
+    <div class="s-chip">SCENE 01 — CURATOR AGENT</div>
+    <div class="s-title">AI-scored personalised feed</div>
+    <div class="s-sub">RSS + web sources ranked by your interest profile in real time</div>
+    <div class="feed-list" id="feedList">
+      <div class="feed-item" id="fi0">
+        <div class="fi-score"><div class="fi-num">97</div><div class="fi-label">SCORE</div></div>
+        <div class="fi-body">
+          <div class="fi-src">MIT Technology Review · AI/ML</div>
+          <div class="fi-head">Claude's extended thinking outperforms chain-of-thought in multi-step reasoning</div>
+          <div class="fi-tags"><span class="fi-tag match">AI agents</span><span class="fi-tag match">LLM</span><span class="fi-tag">benchmarks</span></div>
+          <div class="fi-bar-wrap"><div class="fi-bar" style="width:97%;"></div></div>
+        </div>
+      </div>
+      <div class="feed-item" id="fi1">
+        <div class="fi-score"><div class="fi-num">91</div><div class="fi-label">SCORE</div></div>
+        <div class="fi-body">
+          <div class="fi-src">Oracle Blogs · Utilities</div>
+          <div class="fi-head">Select AI NL2SQL goes GA for Oracle DB 23ai — what you need to know</div>
+          <div class="fi-tags"><span class="fi-tag match">Oracle</span><span class="fi-tag match">NL2SQL</span><span class="fi-tag">CC&B</span></div>
+          <div class="fi-bar-wrap"><div class="fi-bar" style="width:91%;"></div></div>
+        </div>
+      </div>
+      <div class="feed-item" id="fi2">
+        <div class="fi-score"><div class="fi-num">84</div><div class="fi-label">SCORE</div></div>
+        <div class="fi-body">
+          <div class="fi-src">Hacker News · Dev Tools</div>
+          <div class="fi-head">MCP protocol adoption doubles in Q1 2026 — ecosystem map and top servers</div>
+          <div class="fi-tags"><span class="fi-tag match">MCP</span><span class="fi-tag">developer tools</span><span class="fi-tag match">AI agents</span></div>
+          <div class="fi-bar-wrap"><div class="fi-bar" style="width:84%;"></div></div>
+        </div>
+      </div>
+      <div class="feed-item" id="fi3">
+        <div class="fi-score"><div class="fi-num">76</div><div class="fi-label">SCORE</div></div>
+        <div class="fi-body">
+          <div class="fi-src">Towards Data Science · Embeddings</div>
+          <div class="fi-head">Cohere Embed v4 vs OpenAI text-embedding-3-large — retrieval benchmark</div>
+          <div class="fi-tags"><span class="fi-tag">embeddings</span><span class="fi-tag match">RAG</span><span class="fi-tag">vector DB</span></div>
+          <div class="fi-bar-wrap"><div class="fi-bar" style="width:76%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: Research Agent -->
+  <div class="scene" id="s2">
+    <div class="s-chip">SCENE 02 — RESEARCH AGENT</div>
+    <div class="s-title">Multi-agent deep research pipeline</div>
+    <div class="s-sub">Web search → synthesis → structured exportable report</div>
+    <div class="agent-pipeline" id="pipeline">
+      <div class="ap-step done" id="ps0"><div class="as-dot"></div><div class="as-agent">ORCHESTRATOR</div><div class="as-step">Topic parsed & decomposed</div><div class="as-result">4 sub-queries</div></div>
+      <div class="ap-step" id="ps1"><div class="as-dot"></div><div class="as-agent">SEARCHER</div><div class="as-step">Web search across 12 sources</div><div class="as-result" id="pr1">waiting...</div></div>
+      <div class="ap-step" id="ps2"><div class="as-dot"></div><div class="as-agent">SYNTHESIZER</div><div class="as-step">Cross-source conflict resolution</div><div class="as-result" id="pr2">waiting...</div></div>
+      <div class="ap-step" id="ps3"><div class="as-dot"></div><div class="as-agent">FORMATTER</div><div class="as-step">Structure report & citations</div><div class="as-result" id="pr3">waiting...</div></div>
+    </div>
+    <div class="report-preview" id="reportPreview" style="opacity:0;transition:opacity 0.5s;">
+      <div class="rp-head"><i class="ti ti-file-text" aria-hidden="true" style="margin-right:5px;"></i>Report: "AI Agents in Enterprise Software — 2026 Landscape"</div>
+      <div class="rp-line"><span>Executive summary</span><span class="rp-src">synthesized · 12 srcs</span></div>
+      <div class="rp-line"><span>Market sizing & key players</span><span class="rp-src">Gartner, a16z, CB Insights</span></div>
+      <div class="rp-line"><span>Adoption barriers analysis</span><span class="rp-src">synthesized · 8 srcs</span></div>
+      <div class="rp-line"><span>Technology trade-off matrix</span><span class="rp-src">structured output</span></div>
+    </div>
+  </div>
+
+  <!-- Scene 3: Content Studio -->
+  <div class="scene" id="s3">
+    <div class="s-chip">SCENE 03 — CONTENT STUDIO</div>
+    <div class="s-title">5-phase multi-agent publishing pipeline</div>
+    <div class="s-sub">One knowledge piece → six platform-optimised formats, automatically</div>
+    <div class="pub-grid" id="pubGrid">
+      <div class="pub-card" id="pc0"><div class="pc-icon"><i class="ti ti-brand-medium" aria-hidden="true"></i></div><div class="pc-name">Medium</div><div class="pc-status ready">ready</div></div>
+      <div class="pub-card" id="pc1"><div class="pc-icon"><i class="ti ti-brand-linkedin" aria-hidden="true"></i></div><div class="pc-name">LinkedIn</div><div class="pc-status ready">ready</div></div>
+      <div class="pub-card" id="pc2"><div class="pc-icon"><i class="ti ti-brand-twitter" aria-hidden="true"></i></div><div class="pc-name">Twitter / X</div><div class="pc-status ready">ready</div></div>
+      <div class="pub-card" id="pc3"><div class="pc-icon"><i class="ti ti-news" aria-hidden="true"></i></div><div class="pc-name">Substack</div><div class="pc-status ready">ready</div></div>
+      <div class="pub-card" id="pc4"><div class="pc-icon"><i class="ti ti-brand-deviantart" aria-hidden="true"></i></div><div class="pc-name">Dev.to</div><div class="pc-status ready">ready</div></div>
+      <div class="pub-card" id="pc5"><div class="pc-icon"><i class="ti ti-layout-2" aria-hidden="true"></i></div><div class="pc-name">Blog</div><div class="pc-status ready">ready</div></div>
+    </div>
+    <div class="phase-track" id="phaseTrack">
+      <div class="pt-phase" id="ph0"><div class="pt-num">1</div><div class="pt-name">Knowledge extraction from saved articles</div><div class="pt-badge go">done</div></div>
+      <div class="pt-phase" id="ph1"><div class="pt-num">2</div><div class="pt-name">Angle & narrative drafting — Claude</div><div class="pt-badge go">done</div></div>
+      <div class="pt-phase" id="ph2"><div class="pt-num">3</div><div class="pt-name">Critique & refinement loop — GPT-4o</div><div class="pt-badge go">done</div></div>
+      <div class="pt-phase" id="ph3"><div class="pt-num">4</div><div class="pt-name">Platform tone adaptation — Groq</div><div class="pt-badge">formatting</div></div>
+      <div class="pt-phase" id="ph4"><div class="pt-num">5</div><div class="pt-name">SEO metadata & hashtag injection</div><div class="pt-badge">queued</div></div>
+    </div>
+  </div>
+
+  <!-- Scene 4: Knowledge Q&A / RAG -->
+  <div class="scene" id="s4">
+    <div class="s-chip">SCENE 04 — KNOWLEDGE Q&A</div>
+    <div class="s-title">Chat with your knowledge base</div>
+    <div class="s-sub">Vector RAG over your saved articles, PDFs, and emails — with source attribution</div>
+    <div class="chat-thread" id="chatThread">
+      <div class="msg user" id="m0">What are the main architectural trade-offs between MCP and traditional REST APIs for AI tool integration?</div>
+      <div class="msg ai" id="m1" style="display:none;">
+        <div class="msg-ai-label"><i class="ti ti-brain" aria-hidden="true" style="font-size:10px;"></i>KNOWLEDGE BASE · 4 sources matched</div>
+        Based on your saved sources, MCP offers stateful session management and streaming tool calls that REST cannot do natively. Your Hacker News save from April highlights that MCP's SSE transport eliminates round-trip overhead, while your Oracle MCP article notes the security model trades simplicity for granular per-tool permissions. Key trade-off: MCP wins on agent orchestration; REST wins on ecosystem maturity.
+        <div class="rag-meta">
+          <span class="rag-src">hacker-news-mcp-2026.md</span>
+          <span class="rag-src">oracle-mcp-blog.pdf</span>
+          <span class="rag-src">agent-protocols-survey.md</span>
+        </div>
+      </div>
+      <div class="msg user" id="m2" style="display:none;">Summarise my recent PDFs on utility billing architecture</div>
+      <div class="msg ai" id="m3" style="display:none;">
+        <div class="msg-ai-label"><i class="ti ti-brain" aria-hidden="true" style="font-size:10px;"></i>KNOWLEDGE BASE · 3 PDFs matched</div>
+        Across your 3 utility billing PDFs, the recurring theme is AMI-driven real-time billing — replacing batch jobs with event streams. Two papers advocate TimescaleDB for meter read storage; one GWW post-mortem warns against migrating billing engines without parallel-run validation. Consensus: event-sourced architecture, not OLTP, is the path forward.
+        <div class="rag-meta">
+          <span class="rag-src">gww-billing-review.pdf</span>
+          <span class="rag-src">ami-billing-patterns.pdf</span>
+          <span class="rag-src">lean-cis-architecture.pdf</span>
+        </div>
+      </div>
+      <div class="msg ai" id="mtyping" style="display:none;"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+  </div>
+
+  <!-- Scene 5: Interest Analytics -->
+  <div class="scene" id="s5">
+    <div class="s-chip">SCENE 05 — INTEREST PROFILING</div>
+    <div class="s-title">AI-built interest graph</div>
+    <div class="s-sub">Auto-detected from your reading patterns — powers all scoring and recommendations</div>
+    <div class="stat-row">
+      <div class="stat-c"><div class="stat-n">347</div><div class="stat-l">items saved</div></div>
+      <div class="stat-c"><div class="stat-n">12</div><div class="stat-l">RSS feeds</div></div>
+      <div class="stat-c"><div class="stat-n">94%</div><div class="stat-l">feed relevance</div></div>
+      <div class="stat-c"><div class="stat-n">6</div><div class="stat-l">macro themes</div></div>
+    </div>
+    <div class="interest-grid" id="intGrid">
+      <div class="int-card" id="ic0">
+        <div class="ic-topic">AI Agents & LLMs <span class="ic-pct">38%</span></div>
+        <div class="ic-bar-t"><div class="ic-bar-f" style="width:38%;"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><div class="ic-sub">Claude, GPT-4o, Groq · MCP, function calling</div><span class="ic-trend">+12% this month</span></div>
+      </div>
+      <div class="int-card" id="ic1">
+        <div class="ic-topic">Oracle Utilities <span class="ic-pct">27%</span></div>
+        <div class="ic-bar-t"><div class="ic-bar-f" style="width:27%;"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><div class="ic-sub">CC&B, C2M, OUAF · NL2SQL · data migration</div><span class="ic-trend">stable</span></div>
+      </div>
+      <div class="int-card" id="ic2">
+        <div class="ic-topic">RAG & Vector Search <span class="ic-pct">18%</span></div>
+        <div class="ic-bar-t"><div class="ic-bar-f" style="width:18%;"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><div class="ic-sub">Cohere, pgvector, Supabase · embeddings</div><span class="ic-trend">+6% this month</span></div>
+      </div>
+      <div class="int-card" id="ic3">
+        <div class="ic-topic">EdTech & Knowledge <span class="ic-pct">17%</span></div>
+        <div class="ic-bar-t"><div class="ic-bar-f" style="width:17%;"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><div class="ic-sub">IIT-JEE prep · PKM · spaced repetition</div><span class="ic-trend">+4% this month</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ctrl-wrap">
+    <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="ctrl-row">
+      <button class="pbtn" id="playBtn" onclick="togglePlay()" aria-label="Play or pause"><i class="ti ti-player-play" id="pIcon" aria-hidden="true"></i></button>
+      <div class="sdots" id="sdots"></div>
+      <div class="slbl" id="slbl">Press play</div>
+      <div class="tlbl" id="tlbl">0:00</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCENES=[
+  {id:'s0',label:'Intro',dur:4000},
+  {id:'s1',label:'Curator Agent',dur:8500},
+  {id:'s2',label:'Research Agent',dur:9000},
+  {id:'s3',label:'Content Studio',dur:8000},
+  {id:'s4',label:'Knowledge Q&A',dur:9000},
+  {id:'s5',label:'Interest Profiling',dur:7500},
+];
+const TOTAL=SCENES.reduce((a,s)=>a+s.dur,0);
+let elapsed=0,playing=false,raf=null,lastTs=null,cur=0,scEl=0;
+let animDone={};
+
+function buildDots(){
+  const c=document.getElementById('sdots');
+  SCENES.forEach((s,i)=>{
+    const d=document.createElement('div');
+    d.className='sdot'+(i===0?' on':'');
+    d.onclick=()=>jumpTo(i);
+    c.appendChild(d);
+  });
+}
+function updDots(i){document.querySelectorAll('.sdot').forEach((d,j)=>{d.className='sdot'+(j===i?' on':'');});}
+
+function showScene(idx){
+  SCENES.forEach((s,i)=>{
+    const el=document.getElementById(s.id);
+    if(i===idx)el.classList.add('active');else el.classList.remove('active');
+  });
+  document.getElementById('slbl').textContent=SCENES[idx].label;
+  updDots(idx);
+  triggerAnim(idx);
+}
+
+function triggerAnim(idx){
+  if(animDone[idx])return;
+  animDone[idx]=true;
+  if(idx===1)animFeed();
+  if(idx===2)animPipeline();
+  if(idx===3)animContent();
+  if(idx===4)animChat();
+  if(idx===5)animInterest();
+}
+
+function animFeed(){
+  ['fi0','fi1','fi2','fi3'].forEach((id,i)=>{
+    setTimeout(()=>{const el=document.getElementById(id);if(el)el.classList.add('in');},i*350+200);
+  });
+}
+
+function animPipeline(){
+  const steps=[['ps1','pr1','12 sources fetched'],['ps2','pr2','3 conflicts resolved'],['ps3','pr3','report exported']];
+  document.getElementById('ps0').classList.add('in','done');
+  steps.forEach(([sid,rid,res],i)=>{
+    setTimeout(()=>{
+      const s=document.getElementById(sid);
+      if(!s)return;
+      s.classList.add('in','running');
+      s.querySelector('.as-dot').style.background='#fbbf24';
+    },600+i*1400);
+    setTimeout(()=>{
+      const s=document.getElementById(sid);
+      if(!s)return;
+      s.classList.remove('running');s.classList.add('done');
+      s.querySelector('.as-dot').style.background='#34d399';
+      const r=document.getElementById(rid);if(r)r.textContent=res;
+    },600+i*1400+1000);
+  });
+  setTimeout(()=>{const rp=document.getElementById('reportPreview');if(rp)rp.style.opacity='1';},600+3*1400+800);
+}
+
+function animContent(){
+  ['pc0','pc1','pc2','pc3','pc4','pc5'].forEach((id,i)=>{
+    setTimeout(()=>{const el=document.getElementById(id);if(el){el.classList.add('in');if(i===3)el.classList.add('active-pub');}},i*130+100);
+  });
+  ['ph0','ph1','ph2','ph3','ph4'].forEach((id,i)=>{
+    setTimeout(()=>{const el=document.getElementById(id);if(el)el.classList.add('in');},800+i*250);
+  });
+}
+
+function animChat(){
+  const seq=[
+    {id:'m0',delay:300},
+    {id:'mtyping',delay:800,show:true},
+    {id:'mtyping',delay:2400,hide:true},
+    {id:'m1',delay:2500,show:true},
+    {id:'m2',delay:4200,show:true},
+    {id:'mtyping',delay:4800,show:true},
+    {id:'mtyping',delay:6400,hide:true},
+    {id:'m3',delay:6500,show:true},
+  ];
+  seq.forEach(({id,delay,show,hide})=>{
+    setTimeout(()=>{
+      const el=document.getElementById(id);
+      if(!el)return;
+      if(hide){el.style.display='none';return;}
+      if(show)el.style.display='block';
+      setTimeout(()=>el.classList.add('in'),10);
+    },delay);
+  });
+  document.getElementById('m0').classList.add('in');
+}
+
+function animInterest(){
+  ['ic0','ic1','ic2','ic3'].forEach((id,i)=>{
+    setTimeout(()=>{const el=document.getElementById(id);if(el)el.classList.add('in');},i*200+200);
+  });
+}
+
+function jumpTo(idx){
+  let t=0;for(let i=0;i<idx;i++)t+=SCENES[i].dur;
+  elapsed=t;scEl=0;cur=idx;showScene(idx);updProg();
+}
+function updProg(){
+  document.getElementById('progFill').style.width=(elapsed/TOTAL*100)+'%';
+  const s=Math.floor(elapsed/1000);
+  document.getElementById('tlbl').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;
+}
+function tick(ts){
+  if(!lastTs)lastTs=ts;
+  const dt=ts-lastTs;lastTs=ts;
+  elapsed=Math.min(elapsed+dt,TOTAL);scEl+=dt;
+  updProg();
+  if(scEl>=SCENES[cur].dur){
+    if(cur<SCENES.length-1){cur++;scEl=0;showScene(cur);}
+    else{playing=false;document.getElementById('pIcon').className='ti ti-player-play';return;}
+  }
+  if(playing)raf=requestAnimationFrame(tick);
+}
+function togglePlay(){
+  playing=!playing;
+  document.getElementById('pIcon').className=playing?'ti ti-player-pause':'ti ti-player-play';
+  if(playing){
+    if(elapsed>=TOTAL){elapsed=0;scEl=0;cur=0;animDone={};showScene(0);}
+    lastTs=null;raf=requestAnimationFrame(tick);
+  }else{if(raf)cancelAnimationFrame(raf);}
+}
+document.getElementById('progTrack').addEventListener('click',function(e){
+  const p=(e.clientX-this.getBoundingClientRect().left)/this.getBoundingClientRect().width;
+  elapsed=p*TOTAL;
+  let acc=0,si=0;
+  for(let i=0;i<SCENES.length;i++){if(elapsed>=acc&&elapsed<acc+SCENES[i].dur){si=i;scEl=elapsed-acc;break;}acc+=SCENES[i].dur;}
+  cur=si;showScene(si);updProg();
+});
+buildDots();
+</script>

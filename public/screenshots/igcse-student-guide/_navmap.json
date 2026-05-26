@@ -1,0 +1,22 @@
+[
+  {
+    "text": "Subjects",
+    "href": "https://igcse-student-guide.vercel.app/subjects"
+  },
+  {
+    "text": "Flashcards",
+    "href": "https://igcse-student-guide.vercel.app/flashcards"
+  },
+  {
+    "text": "Quizzes",
+    "href": "https://igcse-student-guide.vercel.app/quizzes"
+  },
+  {
+    "text": "Exam Papers",
+    "href": "https://igcse-student-guide.vercel.app/exam-papers"
+  },
+  {
+    "text": "Sign In",
+    "href": "https://igcse-student-guide.vercel.app/login"
+  }
+]
