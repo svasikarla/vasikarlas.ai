@@ -540,7 +540,7 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
           };
           const isEven = idx % 2 === 1;
           return (
-            <div key={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
+            <div key={p.id} id={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
               <div className={`flagship-visual${DEMO_IDS.has(p.id) ? ' flagship-visual--iframe' : ''}`}>
                 <FlagshipVisual id={p.id} />
               </div>
