@@ -20,7 +20,7 @@ page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', e => errors.push(e.message));
 
 console.log('Loading /work page...');
-await page.goto('http://localhost:3000/work', { waitUntil: 'networkidle', timeout: 30000 });
+await page.goto('http://localhost:3001/work', { waitUntil: 'networkidle', timeout: 30000 });
 await page.waitForTimeout(3000);
 
 // Screenshot full page
