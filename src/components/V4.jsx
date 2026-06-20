@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 
 const ParallaxBubbles = lazy(() => import('./ParallaxBubbles'));
 const ParticleField   = lazy(() => import('./ParticleField'));
+import RevealOnScroll from './RevealOnScroll';
 import { PROJECTS, PROFILE } from '@/data/projects';
 import { getVercelProjects } from '@/actions/vercel';
 import {
@@ -14,6 +15,14 @@ import {
   Option,
   SearchBox,
 } from '@fluentui/react-components';
+import {
+  SearchRegular,
+  DismissRegular,
+  SearchInfoRegular,
+  DatabaseRegular,
+  ShieldCheckmarkRegular,
+  LockClosedRegular,
+} from '@fluentui/react-icons';
 
 /* ─── Helpers ─── */
 
@@ -200,38 +209,22 @@ const PROBLEMS = [
   {
     pain: 'Unstructured knowledge is hard to search',
     solve: 'RAG pipelines, ingestion workflows, and knowledge graphs that turn scattered sources into retrievable intelligence.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" width="22" height="22">
-        <circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /><path d="M8 11h6M11 8v6" />
-      </svg>
-    ),
+    icon: <SearchInfoRegular style={{ fontSize: 22 }} />,
   },
   {
     pain: 'Business users cannot access their own data',
     solve: 'NL-to-SQL interfaces with schema awareness and guardrails — plain English in, production SQL out.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" width="22" height="22">
-        <ellipse cx="12" cy="5" rx="8" ry="3" /><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5" /><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" />
-      </svg>
-    ),
+    icon: <DatabaseRegular style={{ fontSize: 22 }} />,
   },
   {
     pain: 'High-stakes decisions feel opaque and low-trust',
     solve: 'Multilingual, guided workflows with AI-assisted comparison — built for insurance, health, and regulated domains.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" width="22" height="22">
-        <path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3z" /><path d="m9 12 2 2 4-4" />
-      </svg>
-    ),
+    icon: <ShieldCheckmarkRegular style={{ fontSize: 22 }} />,
   },
   {
     pain: 'Sensitive documents can’t go to public LLMs',
     solve: 'Private, on-device RAG and local-LLM pipelines for compliance-bound document workflows.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" width="22" height="22">
-        <rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /><circle cx="12" cy="15.5" r="1.2" />
-      </svg>
-    ),
+    icon: <LockClosedRegular style={{ fontSize: 22 }} />,
   },
 ];
 
@@ -293,7 +286,7 @@ export function CommandPalette({ open, setOpen, projects }) {
     <div className="cmdk-overlay" onClick={() => setOpen(false)}>
       <div className="cmdk" onClick={(e) => e.stopPropagation()}>
         <div className="cmdk-input">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
+          <SearchRegular style={{ fontSize: 16 }} />
           <input ref={inputRef} value={q} onChange={(e) => { setQ(e.target.value); setIdx(0); }} onKeyDown={onKeyDown} placeholder="Search projects…" />
           <kbd>ESC</kbd>
         </div>
@@ -360,7 +353,7 @@ export function DetailPanel({ project, profile, onClose }) {
     <div className="detail-overlay" onClick={onClose}>
       <div className="detail-panel" onClick={(e) => e.stopPropagation()}>
         <button className="dp-close" onClick={onClose}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <DismissRegular style={{ fontSize: 16 }} />
         </button>
 
         <div className="dp-header">
@@ -453,7 +446,7 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
           <span>AI Product Engineer</span>
           {onOpenPalette && (
             <button className="cmdk-btn" onClick={onOpenPalette}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="12" height="12"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
+              <SearchRegular style={{ fontSize: 12 }} />
               Search
               <kbd>⌘K</kbd>
             </button>
@@ -508,11 +501,13 @@ export function ProblemsSection() {
       </div>
       <div className="problems-grid">
         {PROBLEMS.map((p, i) => (
-          <div key={i} className="problem-card">
-            <div className="problem-icon">{p.icon}</div>
-            <h4 className="problem-pain">{p.pain}</h4>
-            <p className="problem-solve">{p.solve}</p>
-          </div>
+          <RevealOnScroll key={i} delay={i * 80}>
+            <div className="problem-card">
+              <div className="problem-icon">{p.icon}</div>
+              <h4 className="problem-pain">{p.pain}</h4>
+              <p className="problem-solve">{p.solve}</p>
+            </div>
+          </RevealOnScroll>
         ))}
       </div>
     </section>
@@ -540,44 +535,46 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
           };
           const isEven = idx % 2 === 1;
           return (
-            <div key={p.id} id={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
-              <div className={`flagship-visual${DEMO_IDS.has(p.id) ? ' flagship-visual--iframe' : ''}`}>
-                <FlagshipVisual id={p.id} />
-              </div>
-              <div className="flagship-body">
-                <div className="flagship-head">
-                  <div>
-                    <h3 className="flagship-name">{p.name}</h3>
-                    <span className="flagship-category">{p.category}</span>
-                  </div>
-                  <StatusPill status={p.status} />
+            <RevealOnScroll key={p.id} delay={idx * 120}>
+              <div id={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
+                <div className={`flagship-visual${DEMO_IDS.has(p.id) ? ' flagship-visual--iframe' : ''}`}>
+                  <FlagshipVisual id={p.id} />
                 </div>
+                <div className="flagship-body">
+                  <div className="flagship-head">
+                    <div>
+                      <h3 className="flagship-name">{p.name}</h3>
+                      <span className="flagship-category">{p.category}</span>
+                    </div>
+                    <StatusPill status={p.status} />
+                  </div>
 
-                <div className="flagship-narrative">
-                  <div className="narrative-block">
-                    <span className="narrative-label">Challenge</span>
-                    <p>{narr.challenge}</p>
+                  <div className="flagship-narrative">
+                    <div className="narrative-block">
+                      <span className="narrative-label">Challenge</span>
+                      <p>{narr.challenge}</p>
+                    </div>
+                    <div className="narrative-block">
+                      <span className="narrative-label">Solution</span>
+                      <p>{narr.solution}</p>
+                    </div>
                   </div>
-                  <div className="narrative-block">
-                    <span className="narrative-label">Solution</span>
-                    <p>{narr.solution}</p>
-                  </div>
-                </div>
 
-                <div className="flagship-footer">
-                  <div className="flagship-chips">
-                    {p.stack.slice(0, 4).map(s => <span key={s}>{s}</span>)}
-                  </div>
-                  <div className="flagship-actions">
-                    <a className="btn-ghost small" href={`/work/${p.id}`}>Case Study →</a>
-                    {p.url && <a className="btn-primary small" href={p.url} target="_blank" rel="noopener noreferrer">Live ↗</a>}
-                    {onSelectProject && (
-                      <button className="btn-ghost small" onClick={() => onSelectProject(p)}>Details</button>
-                    )}
+                  <div className="flagship-footer">
+                    <div className="flagship-chips">
+                      {p.stack.slice(0, 4).map(s => <span key={s}>{s}</span>)}
+                    </div>
+                    <div className="flagship-actions">
+                      <a className="btn-ghost small" href={`/work/${p.id}`}>Case Study →</a>
+                      {p.url && <a className="btn-primary small" href={p.url} target="_blank" rel="noopener noreferrer">Live ↗</a>}
+                      {onSelectProject && (
+                        <button className="btn-ghost small" onClick={() => onSelectProject(p)}>Details</button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </RevealOnScroll>
           );
         })}
       </div>
@@ -589,18 +586,22 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
 export function CapabilitiesSection() {
   return (
     <section className="v4-section capabilities-section">
-      <div className="section-header">
-        <span className="section-label">Technical Focus</span>
-        <h2>Capabilities</h2>
-      </div>
+      <RevealOnScroll>
+        <div className="section-header">
+          <span className="section-label">Technical Focus</span>
+          <h2>Capabilities</h2>
+        </div>
+      </RevealOnScroll>
       <div className="capabilities-strip">
         {CAPABILITIES.map((c, idx) => (
-          <div key={idx} className="capability-col">
-            <h4>{c.title}</h4>
-            <div className="capability-tags">
-              {c.tags.map((t, i) => <span key={i}>{t}</span>)}
+          <RevealOnScroll key={idx} delay={idx * 100}>
+            <div className="capability-col">
+              <h4>{c.title}</h4>
+              <div className="capability-tags">
+                {c.tags.map((t, i) => <span key={i}>{t}</span>)}
+              </div>
             </div>
-          </div>
+          </RevealOnScroll>
         ))}
       </div>
     </section>
@@ -610,6 +611,7 @@ export function CapabilitiesSection() {
 /* ─── Archive ─── */
 export function ArchiveSection({ projects, onSelectProject, headerLabel = 'Full Portfolio', headerTitle = 'All Projects' }) {
   const [filter, setFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [q, setQ] = useState('');
   const [sort, setSort] = useState('flagship');
 
@@ -619,8 +621,14 @@ export function ArchiveSection({ projects, onSelectProject, headerLabel = 'Full 
     return c;
   }, [projects]);
 
+  const categories = useMemo(() => {
+    const cats = new Set(projects.map(p => p.category));
+    return ['all', ...Array.from(cats).sort()];
+  }, [projects]);
+
   let visible = projects.filter((p) => {
     if (filter !== 'all' && p.status !== filter) return false;
+    if (categoryFilter !== 'all' && p.category !== categoryFilter) return false;
     if (q && !`${p.name} ${p.description} ${p.category}`.toLowerCase().includes(q.toLowerCase())) return false;
     return true;
   });
@@ -675,11 +683,26 @@ export function ArchiveSection({ projects, onSelectProject, headerLabel = 'Full 
         </div>
       </div>
 
+      <div className="archive-toolbar archive-category-row">
+        <TabList
+          selectedValue={categoryFilter}
+          onTabSelect={(_, data) => setCategoryFilter(data.value)}
+          size="small"
+          className="archive-category-tabs"
+        >
+          {categories.map((c) => (
+            <Tab key={c} value={c}>
+              {c === 'all' ? 'All Categories' : c}
+            </Tab>
+          ))}
+        </TabList>
+      </div>
+
       {visible.length === 0 && (
         <div className="empty-state">
           <div className="empty-icon">⌘</div>
           <div className="empty-title">No projects match</div>
-          <button className="btn-ghost small" onClick={() => { setQ(''); setFilter('all'); }}>Reset filters</button>
+          <button className="btn-ghost small" onClick={() => { setQ(''); setFilter('all'); setCategoryFilter('all'); }}>Reset filters</button>
         </div>
       )}
 
@@ -711,16 +734,18 @@ export function ArchiveSection({ projects, onSelectProject, headerLabel = 'Full 
 /* ─── Contact ─── */
 export function ContactSection({ profile }) {
   return (
-    <section className="contact-section">
-      <div className="contact-inner">
-        <span className="contact-label">Work With Me</span>
-        <h2>Let&apos;s build something that ships.</h2>
-        <p>I build AI products, internal tools, and decision systems for teams that need working software, not demos.</p>
-        <a href={`mailto:${profile.email}`} className="btn-primary">
-          Get in Touch →
-        </a>
-      </div>
-    </section>
+    <RevealOnScroll>
+      <section className="contact-section">
+        <div className="contact-inner">
+          <span className="contact-label">Work With Me</span>
+          <h2>Let&apos;s build something that ships.</h2>
+          <p>I build AI products, internal tools, and decision systems for teams that need working software, not demos.</p>
+          <a href={`mailto:${profile.email}`} className="btn-primary">
+            Get in Touch →
+          </a>
+        </div>
+      </section>
+    </RevealOnScroll>
   );
 }
 

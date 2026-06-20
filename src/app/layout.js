@@ -3,6 +3,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SiteNav from "@/components/SiteNav";
 import CursorGlow from "@/components/CursorGlow";
+import ScrollProgress from "@/components/ScrollProgress";
 
 const inter = Inter({
   variable: "--f-sans-font",
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider>
           <CursorGlow />
+          <ScrollProgress />
           <div className="grid-bg" />
           <SiteNav />
           <main>{children}</main>
