@@ -7,11 +7,11 @@ import {
   Hero,
   ProblemsSection,
   FlagshipsSection,
-  CapabilitiesSection,
   ContactSection,
   SiteFooter,
   DetailPanel,
 } from '@/components/V4';
+import SkillsMatrix from '@/components/SkillsMatrix';
 
 export default function HomePage() {
   const projects = useProjectsData();
@@ -30,7 +30,7 @@ export default function HomePage() {
           headerLabel="Selected Work"
           headerTitle="Featured Case Studies"
         />
-        <CapabilitiesSection />
+        <SkillsMatrix />
         <ContactSection profile={profile} />
         <SiteFooter profile={profile} />
       </div>

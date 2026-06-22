@@ -9,15 +9,7 @@ import {
   SiteFooter,
   DetailPanel,
 } from '@/components/V4';
-
-const TELEMETRY_EVENTS = [
-  { time: 'Just now', type: 'deploy', text: 'BimaBuddyAdvanced: Deployed to production (bom1) · Uptime 99.99%', color: 'var(--accent)' },
-  { time: '2m ago', type: 'commit', text: 'CorePragyaAdvanced: Satish committed "feat: multi-agent research pipeline v2"', color: 'var(--info)' },
-  { time: '8m ago', type: 'build', text: 'NLSQLPro: Prompt guardrails security scan ... PASSED (30/30)', color: 'oklch(0.72 0.17 140)' },
-  { time: '14m ago', type: 'sync', text: 'ConceptForge: Syllabi DAG synchronization completed successfully', color: 'var(--accent)' },
-  { time: '25m ago', type: 'deploy', text: 'IGCSEStudentGuide: Automatic fact-check verification pipeline active', color: 'var(--info)' },
-  { time: '1h ago', type: 'telemetry', text: 'System Check: All 5 flagship production clusters reporting HEALTHY', color: 'oklch(0.72 0.17 140)' },
-];
+import { getGithubData } from '@/actions/github';
 
 export default function WorkPage() {
   const projects = useProjectsData();
@@ -25,46 +17,13 @@ export default function WorkPage() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeDomain, setActiveDomain] = useState('all');
   const [activeCard, setActiveCard] = useState('');
-  const [latencies, setLatencies] = useState({
-    'core-pragya-advanced': 82,
-    'bima-buddy-advanced': 105,
-    'igcse-student-guide': 68,
-    'nlsql-pro': 42,
-    'concept-forge': 91
-  });
-  const [visibleEvents, setVisibleEvents] = useState([]);
+  const [github, setGithub] = useState(null);
 
-  // Telemetry rotation
+  // Real GitHub activity — replaces the old hardcoded telemetry feed
   useEffect(() => {
-    setVisibleEvents(TELEMETRY_EVENTS.slice(0, 3));
-    const interval = setInterval(() => {
-      setVisibleEvents(prev => {
-        if (prev.length < 3) return prev;
-        const nextEvents = [...prev];
-        const lastEventText = prev[2]?.text;
-        const lastEventIdx = TELEMETRY_EVENTS.findIndex(e => e.text === lastEventText);
-        const nextIdx = (lastEventIdx + 1) % TELEMETRY_EVENTS.length;
-        nextEvents.shift();
-        nextEvents.push(TELEMETRY_EVENTS[nextIdx]);
-        return nextEvents;
-      });
-    }, 4500);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Telemetry latency jitter
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLatencies(prev => {
-        const next = { ...prev };
-        Object.keys(next).forEach(key => {
-          const delta = Math.floor(Math.random() * 7) - 3;
-          next[key] = Math.max(30, Math.min(150, prev[key] + delta));
-        });
-        return next;
-      });
-    }, 3000);
-    return () => clearInterval(interval);
+    let mounted = true;
+    getGithubData().then((data) => { if (mounted) setGithub(data); });
+    return () => { mounted = false; };
   }, []);
 
   // Filter projects by domain (only flagship projects)
@@ -217,47 +176,48 @@ export default function WorkPage() {
 
           {/* Right Sidebar */}
           <aside className="work-sidebar-right">
-            {/* Live System Telemetry */}
+            {/* GitHub Language Breakdown (real data) */}
             <div className="sidebar-glass-card telemetry-card">
-              <div className="card-label">Live Telemetry</div>
-              <div className="telemetry-grid">
-                {flagshipProjects.map((p) => {
-                  const currentLatency = latencies[p.id] || 60;
-                  return (
-                    <div key={p.id} className="telemetry-row">
-                      <div className="telemetry-info">
-                        <span className="app-name">{p.name}</span>
-                        <span className="app-latency">{currentLatency}ms</span>
+              <div className="card-label">
+                GitHub · Stack
+                {github?.repoCount != null && <span className="card-label-meta">{github.repoCount} repos</span>}
+              </div>
+              {!github && <div className="gh-loading">Loading from GitHub…</div>}
+              {github?.error && <div className="gh-loading">GitHub unavailable</div>}
+              {github?.languages && (
+                <div className="gh-lang-list">
+                  {github.languages.map((l) => (
+                    <div key={l.name} className="gh-lang-row">
+                      <div className="gh-lang-head">
+                        <span className="gh-lang-name">{l.name}</span>
+                        <span className="gh-lang-pct">{l.pct}%</span>
                       </div>
-                      <div className="telemetry-bar-container">
-                        <div
-                          className="telemetry-bar-fill"
-                          style={{
-                            width: `${Math.min(100, (currentLatency / 150) * 100)}%`,
-                          }}
-                        />
-                      </div>
-                      <div className="telemetry-meta">
-                        <span className="app-uptime">{p.uptime ? `${p.uptime}%` : '99.9%'}</span>
-                        <span className="live-pulse-dot" />
+                      <div className="gh-lang-track">
+                        <div className="gh-lang-fill" style={{ width: `${l.pct}%` }} />
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Live Activity Feed */}
+            {/* Recent GitHub Activity (real data) */}
             <div className="sidebar-glass-card activity-card">
-              <div className="card-label">Live Activity Feed</div>
+              <div className="card-label">
+                Recent Activity
+                {github?.lastActive && <span className="card-label-meta">{github.lastActive}</span>}
+              </div>
               <div className="activity-feed-list">
-                {visibleEvents.map((ev, index) => (
-                  <div key={index} className="activity-event-item" style={{ borderColor: ev.color }}>
+                {!github && <div className="gh-loading">Loading commits…</div>}
+                {github?.error && <div className="gh-loading">Couldn’t reach GitHub</div>}
+                {github?.events?.map((ev) => (
+                  <div key={ev.id} className={`activity-event-item gh-${ev.kind}`}>
                     <div className="event-header">
-                      <span className="event-type" style={{ color: ev.color }}>{ev.type.toUpperCase()}</span>
+                      <span className="event-type">{ev.kind.toUpperCase()}</span>
                       <span className="event-time">{ev.time}</span>
                     </div>
-                    <p className="event-text">{ev.text}</p>
+                    <p className="event-text">{ev.label}</p>
+                    {ev.detail && <p className="event-detail">{ev.detail}</p>}
                   </div>
                 ))}
               </div>

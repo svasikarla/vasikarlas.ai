@@ -10,6 +10,8 @@ import {
   StatusPill,
   SiteFooter,
 } from '@/components/V4';
+import ArchitectureDiagram from '@/components/ArchitectureDiagram';
+import { ARCHITECTURE } from '@/data/architecture';
 
 export default function CaseStudyPage() {
   const params = useParams();
@@ -101,6 +103,12 @@ export default function CaseStudyPage() {
           <section className="case-section">
             <span className="section-label">Architecture</span>
             <p className="case-prose">{cs.architecture}</p>
+            {ARCHITECTURE[project.id] && (
+              <ArchitectureDiagram
+                stages={ARCHITECTURE[project.id].stages}
+                caption={ARCHITECTURE[project.id].caption}
+              />
+            )}
           </section>
         )}
 

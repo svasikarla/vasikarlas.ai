@@ -5,6 +5,16 @@ import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 const ParallaxBubbles = lazy(() => import('./ParallaxBubbles'));
 const ParticleField   = lazy(() => import('./ParticleField'));
 import RevealOnScroll from './RevealOnScroll';
+const NlSqlDemo = lazy(() => import('./NlSqlDemo'));
+const CorePragyaDemo = lazy(() => import('./CorePragyaDemo'));
+const ConceptForgeDemo = lazy(() => import('./ConceptForgeDemo'));
+
+/* Flagships that render a live, interactive AI demo instead of a screenshot. */
+const LIVE_DEMOS = {
+  'nlsql-pro': NlSqlDemo,
+  'core-pragya-advanced': CorePragyaDemo,
+  'concept-forge': ConceptForgeDemo,
+};
 import { PROJECTS, PROFILE } from '@/data/projects';
 import { getVercelProjects } from '@/actions/vercel';
 import {
@@ -324,20 +334,68 @@ export const DEMO_IDS = new Set([
   'concept-forge',
 ]);
 
+function FlagshipTour({ id }) {
+  return (
+    <div className="flagship-tour">
+      <iframe
+        src={`/demos/${id}-demo.html`}
+        title={`${id} app tour`}
+        className="flagship-tour-iframe"
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin"
+      />
+    </div>
+  );
+}
+
+function FlagshipLive({ LiveDemo }) {
+  return (
+    <div className="widget-mini flagship-demo-widget flagship-demo-widget--live">
+      <Suspense fallback={null}>
+        <LiveDemo />
+      </Suspense>
+    </div>
+  );
+}
+
 export function FlagshipVisual({ id }) {
-  if (DEMO_IDS.has(id)) {
+  const LiveDemo = LIVE_DEMOS[id];
+  const hasTour = DEMO_IDS.has(id);
+  // Default to the real app tour so the product features lead; the live AI
+  // engine is one click away under "Try it live".
+  const [tab, setTab] = useState('tour');
+
+  // Both an app tour AND a live engine → tabbed view.
+  if (LiveDemo && hasTour) {
     return (
-      <div className="widget-mini flagship-demo-widget">
-        <iframe
-          src={`/demos/${id}-demo.html`}
-          title={`${id} live app demo`}
-          className="flagship-demo-iframe"
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin"
-        />
+      <div className="flagship-tabbed">
+        <div className="fvtab-bar" role="tablist" aria-label="Demo view">
+          <button
+            role="tab"
+            aria-selected={tab === 'tour'}
+            className={`fvtab${tab === 'tour' ? ' is-active' : ''}`}
+            onClick={() => setTab('tour')}
+          >
+            App Tour
+          </button>
+          <button
+            role="tab"
+            aria-selected={tab === 'live'}
+            className={`fvtab${tab === 'live' ? ' is-active' : ''}`}
+            onClick={() => setTab('live')}
+          >
+            Try it live
+          </button>
+        </div>
+        <div className="fvtab-panel">
+          {tab === 'tour' ? <FlagshipTour id={id} /> : <FlagshipLive LiveDemo={LiveDemo} />}
+        </div>
       </div>
     );
   }
+
+  if (LiveDemo) return <FlagshipLive LiveDemo={LiveDemo} />;
+  if (hasTour) return <FlagshipTour id={id} />;
   return null;
 }
 

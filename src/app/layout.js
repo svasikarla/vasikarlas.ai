@@ -16,8 +16,20 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://vasikarlas.ai"),
   title: "Vasikarla · AI — AI Product Engineer",
   description: "AI Product Engineer. Building production AI and full-stack systems for insurance, education, and knowledge platforms.",
+  openGraph: {
+    title: "Vasikarla · AI — AI Product Engineer",
+    description: "AI Product Engineer. Building production AI and full-stack systems for insurance, education, and knowledge platforms.",
+    type: "website",
+    siteName: "Vasikarla · AI",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vasikarla · AI — AI Product Engineer",
+    description: "Building production AI products for insurance, education, and knowledge platforms.",
+  },
 };
 
 export default function RootLayout({ children }) {
