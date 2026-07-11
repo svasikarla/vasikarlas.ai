@@ -31,17 +31,45 @@ export default function AboutPage() {
       </section>
 
       <div className="v4-content">
+        <section className="v4-section about-bio">
+          <div className="section-header">
+            <span className="section-label">Profile</span>
+            <h2>How I work</h2>
+          </div>
+          <div className="about-bio-body">
+            <p>{profile.bio}</p>
+            <p>
+              I focus on shipping software that runs in production for real users — LLM integration,
+              RAG pipelines, knowledge graphs, and natural-language-to-SQL across insurance, education,
+              and knowledge platforms. The emphasis is on reliability and usability, not demos.
+            </p>
+          </div>
+          <div className="about-stats">
+            <div className="about-stat">
+              <span className="about-stat-num">{profile.stats.projects}</span>
+              <span className="about-stat-label">Shipped products</span>
+            </div>
+            <div className="about-stat">
+              <span className="about-stat-num">{profile.stats.deploys}</span>
+              <span className="about-stat-label">Production deploys</span>
+            </div>
+            <div className="about-stat">
+              <span className="about-stat-num">{profile.stats.uptime}%</span>
+              <span className="about-stat-label">Uptime</span>
+            </div>
+          </div>
+        </section>
+
         <CapabilitiesSection />
+
         <section className="v4-section">
           <div className="section-header">
             <span className="section-label">Specializations</span>
             <h2>What I work on</h2>
           </div>
-          <div className="capabilities-strip">
+          <div className="spec-chips">
             {profile.specializations.map((s, i) => (
-              <div key={i} className="capability-col">
-                <h4>{s}</h4>
-              </div>
+              <span key={i} className="spec-chip">{s}</span>
             ))}
           </div>
         </section>

@@ -650,18 +650,18 @@ export function CapabilitiesSection() {
           <h2>Capabilities</h2>
         </div>
       </RevealOnScroll>
-      <div className="capabilities-strip">
-        {CAPABILITIES.map((c, idx) => (
-          <RevealOnScroll key={idx} delay={idx * 100}>
-            <div className="capability-col">
+      <RevealOnScroll>
+        <div className="capabilities-strip">
+          {CAPABILITIES.map((c, idx) => (
+            <div key={idx} className="capability-col">
               <h4>{c.title}</h4>
               <div className="capability-tags">
                 {c.tags.map((t, i) => <span key={i}>{t}</span>)}
               </div>
             </div>
-          </RevealOnScroll>
-        ))}
-      </div>
+          ))}
+        </div>
+      </RevealOnScroll>
     </section>
   );
 }
@@ -720,7 +720,7 @@ export function ArchiveSection({ projects, onSelectProject, headerLabel = 'Full 
           size="small"
           className="archive-tablist"
         >
-          {['all', 'live', 'beta', 'wip', 'archived'].map((s) => (
+          {['all', 'live', 'beta', 'wip', 'archived'].filter((s) => counts[s]).map((s) => (
             <Tab key={s} value={s}>
               {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)} ({counts[s] || 0})
             </Tab>
