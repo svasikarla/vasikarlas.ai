@@ -16,6 +16,7 @@ const LIVE_DEMOS = {
   'concept-forge': ConceptForgeDemo,
 };
 import { PROJECTS, PROFILE } from '@/data/projects';
+import TechCardWrapper from './TechCardWrapper';
 import { getVercelProjects } from '@/actions/vercel';
 import {
   Badge,
@@ -555,6 +556,13 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
   );
 }
 
+const PROBLEM_TELEMETRY = [
+  '⚡ RAG Pipelines & Vector Recall',
+  '🛡️ Schema-Aware NL-to-SQL AST',
+  '🌐 Multilingual UX & AI Guardrails',
+  '🔒 On-Device Local-LLM Pipeline',
+];
+
 /* ─── Problems I Solve ─── */
 export function ProblemsSection() {
   return (
@@ -565,11 +573,11 @@ export function ProblemsSection() {
       <div className="problems-grid">
         {PROBLEMS.map((p, i) => (
           <RevealOnScroll key={i} delay={i * 80}>
-            <div className="problem-card">
+            <TechCardWrapper className="problem-card" telemetryOverride={PROBLEM_TELEMETRY[i]}>
               <div className="problem-icon">{p.icon}</div>
               <h4 className="problem-pain">{p.pain}</h4>
               <p className="problem-solve">{p.solve}</p>
-            </div>
+            </TechCardWrapper>
           </RevealOnScroll>
         ))}
       </div>
@@ -599,7 +607,7 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
           const isEven = idx % 2 === 1;
           return (
             <RevealOnScroll key={p.id} delay={idx * 120}>
-              <div id={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
+              <TechCardWrapper id={p.id} projectId={p.id} className={`flagship-card ${isEven ? 'reversed' : ''}`}>
                 <div className={`flagship-visual${DEMO_IDS.has(p.id) ? ' flagship-visual--iframe' : ''}`}>
                   <FlagshipVisual id={p.id} />
                 </div>
@@ -636,7 +644,7 @@ export function FlagshipsSection({ projects, onSelectProject, limit, headerLabel
                     </div>
                   </div>
                 </div>
-              </div>
+              </TechCardWrapper>
             </RevealOnScroll>
           );
         })}

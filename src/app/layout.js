@@ -2,7 +2,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SiteNav from "@/components/SiteNav";
-import CursorGlow from "@/components/CursorGlow";
+import VectorConstellation from "@/components/VectorConstellation";
 import ScrollProgress from "@/components/ScrollProgress";
 
 const inter = Inter({
@@ -144,7 +144,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          <CursorGlow />
+          <VectorConstellation />
           <ScrollProgress />
           <div className="grid-bg" />
           <SiteNav />
