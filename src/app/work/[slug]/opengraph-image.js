@@ -1,26 +1,18 @@
 import { ImageResponse } from 'next/og';
 import { PROJECTS } from '@/data/projects';
 
-export const alt = 'Vasikarla · AI case study';
+export const alt = 'Vasikarla · AI | Case Study';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const STATUS = {
-  live: { label: 'LIVE', color: '#4ade80' },
-  beta: { label: 'BETA', color: '#fbbf24' },
-  wip: { label: 'WIP', color: '#60a5fa' },
-  archived: { label: 'ARCHIVED', color: '#9a9aa6' },
-};
-
 export default async function Image({ params }) {
-  const { slug } = await params;
+  const resolvedParams = await params;
+  const slug = resolvedParams?.slug;
   const project = PROJECTS.find((p) => p.id === slug);
 
-  const name = project?.name || 'Vasikarla · AI';
-  const tagline = project?.tagline || 'AI Product Engineer';
-  const stack = (project?.stack || []).slice(0, 5);
-  const status = STATUS[project?.status] || STATUS.live;
-  const nameSize = name.length > 13 ? 68 : 86;
+  const title = project ? project.name : (slug ? slug.replace(/-/g, ' ').toUpperCase() : 'VASIKARLA · AI');
+  const tagline = project ? project.tagline : 'AI Product Case Study & Architecture Breakdown';
+  const category = project ? project.category : 'AI / Full Stack';
 
   return new ImageResponse(
     (
@@ -34,65 +26,51 @@ export default async function Image({ params }) {
           padding: '72px',
           backgroundColor: '#0c0c11',
           backgroundImage:
-            'radial-gradient(1100px 500px at 80% -10%, rgba(139,124,255,0.18), transparent 60%)',
+            'radial-gradient(1100px 520px at 75% -10%, rgba(139,124,255,0.22), transparent 60%)',
           fontFamily: 'sans-serif',
           color: '#f5f5f7',
         }}
       >
-        {/* Top: brand + status */}
+        {/* Top Header Badge */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: '#8b7cff' }} />
-            <div style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '2px', color: '#cfcfe0' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+            <span style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '2px', color: '#cfcfe0' }}>
               VASIKARLA · AI
-            </div>
+            </span>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              fontSize: '20px',
-              fontWeight: 700,
-              letterSpacing: '2px',
-              color: status.color,
-              border: `1px solid ${status.color}`,
-              borderRadius: '999px',
-              padding: '8px 20px',
-            }}
-          >
-            {status.label}
-          </div>
+          <span style={{ fontSize: '20px', fontWeight: 600, color: '#8b7cff', backgroundColor: 'rgba(139,124,255,0.12)', padding: '6px 16px', borderRadius: '20px' }}>
+            {category}
+          </span>
         </div>
 
-        {/* Middle: name + tagline */}
+        {/* Dynamic Center Title */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ fontSize: `${nameSize}px`, fontWeight: 800, lineHeight: 1.05, color: '#ffffff' }}>
-            {name}
-          </div>
-          <div style={{ fontSize: '34px', lineHeight: 1.3, color: '#a7a7b4', maxWidth: '900px' }}>
+          <h1 style={{ fontSize: '64px', fontWeight: 800, color: '#ffffff', margin: 0, lineHeight: 1.1 }}>
+            {title}
+          </h1>
+          <p style={{ fontSize: '28px', color: '#a7a7b4', margin: 0, maxWidth: '960px' }}>
             {tagline}
-          </div>
+          </p>
         </div>
 
-        {/* Bottom: stack chips */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          {stack.map((s) => (
-            <div
-              key={s}
-              style={{
-                display: 'flex',
-                fontSize: '22px',
-                color: '#c8c8d4',
-                backgroundColor: '#1a1a22',
-                border: '1px solid #2c2c36',
-                borderRadius: '8px',
-                padding: '8px 18px',
-              }}
-            >
-              {s}
-            </div>
-          ))}
+        {/* Footer Tagline */}
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderTop: '1px solid rgba(255,255,255,0.12)',
+            paddingTop: '28px',
+          }}
+        >
+          <span style={{ fontSize: '20px', color: '#94a3b8' }}>
+            Production AI Systems &amp; Case Studies
+          </span>
+          <span style={{ fontSize: '20px', fontWeight: 600, color: '#38bdf8' }}>
+            vasikarlas-ai.vercel.app ↗
+          </span>
         </div>
       </div>
     ),

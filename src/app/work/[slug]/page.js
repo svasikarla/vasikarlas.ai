@@ -132,6 +132,24 @@ export default function CaseStudyPage() {
           </section>
         )}
 
+        {/* Technical Benchmarks */}
+        {cs?.benchmarks && cs.benchmarks.length > 0 && (
+          <section className="case-section">
+            <span className="section-label">Technical Benchmarks &amp; Metrics</span>
+            <div className="case-features" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+              {cs.benchmarks.map((b, i) => (
+                <div key={i} className="case-feature" style={{ borderColor: 'rgba(139,124,255,0.2)' }}>
+                  <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--accent, #8b7cff)', marginBottom: '4px' }}>
+                    {b.value}
+                  </div>
+                  <div className="case-feature-name" style={{ fontSize: '15px' }}>{b.metric}</div>
+                  <div className="case-feature-desc" style={{ marginTop: '4px' }}>{b.detail}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Features */}
         {project.features && project.features.length > 0 && (
           <section className="case-section">

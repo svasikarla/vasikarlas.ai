@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 
 const ParallaxBubbles = lazy(() => import('./ParallaxBubbles'));
-const ParticleField   = lazy(() => import('./ParticleField'));
+const ParticleField = lazy(() => import('./ParticleField'));
 import RevealOnScroll from './RevealOnScroll';
 const NlSqlDemo = lazy(() => import('./NlSqlDemo'));
 const CorePragyaDemo = lazy(() => import('./CorePragyaDemo'));
@@ -86,9 +86,14 @@ function useTypewriter(text, { startDelay = 500, baseSpeed = 50 } = {}) {
 }
 
 export function CountUp({ value, decimals = 0, suffix = '' }) {
-  const v = useCountUp(value);
-  const f = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
-  return <span>{f}{suffix}</span>;
+  const [mounted, setMounted] = useState(false);
+  const animatedValue = useCountUp(mounted ? value : null);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const displayVal = mounted ? animatedValue : (value ?? 0);
+  const f = decimals > 0 ? displayVal.toFixed(decimals) : Math.round(displayVal).toLocaleString();
+  return <span suppressHydrationWarning>{f}{suffix}</span>;
 }
 
 export function StatusPill({ status }) {
@@ -483,7 +488,7 @@ export function DetailPanel({ project, profile, onClose }) {
   );
 }
 
-const HERO_HEADING = 'I build AI products that solve real business workflows.';
+const HERO_HEADING = 'I build AI products that solve real business workflows';
 
 /* ─── Hero ─── */
 export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'View Case Studies →', showStats = true, compact = false }) {
@@ -512,7 +517,7 @@ export function Hero({ profile, onOpenPalette, ctaHref = '/work', ctaLabel = 'Vi
         </div>
 
         <h1 suppressHydrationWarning>
-          {displayed}
+          {displayed || HERO_HEADING}
           <span className={`cursor${done ? '' : ' typing'}`} />
         </h1>
 

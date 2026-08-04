@@ -32,7 +32,7 @@ export default function Image() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div style={{ fontSize: '66px', fontWeight: 800, lineHeight: 1.08, color: '#ffffff', maxWidth: '960px' }}>
-            I build AI products that solve real business workflows.
+            I build AI products that solve real business workflows
           </div>
           <div style={{ fontSize: '30px', color: '#a7a7b4' }}>
             {`AI Product Engineer · ${PROFILE.specializations.slice(0, 4).join(' · ')}`}
