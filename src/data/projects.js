@@ -82,6 +82,7 @@ export const PROJECTS = [
     vercel: 'fortyguard-thermotwin',
     url: 'https://fortyguard-thermotwin.vercel.app',
     repo: null,
+    screenshot: '/screenshots/thermotwin/landing.png',
     stack: ['Next.js', 'FastAPI', 'Cloud Run', 'LightGBM', 'SOLWEIG', 'DuckDB'],
     highlights: [
       { value: '0.992', label: 'R² of the surrogate on held-out data' },
@@ -137,6 +138,7 @@ export const PROJECTS = [
     vercel: 'skillpilot',
     url: 'https://skillpilot-mauve.vercel.app',
     repo: null,
+    screenshot: '/screenshots/skillpilot/landing.png',
     stack: ['Next.js', 'Claude', 'Multi-source ingestion', 'Scoring engine'],
     highlights: [
       { value: '79', label: 'skills across 10 clusters' },
@@ -293,6 +295,7 @@ export const PROJECTS = [
     vercel: 'mahatiwelfaresociety',
     url: null,
     repo: null,
+    screenshot: '/screenshots/society-finance/landing.png',
     stack: ['Next.js', 'Append-only ledger', 'Database-enforced rules', 'Excel & PDF export'],
     highlights: [
       { value: '1', label: 'ledger every balance derives from' },
