@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { SparkleRegular, BranchRegular } from '@fluentui/react-icons';
 import { generateContent } from '@/actions/corepragya';
 import { CP_EXAMPLES } from '@/data/corePragyaDemo';
 
@@ -47,7 +46,7 @@ export default function CorePragyaDemo() {
   return (
     <div className="demo-widget">
       <div className="demo-head">
-        <span className="demo-badge"><BranchRegular style={{ fontSize: 13 }} /> Live · Content Studio</span>
+        <span className="demo-badge">Live · Content Studio</span>
         <span className="demo-sub">One idea → platform-native posts, by {active.label}.</span>
       </div>
 
@@ -67,7 +66,6 @@ export default function CorePragyaDemo() {
       </div>
 
       <form className="demo-input" onSubmit={(e) => { e.preventDefault(); run(); }}>
-        <SparkleRegular style={{ fontSize: 15, flexShrink: 0, opacity: 0.6 }} />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}

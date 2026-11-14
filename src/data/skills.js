@@ -1,62 +1,67 @@
-// Skill → Proof map. Each capability links to the shipped projects that
+// Skill → proof map. Each capability links to the shipped projects that
 // demonstrate it, with a concrete one-line proof point. `id` references a
-// project in PROJECTS; flagship ids resolve to a /work/<id> case study.
+// project in PROJECTS; every project has a /work/<id> page.
 
 export const SKILL_PROOFS = [
   {
-    skill: 'RAG & Retrieval',
-    blurb: 'Vector search, embeddings, and knowledge graphs over messy sources.',
+    skill: 'Traceable analytics',
+    blurb: 'Numbers that open to their formula, inputs and source.',
     proofs: [
-      { id: 'core-pragya-advanced', point: 'Vector + graph store for semantic recall across thousands of RSS sources.' },
+      { id: 'stock-analyst', point: '75 metrics declared in YAML; every figure links to the filing line it came from.' },
+      { id: 'society-finance', point: 'Every balance derives from one append-only ledger, reconciled to the paise.' },
+      { id: 'thermotwin', point: 'Every temperature and R² comes from a measurement, a simulation or a cited constant.' },
+    ],
+  },
+  {
+    skill: 'Simulation & ML',
+    blurb: 'Real physics, with a learned surrogate where speed matters.',
+    proofs: [
+      { id: 'thermotwin', point: 'LightGBM surrogate at 0.992 R² over a SOLWEIG radiation model, answering in under a second.' },
+      { id: 'concept-forge', point: 'Four-factor mastery model routing practice through a prerequisite graph.' },
+    ],
+  },
+  {
+    skill: 'LLM workflows',
+    blurb: 'Models doing one well-bounded job inside a larger system.',
+    proofs: [
+      { id: 'skillpilot', point: 'Claude drafts three platform-tuned proposal variants under explicit style rules.' },
+      { id: 'core-pragya-advanced', point: 'Curator, Research and Studio agents over a multi-LLM router.' },
+      { id: 'nlsql-pro', point: 'Plain-English questions to dialect-specific, read-only SQL.' },
+    ],
+  },
+  {
+    skill: 'RAG & retrieval',
+    blurb: 'Vector search, embeddings and knowledge graphs over messy sources.',
+    proofs: [
+      { id: 'core-pragya-advanced', point: 'Vector and graph store for semantic recall across RSS sources.' },
       { id: 'nlsql-pro', point: 'Business Glossary and Golden Query memory backed by vector embeddings.' },
-      { id: 'bima-buddy-advanced', point: 'Semantic policy retrieval normalizing 50+ insurers into one schema.' },
+      { id: 'local-rag', point: 'On-device retrieval for documents that cannot leave the machine.' },
     ],
   },
   {
-    skill: 'NL → SQL',
-    blurb: 'Plain-English questions to production-safe SQL.',
+    skill: 'Guardrails & controls',
+    blurb: 'Rules enforced where they cannot be bypassed.',
     proofs: [
-      { id: 'nlsql-pro', point: 'Cross-dialect SQL generation with 24h schema caching and 50–200ms responses.' },
+      { id: 'nlsql-pro', point: 'Blocks 30+ prompt-injection patterns, with read-only sandboxing.' },
+      { id: 'stock-analyst', point: 'A database trigger rejects any update to a filed fact; restatements are new rows.' },
+      { id: 'society-finance', point: 'Roles and corpus-withdrawal approval enforced in the database, not the interface.' },
     ],
   },
   {
-    skill: 'Multi-Agent Systems',
-    blurb: 'Coordinated agents that share context without colliding.',
+    skill: 'Data pipelines',
+    blurb: 'Ingestion that survives sources changing underneath it.',
     proofs: [
-      { id: 'core-pragya-advanced', point: 'Curator, Research, and Studio agents over a multi-LLM router (OpenAI · Claude · Groq).' },
+      { id: 'skillpilot', point: 'Daily multi-source job ingestion with deduplication and reliability scoring.' },
+      { id: 'stock-analyst', point: 'Exchange XBRL parsed as filed, with 12 years of daily price history.' },
+      { id: 'igcse-student-guide', point: 'Staged content pipeline with fact-check and adversarial-review gates.' },
     ],
   },
   {
-    skill: 'LLM Guardrails',
-    blurb: 'Defending generation against injection and hallucination.',
+    skill: 'Multilingual & voice',
+    blurb: 'Interfaces that meet users in their own language.',
     proofs: [
-      { id: 'nlsql-pro', point: 'Blocks 30+ prompt-injection patterns with read-only sandboxing and AES-256.' },
-      { id: 'igcse-student-guide', point: 'Fact-check + adversarial review gates catch hallucinations before publish.' },
-    ],
-  },
-  {
-    skill: 'Multilingual & Voice',
-    blurb: 'High-stakes UX across languages and modalities.',
-    proofs: [
-      { id: 'bima-buddy-advanced', point: 'Streaming ASR + TTS across 10 Indian languages at 95%+ accuracy.' },
-    ],
-  },
-  {
-    skill: 'Adaptive Personalization',
-    blurb: 'Models that learn each user from sparse signals.',
-    proofs: [
-      { id: 'concept-forge', point: '4-factor mastery model routing practice via a prerequisite DAG.' },
-      { id: 'igcse-student-guide', point: 'Adaptive quizzes that track per-student confidence and target weak areas.' },
-      { id: 'core-pragya-advanced', point: 'Feed ranking personalized from a learned interest profile.' },
-    ],
-  },
-  {
-    skill: 'Production Reliability',
-    blurb: 'Shipped to live users, not just demoed.',
-    proofs: [
-      { id: 'bima-buddy-advanced', point: '99.99% uptime across 41 production deploys.' },
-      { id: 'nlsql-pro', point: '50–200ms responses — 10–100× faster than uncached generation.' },
-      { id: 'core-pragya-advanced', point: '99.98% production uptime with autonomous research pipelines.' },
+      { id: 'bima-buddy-advanced', point: 'Voice assistant across 10 Indian languages for insurance decisions.' },
+      { id: 'telugu-sahityam', point: 'Classical Telugu verse with IAST transliteration and English translation.' },
     ],
   },
 ];

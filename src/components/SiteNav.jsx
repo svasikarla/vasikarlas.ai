@@ -1,293 +1,121 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Button,
-  Drawer,
-  DrawerHeader,
-  DrawerHeaderTitle,
-  DrawerBody,
-  Divider,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
-import {
-  WeatherSunnyRegular,
-  WeatherMoonRegular,
-  SearchRegular,
-  NavigationRegular,
-  DismissRegular,
-} from '@fluentui/react-icons';
-
-const useStyles = makeStyles({
-  root: {
-    position: 'sticky',
-    top: 0,
-    zIndex: 50,
-    display: 'flex',
-    alignItems: 'center',
-    gap: tokens.spacingHorizontalL,
-    padding: `${tokens.spacingVerticalS} ${tokens.spacingHorizontalXL}`,
-    backgroundColor: 'color-mix(in oklab, var(--bg) 80%, transparent)',
-    backdropFilter: 'blur(14px)',
-    borderBottom: '1px solid var(--line)',
-    fontFamily: 'var(--f-sans)',
-  },
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontFamily: 'var(--f-mono)',
-    fontSize: '12px',
-    fontWeight: 600,
-    letterSpacing: '0.08em',
-    color: 'var(--fg)',
-    textDecoration: 'none',
-    textTransform: 'uppercase',
-    flexShrink: 0,
-  },
-  brandDot: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    background: 'var(--accent)',
-    boxShadow: '0 0 8px var(--accent)',
-  },
-  brandSub: { color: 'var(--fg-3)' },
-  navDesktop: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: tokens.spacingHorizontalXS,
-    marginLeft: tokens.spacingHorizontalXL,
-    '@media (max-width: 768px)': {
-      display: 'none',
-    },
-  },
-  navLink: {
-    fontFamily: 'var(--f-sans)',
-    fontSize: '13px',
-    fontWeight: 500,
-    color: 'var(--fg-2)',
-    padding: '8px 12px',
-    borderRadius: '6px',
-    textDecoration: 'none',
-    transition: 'color 0.15s ease, background 0.15s ease',
-    ':hover': {
-      color: 'var(--fg)',
-      backgroundColor: 'var(--bg-1)',
-    },
-  },
-  navLinkActive: {
-    color: 'var(--fg)',
-    backgroundColor: 'var(--bg-1)',
-  },
-  right: {
-    marginLeft: 'auto',
-    display: 'flex',
-    alignItems: 'center',
-    gap: tokens.spacingHorizontalS,
-  },
-  searchBtnDesktop: {
-    '@media (max-width: 768px)': {
-      display: 'none',
-    },
-  },
-  contactBtnDesktop: {
-    '@media (max-width: 768px)': {
-      display: 'none',
-    },
-  },
-  hamburger: {
-    display: 'none',
-    minWidth: '36px',
-    height: '36px',
-    padding: 0,
-    '@media (max-width: 768px)': {
-      display: 'inline-flex',
-    },
-  },
-  drawerNav: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: tokens.spacingVerticalXS,
-    marginTop: tokens.spacingVerticalM,
-  },
-  drawerLink: {
-    fontFamily: 'var(--f-sans)',
-    fontSize: '15px',
-    fontWeight: 500,
-    color: 'var(--fg-2)',
-    padding: '12px 14px',
-    borderRadius: '8px',
-    textDecoration: 'none',
-    transition: 'color 0.15s ease, background 0.15s ease',
-    ':hover': {
-      color: 'var(--fg)',
-      backgroundColor: 'var(--bg-1)',
-    },
-  },
-  drawerLinkActive: {
-    color: 'var(--fg)',
-    backgroundColor: 'var(--bg-1)',
-  },
-  drawerCta: {
-    marginTop: tokens.spacingVerticalL,
-  },
-});
+import { OPEN_PALETTE_EVENT } from './CommandPalette';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/work', label: 'Work' },
-  { href: '/projects', label: 'Projects' },
   { href: '/about', label: 'About' },
 ];
 
+/* The theme lives on <html data-theme>, set before first paint by the inline
+   script in the root layout. Subscribing to it keeps this component in sync
+   without setting state in an effect. */
+function subscribeTheme(callback) {
+  const observer = new MutationObserver(callback);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  return () => observer.disconnect();
+}
+const getTheme = () => document.documentElement.getAttribute('data-theme') || 'dark';
+const getServerTheme = () => 'dark';
+
+function Icon({ d }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={d} />
+    </svg>
+  );
+}
+const ICONS = {
+  search: 'M21 21l-4.3-4.3M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z',
+  sun: 'M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5L19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5L19 5M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  moon: 'M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z',
+  menu: 'M4 6h16M4 12h16M4 18h16',
+  close: 'M6 6l12 12M18 6L6 18',
+};
+
 export default function SiteNav() {
-  const styles = useStyles();
   const pathname = usePathname();
-  const [theme, setTheme] = useState('dark');
-  const [mounted, setMounted] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const current = document.documentElement.getAttribute('data-theme') || 'dark';
-    setTheme(current);
-  }, []);
-
-  // Close drawer on route change
-  useEffect(() => {
-    setDrawerOpen(false);
-  }, [pathname]);
+  const theme = useSyncExternalStore(subscribeTheme, getTheme, getServerTheme);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('vsk.theme', next); } catch {}
-    setTheme(next);
   };
 
-  const isActive = (href) => {
-    if (href === '/') return pathname === '/';
-    return pathname === href || pathname.startsWith(href + '/');
+  const openSearch = () => {
+    setMenuOpen(false);
+    window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
   };
+
+  const isActive = (href) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <>
-      <header className={styles.root}>
-        <Link href="/" className={styles.brand}>
-          <span className={styles.brandDot} aria-hidden />
-          VASIKARLA<span className={styles.brandSub}>·AI</span>
+    <header className="site-nav">
+      <div className="site-nav-bar">
+        <Link href="/" className="site-brand" onClick={() => setMenuOpen(false)}>
+          <span className="site-brand-dot" aria-hidden="true" />
+          VASIKARLA<span className="site-brand-sub">·AI</span>
         </Link>
-        <nav className={styles.navDesktop} aria-label="Primary">
+
+        <nav className="site-nav-links" aria-label="Primary">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ''}`}
+              className={`site-nav-link ${isActive(item.href) ? 'active' : ''}`}
+              aria-current={isActive(item.href) ? 'page' : undefined}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className={styles.right}>
-          <Button
-            appearance="subtle"
-            size="small"
-            icon={<SearchRegular />}
-            aria-label="Search projects"
-            as="a"
-            className={styles.searchBtnDesktop}
-            {...{ href: '/projects' }}
-          >
-            Search
-          </Button>
-          <Button
-            appearance="subtle"
-            size="small"
-            aria-label="Toggle theme"
-            icon={mounted && theme === 'dark' ? <WeatherSunnyRegular /> : <WeatherMoonRegular />}
-            onClick={toggleTheme}
-          />
-          <Button
-            appearance="primary"
-            size="small"
-            as="a"
-            className={styles.contactBtnDesktop}
-            {...{ href: '/about#contact' }}
-          >
-            Contact
-          </Button>
-          <Button
-            appearance="subtle"
-            aria-label="Open menu"
-            icon={<NavigationRegular />}
-            className={styles.hamburger}
-            onClick={() => setDrawerOpen(true)}
-          />
-        </div>
-      </header>
 
-      <Drawer
-        open={drawerOpen}
-        onOpenChange={(_, { open }) => setDrawerOpen(open)}
-        position="end"
-        size="small"
-      >
-        <DrawerHeader>
-          <DrawerHeaderTitle
-            action={
-              <Button
-                appearance="subtle"
-                aria-label="Close menu"
-                icon={<DismissRegular />}
-                onClick={() => setDrawerOpen(false)}
-              />
-            }
+        <div className="site-nav-right">
+          <button type="button" className="site-nav-btn site-nav-search" onClick={openSearch} aria-label="Search projects">
+            <Icon d={ICONS.search} />
+            <span>Search</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <button type="button" className="site-nav-btn" onClick={toggleTheme} aria-label="Toggle colour theme">
+            <Icon d={theme === 'dark' ? ICONS.sun : ICONS.moon} />
+          </button>
+          <Link href="/about#contact" className="btn-primary small site-nav-contact">Contact</Link>
+          <button
+            type="button"
+            className="site-nav-btn site-nav-menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="site-nav-drawer"
           >
-            Menu
-          </DrawerHeaderTitle>
-        </DrawerHeader>
-        <DrawerBody>
-          <nav className={styles.drawerNav} aria-label="Mobile">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${styles.drawerLink} ${isActive(item.href) ? styles.drawerLinkActive : ''}`}
-                onClick={() => setDrawerOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <Divider style={{ margin: '16px 0' }} />
-          <Button
-            appearance="primary"
-            size="medium"
-            as="a"
-            className={styles.drawerCta}
-            {...{ href: '/about#contact' }}
-            onClick={() => setDrawerOpen(false)}
-            style={{ width: '100%' }}
-          >
-            Contact
-          </Button>
-          <Button
-            appearance="subtle"
-            size="medium"
-            as="a"
-            {...{ href: '/projects' }}
-            onClick={() => setDrawerOpen(false)}
-            style={{ width: '100%', marginTop: '8px' }}
-            icon={<SearchRegular />}
-          >
-            Search projects
-          </Button>
-        </DrawerBody>
-      </Drawer>
-    </>
+            <Icon d={menuOpen ? ICONS.close : ICONS.menu} />
+          </button>
+        </div>
+      </div>
+
+      {menuOpen && (
+        <nav id="site-nav-drawer" className="site-nav-drawer" aria-label="Mobile">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`site-nav-link ${isActive(item.href) ? 'active' : ''}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <button type="button" className="site-nav-link" onClick={openSearch}>Search projects</button>
+          <Link href="/about#contact" className="btn-primary" onClick={() => setMenuOpen(false)}>Contact</Link>
+        </nav>
+      )}
+    </header>
   );
 }

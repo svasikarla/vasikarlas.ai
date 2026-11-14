@@ -7,7 +7,6 @@ export default function sitemap() {
     '',
     '/about',
     '/work',
-    '/projects',
   ].map((route) => ({
     url: `${SITE_URL}${route}`,
     lastModified: new Date().toISOString().split('T')[0],
@@ -17,9 +16,9 @@ export default function sitemap() {
 
   const projectRoutes = PROJECTS.map((project) => ({
     url: `${SITE_URL}/work/${project.id}`,
-    lastModified: new Date().toISOString().split('T')[0],
+    lastModified: project.shipped ? `${project.shipped}-01` : undefined,
     changeFrequency: 'monthly',
-    priority: project.flagship ? 0.9 : 0.7,
+    priority: project.tier === 'flagship' ? 0.9 : 0.6,
   }));
 
   return [...staticRoutes, ...projectRoutes];

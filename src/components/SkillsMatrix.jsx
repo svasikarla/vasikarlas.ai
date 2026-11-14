@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { PROJECTS } from '@/data/projects';
-import { FLAGSHIP_IDS } from '@/components/V4';
 import { SKILL_PROOFS } from '@/data/skills';
 import RevealOnScroll from '@/components/RevealOnScroll';
 
@@ -24,9 +23,7 @@ export default function SkillsMatrix() {
         <div className="section-header">
           <span className="section-label">Capabilities</span>
           <h2>Skills, proven</h2>
-          <p className="hero-sub" style={{ marginTop: 12 }}>
-            Pick a capability — see the shipped products that prove it.
-          </p>
+          <p className="section-blurb">Pick a capability to see the shipped products that prove it.</p>
         </div>
       </RevealOnScroll>
 
@@ -49,31 +46,16 @@ export default function SkillsMatrix() {
         <div className="skills-proof" key={active}>
           <p className="skills-blurb">{current.blurb}</p>
           <div className="proof-grid">
-            {proofs.map(({ id, point, project }) => {
-              const isFlagship = FLAGSHIP_IDS.includes(id);
-              const href = isFlagship ? `/work/${id}` : project.url || project.repo || null;
-              const external = !isFlagship && href;
-              const Card = (
-                <>
-                  <div className="proof-card-head">
-                    <span className="proof-project">{project.name}</span>
-                    <span className="proof-cat">{project.category}</span>
-                  </div>
-                  <p className="proof-point">{point}</p>
-                  {href && (
-                    <span className="proof-link">
-                      {isFlagship ? 'Case study →' : 'View ↗'}
-                    </span>
-                  )}
-                </>
-              );
-              if (!href) return <div key={id} className="proof-card">{Card}</div>;
-              return external ? (
-                <a key={id} className="proof-card" href={href} target="_blank" rel="noopener noreferrer">{Card}</a>
-              ) : (
-                <Link key={id} className="proof-card" href={href}>{Card}</Link>
-              );
-            })}
+            {proofs.map(({ id, point, project }) => (
+              <Link key={id} className="proof-card" href={`/work/${id}`}>
+                <div className="proof-card-head">
+                  <span className="proof-project">{project.name}</span>
+                  <span className="proof-cat">{project.domain}</span>
+                </div>
+                <p className="proof-point">{point}</p>
+                <span className="proof-link">{project.caseStudy ? 'Case study →' : 'Details →'}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

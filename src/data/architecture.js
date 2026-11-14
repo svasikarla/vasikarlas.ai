@@ -4,6 +4,49 @@
 // Derived from each project's caseStudy.architecture / hardParts.
 
 export const ARCHITECTURE = {
+  'stock-analyst': {
+    caption: 'As-filed facts flow through a declared metric registry; gates run before the score and outside it.',
+    stages: [
+      { label: 'NSE Filings', sub: 'XBRL, as filed', kind: 'input' },
+      { label: 'Fact Store', sub: 'Append-only · point-in-time', kind: 'store' },
+      { label: 'Metric Registry', sub: '75 metrics in YAML', kind: 'engine' },
+      { label: 'Sector Router', sub: 'Banks vs. non-financials', kind: 'pipeline' },
+      { label: 'Forensic Gates', sub: '13 gates · 6 vetoes', kind: 'guard' },
+      { label: 'Working Paper', sub: 'Parameters & flags', kind: 'output' },
+    ],
+  },
+  thermotwin: {
+    caption: 'A measured heat field and real geometry feed the physics; a surrogate trained on the physics makes it interactive.',
+    stages: [
+      { label: 'Site', sub: 'Downtown Seattle · 1.57 km²', kind: 'input', tags: ['Overture Maps', 'DuckDB'] },
+      { label: 'Measured Field', sub: '114 tiles · 1,733 buildings', kind: 'store' },
+      { label: 'SOLWEIG Physics', sub: 'Shadows · Tmrt → UTCI', kind: 'engine' },
+      { label: 'Surrogate', sub: 'LightGBM · R² 0.992', kind: 'llm' },
+      { label: 'Simulator', sub: 'Sub-second what-ifs', kind: 'output', tags: ['FastAPI', 'Cloud Run'] },
+    ],
+  },
+  skillpilot: {
+    caption: 'Listings are scored for trust before they are ranked for fit; Claude only writes once a match is chosen.',
+    stages: [
+      { label: 'Job Sources', sub: 'Boards & marketplaces', kind: 'input' },
+      { label: 'Ingestion', sub: 'Daily · dedup · relevance', kind: 'pipeline' },
+      { label: 'Reliability Score', sub: '0–100 · 20+ signals', kind: 'guard' },
+      { label: 'Match Engine', sub: 'Skill 60 · rate 20 · recency 20', kind: 'engine' },
+      { label: 'Claude', sub: '3 proposal variants', kind: 'llm' },
+      { label: 'Tracker', sub: '9 stages · group stats', kind: 'output' },
+    ],
+  },
+  'society-finance': {
+    caption: 'Everything posts to one append-only ledger; statements and year-end accounts are derived from it.',
+    stages: [
+      { label: 'Flats & Rates', sub: 'Effective-dated', kind: 'input' },
+      { label: 'Billing', sub: 'Occupancy-based dues', kind: 'pipeline' },
+      { label: 'Receipts', sub: 'Gap-free · oldest dues first', kind: 'engine' },
+      { label: 'Ledger', sub: 'Append-only · audit trail', kind: 'store' },
+      { label: 'DB Rules', sub: 'Roles · corpus approval', kind: 'guard' },
+      { label: 'Accounts', sub: 'Statements · I&E · Balance Sheet', kind: 'output' },
+    ],
+  },
   'core-pragya-advanced': {
     caption: 'Three coordinated agents over a multi-LLM router and a vector + graph store.',
     stages: [
