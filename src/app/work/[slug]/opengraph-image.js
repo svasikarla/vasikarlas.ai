@@ -12,7 +12,7 @@ export default async function Image({ params }) {
 
   const title = project ? project.name : (slug ? slug.replace(/-/g, ' ').toUpperCase() : 'VASIKARLA · AI');
   const tagline = project ? project.tagline : 'AI Product Case Study & Architecture Breakdown';
-  const category = project ? project.category : 'AI / Full Stack';
+  const category = project ? project.domain : 'AI / Full Stack';
 
   return new ImageResponse(
     (
@@ -66,7 +66,7 @@ export default async function Image({ params }) {
           }}
         >
           <span style={{ fontSize: '20px', color: '#94a3b8' }}>
-            Production AI Systems &amp; Case Studies
+            Case study
           </span>
           <span style={{ fontSize: '20px', fontWeight: 600, color: '#38bdf8' }}>
             vasikarlas-ai.vercel.app ↗

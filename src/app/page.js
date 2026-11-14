@@ -1,42 +1,19 @@
-'use client';
-
-import React, { useState } from 'react';
-import { PROFILE } from '@/data/projects';
-import {
-  useProjectsData,
-  Hero,
-  ProblemsSection,
-  FlagshipsSection,
-  ContactSection,
-  SiteFooter,
-  DetailPanel,
-} from '@/components/V4';
+import { getPortfolioFacts } from '@/data/projects';
+import { getProjects } from '@/lib/vercel';
+import { Hero, PrinciplesSection, FeaturedWork, ContactSection } from '@/components/Sections';
 import SkillsMatrix from '@/components/SkillsMatrix';
 
-export default function HomePage() {
-  const projects = useProjectsData();
-  const profile = PROFILE;
-  const [selectedProject, setSelectedProject] = useState(null);
-
+export default async function HomePage() {
+  const projects = await getProjects();
   return (
     <div className="v4">
-      <Hero profile={profile} ctaHref="/work" ctaLabel="View Case Studies →" />
+      <Hero facts={getPortfolioFacts(projects)} />
       <div className="v4-content">
-        <ProblemsSection />
-        <FlagshipsSection
-          projects={projects}
-          onSelectProject={setSelectedProject}
-          limit={3}
-          headerLabel="Selected Work"
-          headerTitle="Featured Case Studies"
-        />
+        <FeaturedWork projects={projects} limit={3} />
+        <PrinciplesSection />
         <SkillsMatrix />
-        <ContactSection profile={profile} />
-        <SiteFooter profile={profile} />
+        <ContactSection />
       </div>
-      {selectedProject && (
-        <DetailPanel project={selectedProject} profile={profile} onClose={() => setSelectedProject(null)} />
-      )}
     </div>
   );
 }

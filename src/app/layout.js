@@ -1,9 +1,11 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import ThemeProvider from "@/components/ThemeProvider";
+import "./portfolio.css";
 import SiteNav from "@/components/SiteNav";
 import VectorConstellation from "@/components/VectorConstellation";
 import ScrollProgress from "@/components/ScrollProgress";
+import CommandPalette from "@/components/CommandPalette";
+import { SiteFooter } from "@/components/Sections";
 
 const inter = Inter({
   variable: "--f-sans-font",
@@ -24,11 +26,13 @@ export const metadata = {
     template: "%s | Vasikarla · AI",
   },
   description:
-    "Design and ship AI-native products across knowledge systems (RAG), NL-to-SQL data interfaces, and multi-agent domain workflows.",
+    "AI and data products where the numbers have to be defensible: forensic analytics, physics-backed simulation, LLM workflows and NL-to-SQL.",
   keywords: [
     "AI Product Engineer",
     "Satish Vasikarla",
     "Vasikarla AI",
+    "Forensic Analytics",
+    "ML Surrogate Models",
     "RAG Pipelines",
     "NL-to-SQL",
     "Next.js AI",
@@ -46,7 +50,7 @@ export const metadata = {
     url: SITE_URL,
     title: "Vasikarla · AI | AI Product Engineer",
     description:
-      "Designing and shipping AI-native products, RAG architecture, and production LLM applications.",
+      "AI and data products where the numbers have to be defensible: forensic analytics, physics-backed simulation, LLM workflows and NL-to-SQL.",
     siteName: "Vasikarla · AI",
     images: [
       {
@@ -61,7 +65,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Vasikarla · AI | AI Product Engineer",
     description:
-      "Designing and shipping AI-native products, RAG architecture, and production LLM applications.",
+      "AI and data products where the numbers have to be defensible: forensic analytics, physics-backed simulation, LLM workflows and NL-to-SQL.",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -92,6 +96,8 @@ export default function RootLayout({ children }) {
         sameAs: ["https://github.com/svasikarla"],
         knowsAbout: [
           "Artificial Intelligence",
+          "Forensic Financial Analytics",
+          "Simulation and ML Surrogate Models",
           "Retrieval-Augmented Generation (RAG)",
           "Natural Language to SQL (NL-to-SQL)",
           "Next.js",
@@ -112,7 +118,7 @@ export default function RootLayout({ children }) {
         url: SITE_URL,
         name: "Vasikarla · AI",
         description:
-          "Design and ship AI-native products across knowledge systems (RAG), NL-to-SQL data interfaces, and multi-agent domain workflows.",
+          "AI and data products where the numbers have to be defensible: forensic analytics, physics-backed simulation, LLM workflows and NL-to-SQL.",
         publisher: {
           "@id": `${SITE_URL}/#person`,
         },
@@ -143,13 +149,16 @@ export default function RootLayout({ children }) {
         `}} />
       </head>
       <body>
-        <ThemeProvider>
-          <VectorConstellation />
-          <ScrollProgress />
-          <div className="grid-bg" />
-          <SiteNav />
-          <main>{children}</main>
-        </ThemeProvider>
+        <a className="skip-link" href="#main">Skip to content</a>
+        <VectorConstellation />
+        <ScrollProgress />
+        <div className="grid-bg" />
+        <SiteNav />
+        <main id="main">{children}</main>
+        <div className="v4-content">
+          <SiteFooter />
+        </div>
+        <CommandPalette />
       </body>
     </html>
   );

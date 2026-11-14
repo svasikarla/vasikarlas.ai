@@ -2,24 +2,14 @@
 
 import React, { useRef } from 'react';
 
-export const TELEMETRY_MAP = {
-  'nlsql-pro': '⚡ 50–200ms Latency · 30+ Jailbreak Defense · Golden Query Memory',
-  'core-pragya-advanced': '🤖 3 Coordinated Agents · Multi-LLM Router · 99.98% Uptime',
-  'bima-buddy-advanced': '🎯 85%+ Claim Approval Model · 10 Indian Languages ASR',
-  'concept-forge': '📊 4-Signal Mastery DAG · Real-Time Prerequisite Engine',
-  'igcse-student-guide': '🛡️ 3-Stage Verification Pipeline · Full Syllabus Coverage',
-};
-
+/* Card shell with a cursor-following spotlight and a slight tilt on hover. */
 export default function TechCardWrapper({
   children,
   className = '',
-  projectId = null,
-  telemetryOverride = null,
   style = {},
   ...props
 }) {
   const cardRef = useRef(null);
-  const telemetry = telemetryOverride || (projectId ? TELEMETRY_MAP[projectId] : null);
 
   const handleMouseMove = (e) => {
     const card = cardRef.current;
@@ -60,12 +50,6 @@ export default function TechCardWrapper({
     >
       <div className="tech-card-neural-bg" aria-hidden="true" />
       <div className="tech-card-spotlight" aria-hidden="true" />
-      {telemetry && (
-        <div className="tech-telemetry-badge" aria-hidden="true">
-          <span className="telemetry-pulse-dot" />
-          <span className="telemetry-text">{telemetry}</span>
-        </div>
-      )}
       <div className="tech-card-content">{children}</div>
     </div>
   );

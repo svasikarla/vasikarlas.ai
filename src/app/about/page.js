@@ -1,63 +1,63 @@
-'use client';
+import Link from 'next/link';
+import { PROFILE, getPortfolioFacts } from '@/data/projects';
+import { getProjects } from '@/lib/vercel';
+import { CapabilitiesSection, ContactSection } from '@/components/Sections';
 
-import React from 'react';
-import { PROFILE } from '@/data/projects';
-import { CapabilitiesSection, ContactSection, SiteFooter } from '@/components/V4';
+export const metadata = {
+  title: 'About',
+  description:
+    'Satish Vasikarla is an AI Product Engineer building analytics, simulation and LLM products where every figure can be traced, reproduced or challenged.',
+  alternates: { canonical: '/about' },
+};
 
-export default function AboutPage() {
-  const profile = PROFILE;
-
+export default async function AboutPage() {
+  const facts = getPortfolioFacts(await getProjects());
   return (
     <div className="v4">
-      <section className="v4-hero compact">
-        <div className="v4-hero-glow" />
-        <div className="v4-hero-inner">
-          <div className="hero-topline">
-            <span>About</span>
-            <span className="hero-topline-sep" />
-            <span>{profile.location}</span>
-          </div>
-          <h1>
-            I&apos;m Satish Vasikarla — an AI Product Engineer.
-          </h1>
-          <p className="hero-sub">
-            I build usable, production-grade software across AI, full-stack systems, insurance, education, and knowledge platforms. Twenty-one shipped products, one hundred forty-nine production deploys, four years of iteration.
-          </p>
-          <div className="hero-ctas">
-            <a className="btn-primary" href={`mailto:${profile.email}`}>{profile.email}</a>
-            <a className="btn-ghost" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          </div>
-        </div>
-      </section>
-
       <div className="v4-content">
+        <header className="page-header">
+          <span className="section-label">About · {PROFILE.location}</span>
+          <h1>I&apos;m {PROFILE.name}, an {PROFILE.role}.</h1>
+          <p className="page-lede">{PROFILE.bio}</p>
+          <div className="hero-ctas page-header-ctas">
+            <a className="btn-primary" href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
+            <a className="btn-ghost" href={PROFILE.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
+        </header>
+
         <section className="v4-section about-bio">
           <div className="section-header">
             <span className="section-label">Profile</span>
             <h2>How I work</h2>
           </div>
           <div className="about-bio-body">
-            <p>{profile.bio}</p>
             <p>
-              I focus on shipping software that runs in production for real users — LLM integration,
-              RAG pipelines, knowledge graphs, and natural-language-to-SQL across insurance, education,
-              and knowledge platforms. The emphasis is on reliability and usability, not demos.
+              The products I am proudest of share one rule: a number on the screen has to be defensible.
+              In <Link href="/work/stock-analyst">StockAnalyst</Link> every metric opens to its formula and the
+              filing it came from. In <Link href="/work/thermotwin">ThermoTwin AI</Link> nothing is typed in —
+              each value is measured, simulated or cited. In <Link href="/work/society-finance">Society Finance</Link> balances
+              are derived from one append-only ledger.
+            </p>
+            <p>
+              I work end to end: data ingestion and modelling, the API, the interface, and the deployment.
+              I use LLMs where they do a bounded job well — drafting, retrieval, translation of intent into
+              SQL — and put guardrails and real data around them.
             </p>
           </div>
-          <div className="about-stats">
+          <dl className="about-stats">
             <div className="about-stat">
-              <span className="about-stat-num">{profile.stats.projects}</span>
-              <span className="about-stat-label">Shipped products</span>
+              <dt className="about-stat-num">{facts.total}</dt>
+              <dd className="about-stat-label">Products &amp; studies</dd>
             </div>
             <div className="about-stat">
-              <span className="about-stat-num">{profile.stats.deploys}</span>
-              <span className="about-stat-label">Production deploys</span>
+              <dt className="about-stat-num">{facts.flagships}</dt>
+              <dd className="about-stat-label">Full case studies</dd>
             </div>
             <div className="about-stat">
-              <span className="about-stat-num">{profile.stats.uptime}%</span>
-              <span className="about-stat-label">Uptime</span>
+              <dt className="about-stat-num">{facts.domains}</dt>
+              <dd className="about-stat-label">Domains</dd>
             </div>
-          </div>
+          </dl>
         </section>
 
         <CapabilitiesSection />
@@ -68,15 +68,11 @@ export default function AboutPage() {
             <h2>What I work on</h2>
           </div>
           <div className="spec-chips">
-            {profile.specializations.map((s, i) => (
-              <span key={i} className="spec-chip">{s}</span>
-            ))}
+            {PROFILE.specializations.map((s) => <span key={s} className="spec-chip">{s}</span>)}
           </div>
         </section>
-        <div id="contact">
-          <ContactSection profile={profile} />
-        </div>
-        <SiteFooter profile={profile} />
+
+        <ContactSection />
       </div>
     </div>
   );

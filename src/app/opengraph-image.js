@@ -1,11 +1,12 @@
 import { ImageResponse } from 'next/og';
-import { PROFILE } from '@/data/projects';
+import { PROFILE, getPortfolioFacts } from '@/data/projects';
 
 export const alt = 'Vasikarla · AI — AI Product Engineer';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default function Image() {
+  const facts = getPortfolioFacts();
   return new ImageResponse(
     (
       <div
@@ -32,25 +33,21 @@ export default function Image() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div style={{ fontSize: '66px', fontWeight: 800, lineHeight: 1.08, color: '#ffffff', maxWidth: '960px' }}>
-            I build AI products that solve real business workflows
+            {PROFILE.headline}
           </div>
           <div style={{ fontSize: '30px', color: '#a7a7b4' }}>
-            {`AI Product Engineer · ${PROFILE.specializations.slice(0, 4).join(' · ')}`}
+            {`${PROFILE.role} · ${PROFILE.specializations.slice(0, 3).join(' · ')}`}
           </div>
         </div>
 
         <div style={{ display: 'flex', gap: '40px', fontSize: '24px', color: '#c8c8d4' }}>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <span style={{ color: '#ffffff', fontWeight: 700 }}>{PROFILE.stats.projects}</span>
-            <span>shipped</span>
+            <span style={{ color: '#ffffff', fontWeight: 700 }}>{facts.total}</span>
+            <span>products &amp; studies</span>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <span style={{ color: '#ffffff', fontWeight: 700 }}>{PROFILE.stats.deploys}</span>
-            <span>deploys</span>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <span style={{ color: '#ffffff', fontWeight: 700 }}>{`${PROFILE.stats.uptime}%`}</span>
-            <span>uptime</span>
+            <span style={{ color: '#ffffff', fontWeight: 700 }}>{facts.flagships}</span>
+            <span>case studies</span>
           </div>
         </div>
       </div>

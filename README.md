@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# vasikarlas.ai
 
-## Getting Started
+Portfolio site for Satish Vasikarla. Next.js 16 (App Router), React 19, plain CSS.
 
-First, run the development server:
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run build` prerenders every page; `npm run lint` must stay clean.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Adding or changing a project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Everything shown on the site comes from `src/data/projects.js`. Add an object there and it
+appears on `/work`, gets its own `/work/<id>` page, and shows up in search (⌘K) and the sitemap.
 
-## Learn More
+- `tier` — `flagship`, `product`, `research` or `heritage`; decides the group on `/work`.
+- `status` — `live` (public URL), `private` (invite-only or private deployment), `source` (repo only).
+- `shipped` — `YYYY-MM` of the last production deploy.
+- `screenshot` — path under `public/screenshots/`. Without one, the card shows the `highlights` instead.
+- `caseStudy` — optional long-form sections for the project page.
+- Architecture diagrams live in `src/data/architecture.js`, skill proofs in `src/data/skills.js`.
 
-To learn more about Next.js, take a look at the following resources:
+Only add a number if the product itself can show where it comes from.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment variables (all optional)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Purpose |
+|---|---|
+| `VERCEL_API_TOKEN`, `VERCEL_TEAM_ID` | Refresh each project's `shipped` date from Vercel hourly. Never adds projects. |
+| `ANTHROPIC_API_KEY`, `GROQ_API_KEY` | Power the "Try it live" demos on NLSQL Pro, CorePragya and ConceptForge. |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata and the sitemap. |
 
-## Deploy on Vercel
+## Layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app` — routes: `/`, `/work`, `/work/[slug]`, `/about` (`/projects` redirects to `/work`).
+- `src/components` — UI. Pages are server components; only interactive pieces are client components.
+- `src/app/globals.css` — tokens and base styles; `src/app/portfolio.css` — nav, cards, work and case-study layout.
+- `scripts/` — Playwright scripts that capture app screenshots and build the recorded tours in `public/demos`.

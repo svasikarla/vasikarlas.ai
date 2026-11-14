@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
  * - className: additional classes to merge onto the wrapper
  * - as: HTML element tag (default 'div')
  *
- * Respects prefers-reduced-motion — shows content immediately.
+ * prefers-reduced-motion is handled in CSS, where .reveal is shown immediately.
  */
 export default function RevealOnScroll({
   children,
@@ -27,12 +27,6 @@ export default function RevealOnScroll({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    // Skip animation for users who prefer reduced motion
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setVisible(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

@@ -1,55 +1,52 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import { useParams, notFound } from 'next/navigation';
-import { PROJECTS, PROFILE } from '@/data/projects';
-import {
-  FLAGSHIP_NARRATIVES,
-  FlagshipVisual,
-  StatusPill,
-  SiteFooter,
-} from '@/components/V4';
-import ArchitectureDiagram from '@/components/ArchitectureDiagram';
+import { notFound } from 'next/navigation';
+import { PROJECTS, getProject, getHighlights, formatShipped } from '@/data/projects';
+import { getProjects } from '@/lib/vercel';
 import { ARCHITECTURE } from '@/data/architecture';
+import ArchitectureDiagram from '@/components/ArchitectureDiagram';
+import ProjectVisual from '@/components/ProjectVisual';
+import StatusPill from '@/components/StatusPill';
 
-export default function CaseStudyPage() {
-  const params = useParams();
-  const slug = params?.slug;
-  const project = PROJECTS.find((p) => p.id === slug);
-  const profile = PROFILE;
+export function generateStaticParams() {
+  return PROJECTS.map((p) => ({ slug: p.id }));
+}
 
-  if (!project) {
-    return (
-      <div className="v4">
-        <div className="v4-content" style={{ paddingTop: 96, paddingBottom: 96 }}>
-          <div className="section-header">
-            <span className="section-label">404</span>
-            <h2>Project not found</h2>
-            <p className="hero-sub" style={{ marginTop: 12 }}>
-              We couldn&apos;t find a project with that ID.
-            </p>
-            <div className="hero-ctas" style={{ marginTop: 24 }}>
-              <Link className="btn-primary" href="/work">← All case studies</Link>
-              <Link className="btn-ghost" href="/projects">Browse all projects</Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+// Only the projects in the data file exist; anything else is a 404.
+export const dynamicParams = false;
 
-  const narr = FLAGSHIP_NARRATIVES[project.id] || {
-    challenge: project.description,
-    solution: project.tagline,
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) return { title: 'Project not found' };
+
+  const title = `${project.name} — ${project.tagline}`;
+  const description = project.description;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/work/${project.id}` },
+    openGraph: { title, description, type: 'article', url: `/work/${project.id}` },
+    twitter: { card: 'summary_large_image', title, description },
   };
-  const isFlagship = Object.prototype.hasOwnProperty.call(FLAGSHIP_NARRATIVES, project.id);
+}
+
+export default async function CaseStudyPage({ params }) {
+  const { slug } = await params;
+  const project = (await getProjects()).find((p) => p.id === slug);
+  if (!project) notFound();
+
   const cs = project.caseStudy;
+  const arch = ARCHITECTURE[project.id];
+  const highlights = getHighlights(project);
+  const shipped = formatShipped(project.shipped);
+
+  // Previous / next within the same ordering used on /work.
+  const index = PROJECTS.findIndex((p) => p.id === project.id);
+  const next = PROJECTS[(index + 1) % PROJECTS.length];
 
   return (
     <div className="v4">
       <article className="v4-content case-study">
-        {/* Breadcrumb */}
         <nav className="case-crumbs" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span>/</span>
@@ -58,105 +55,107 @@ export default function CaseStudyPage() {
           <span className="current">{project.name}</span>
         </nav>
 
-        {/* Hero block */}
         <header className="case-hero">
           <div className="case-hero-left">
             <div className="case-meta">
               <StatusPill status={project.status} />
-              <span className="case-cat">{project.category}</span>
-              {isFlagship && <span className="case-flag">Flagship</span>}
+              <span className="case-cat">{project.domain}</span>
+              {shipped && <span className="case-cat">Shipped {shipped}</span>}
+              {project.context && <span className="case-flag">{project.context}</span>}
             </div>
             <h1 className="case-title">{project.name}</h1>
             <p className="case-tagline">{project.tagline}</p>
+            <p className="case-desc">{project.description}</p>
             <div className="case-actions">
-              {project.url && <a className="btn-primary" href={project.url} target="_blank" rel="noopener noreferrer">Visit Live ↗</a>}
-              {project.repo && <a className="btn-ghost" href={project.repo} target="_blank" rel="noopener noreferrer">View Source ↗</a>}
-            </div>
-            <div className="case-stats">
-              <div className="case-stat"><span className="k">Commits</span><span className="v">{project.commits}</span></div>
-              <div className="case-stat"><span className="k">Deploys</span><span className="v">{project.deploys || '—'}</span></div>
-              <div className="case-stat"><span className="k">Uptime</span><span className="v">{project.uptime ? `${project.uptime}%` : '—'}</span></div>
-              <div className="case-stat"><span className="k">Updated</span><span className="v">{project.lastUpdate} ago</span></div>
+              {project.url && (
+                <a className="btn-primary" href={project.url} target="_blank" rel="noopener noreferrer">
+                  {project.status === 'private' ? 'Visit landing page ↗' : 'Visit live ↗'}
+                </a>
+              )}
+              {project.repo && (
+                <a className="btn-ghost" href={project.repo} target="_blank" rel="noopener noreferrer">View source ↗</a>
+              )}
+              {!project.url && !project.repo && <span className="case-private">Private deployment</span>}
             </div>
           </div>
-          {isFlagship && (
-            <div className="case-hero-visual">
-              <FlagshipVisual id={project.id} />
-            </div>
-          )}
+          <div className="case-hero-visual">
+            <ProjectVisual project={project} priority />
+          </div>
         </header>
 
-        {/* Problem */}
-        <section className="case-section">
-          <span className="section-label">The Problem</span>
-          <p className="case-prose">{cs?.problem || narr.challenge}</p>
-        </section>
+        {/* Without a screenshot the hero panel already shows these facts. */}
+        {project.screenshot && highlights.length > 0 && (
+          <dl className="case-highlights">
+            {highlights.map((h) => (
+              <div key={h.label} className="case-highlight">
+                <dt>{h.value}</dt>
+                <dd>{h.label}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
 
-        {/* Solution */}
-        <section className="case-section">
-          <span className="section-label">The Solution</span>
-          <p className="case-prose">{cs?.solution || narr.solution}</p>
-        </section>
+        {(cs?.problem || project.narrative?.challenge) && (
+          <section className="case-section">
+            <h2 className="section-label">The problem</h2>
+            <p className="case-prose">{cs?.problem || project.narrative.challenge}</p>
+          </section>
+        )}
 
-        {/* Architecture */}
+        {(cs?.solution || project.narrative?.solution) && (
+          <section className="case-section">
+            <h2 className="section-label">The solution</h2>
+            <p className="case-prose">{cs?.solution || project.narrative.solution}</p>
+          </section>
+        )}
+
         {cs?.architecture && (
           <section className="case-section">
-            <span className="section-label">Architecture</span>
+            <h2 className="section-label">Architecture</h2>
             <p className="case-prose">{cs.architecture}</p>
-            {ARCHITECTURE[project.id] && (
-              <ArchitectureDiagram
-                stages={ARCHITECTURE[project.id].stages}
-                caption={ARCHITECTURE[project.id].caption}
-              />
-            )}
+            {arch && <ArchitectureDiagram stages={arch.stages} caption={arch.caption} />}
           </section>
         )}
 
-        {/* What made it hard */}
-        {cs?.hardParts && cs.hardParts.length > 0 && (
+        {cs?.hardParts?.length > 0 && (
           <section className="case-section">
-            <span className="section-label">What Made It Hard</span>
+            <h2 className="section-label">What made it hard</h2>
             <ul className="case-list">
-              {cs.hardParts.map((h, i) => <li key={i}>{h}</li>)}
+              {cs.hardParts.map((h) => <li key={h}>{h}</li>)}
             </ul>
           </section>
         )}
 
-        {/* Outcomes */}
-        {cs?.outcomes && cs.outcomes.length > 0 && (
+        {cs?.outcomes?.length > 0 && (
           <section className="case-section">
-            <span className="section-label">Outcomes</span>
+            <h2 className="section-label">Outcomes</h2>
             <ul className="case-outcomes">
-              {cs.outcomes.map((o, i) => <li key={i}>{o}</li>)}
+              {cs.outcomes.map((o) => <li key={o}>{o}</li>)}
             </ul>
           </section>
         )}
 
-        {/* Technical Benchmarks */}
-        {cs?.benchmarks && cs.benchmarks.length > 0 && (
+        {cs?.benchmarks?.length > 0 && (
           <section className="case-section">
-            <span className="section-label">Technical Benchmarks &amp; Metrics</span>
-            <div className="case-features" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-              {cs.benchmarks.map((b, i) => (
-                <div key={i} className="case-feature" style={{ borderColor: 'rgba(139,124,255,0.2)' }}>
-                  <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--accent, #8b7cff)', marginBottom: '4px' }}>
-                    {b.value}
-                  </div>
-                  <div className="case-feature-name" style={{ fontSize: '15px' }}>{b.metric}</div>
-                  <div className="case-feature-desc" style={{ marginTop: '4px' }}>{b.detail}</div>
+            <h2 className="section-label">By the numbers</h2>
+            <div className="case-features case-features--metrics">
+              {cs.benchmarks.map((b) => (
+                <div key={b.metric} className="case-feature">
+                  <div className="case-metric-value">{b.value}</div>
+                  <div className="case-feature-name">{b.metric}</div>
+                  <div className="case-feature-desc">{b.detail}</div>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Features */}
-        {project.features && project.features.length > 0 && (
+        {project.features?.length > 0 && (
           <section className="case-section">
-            <span className="section-label">Key Features</span>
+            <h2 className="section-label">Key features</h2>
             <div className="case-features">
-              {project.features.map((f, i) => (
-                <div key={i} className="case-feature">
+              {project.features.map((f) => (
+                <div key={f.name} className="case-feature">
                   <div className="case-feature-name">{f.name}</div>
                   <div className="case-feature-desc">{f.desc}</div>
                 </div>
@@ -165,21 +164,18 @@ export default function CaseStudyPage() {
           </section>
         )}
 
-        {/* Stack */}
         <section className="case-section">
-          <span className="section-label">Stack</span>
+          <h2 className="section-label">Stack</h2>
           <div className="case-stack">
             {project.stack.map((s) => <span key={s} className="case-chip">{s}</span>)}
           </div>
         </section>
 
-        {/* Footer nav */}
-        <nav className="case-footer-nav">
-          <Link className="btn-ghost" href="/work">← All case studies</Link>
-          <Link className="btn-ghost" href="/projects">Browse archive →</Link>
+        <nav className="case-footer-nav" aria-label="More work">
+          <Link className="btn-ghost" href="/work">← All work</Link>
+          <Link className="btn-ghost" href={`/work/${next.id}`}>Next: {next.name} →</Link>
         </nav>
       </article>
-      <SiteFooter profile={profile} />
     </div>
   );
 }
