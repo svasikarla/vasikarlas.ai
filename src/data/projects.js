@@ -20,6 +20,13 @@ export const PROJECTS = [
     vercel: 'stockanalyst',
     url: 'https://stockanalyst-xi.vercel.app',
     repo: null,
+    screenshot: '/screenshots/stock-analyst/screener.png',
+    gallery: [
+      { src: '/screenshots/stock-analyst/screener.png', caption: 'The screen: gate status first, metrics second. Vetoed companies stay listed with the reason, and the banner states when the analysis ran and how stale prices are.' },
+      { src: '/screenshots/stock-analyst/valuation.png', caption: 'Reverse DCF: the implied growth rate the market is pricing, with a 25-cell sensitivity grid instead of a target price.' },
+      { src: '/screenshots/stock-analyst/forensic-gates.png', caption: 'Forensic gates, each tied to a section of the framework. UNKNOWN is shown as its own state and never counted as a pass.' },
+      { src: '/screenshots/stock-analyst/working-paper.png', caption: 'A company working paper: how many metrics could be computed, over how many periods, and which governance gates still lack data.' },
+    ],
     stack: ['Next.js', 'NSE XBRL ingest', 'YAML metric registry', 'Append-only fact store'],
     highlights: [
       { value: '75', label: 'metrics declared in YAML' },
@@ -48,12 +55,34 @@ export const PROJECTS = [
     caseStudy: {
       problem: 'Ratios are a commodity; judgment about them is not. A company can grow profit for five years while collecting less and less cash, and a conventional score will happily average that red flag away against a good multiple. Most tools also fill a missing input with zero and move on — which is how a bank ends up ranked at the bottom of a list it should never have appeared on.',
       solution: 'A screening workbench built for the person who has to defend the file. Thirteen forensic gates run before the score and outside it; six are vetoes that cap the verdict and say why, naming the figures that fired them. Every metric carries one of four states — computed, not applicable, not computable, or stale — and the three non-computed states render and sort differently from real values. There is no target-price field anywhere in the valuation module, the API or the interface: the output is implied expectations with a sensitivity range.',
-      architecture: 'Financial results are parsed straight from NSE XBRL filings into an append-only fact store, where a restatement is a new row and a database trigger rejects updates — so any past date can be replayed as it was known then. Seventy-five metrics are declared in a YAML registry. A sector router sends each company to its metric and gate pack, thresholds resolve to live percentiles within the sector pack, and gates, percentiles and valuation are computed on every request rather than served from a cache.',
+      architecture: 'Financial results are parsed straight from NSE XBRL filings into an append-only fact store, where a restatement is a new row and a database trigger rejects updates — so any past date can be replayed as it was known then. Seventy-five metrics are declared in a YAML registry. A sector router sends each company to its metric and gate pack, and thresholds resolve to percentiles within the sector pack. Each analysis run is stamped, and the screen says when it ran and how old its prices are.',
       hardParts: [
         'Keeping missing data honest: an empty cell is a finding, so absent values never sort as small numbers and never wear a warning colour.',
         'Point-in-time correctness — answering what was known on a past date, before a restatement.',
         'Sector routing, so a bank is read on its standalone entity with banking metrics rather than as a manufacturer with different numbers.',
         "Trend signals such as pledge rising four consecutive quarters, when the exchange publishes only today's position.",
+      ],
+      decisions: [
+        {
+          choice: 'Gates are vetoes that sit outside the score',
+          why: 'A cheap multiple should never be able to average away an auditor resignation or a widening cash-profit gap.',
+          cost: 'One failed gate caps an otherwise attractive company, so every threshold has to be justified by the framework.',
+        },
+        {
+          choice: 'No target price anywhere in the system',
+          why: 'An implied growth rate is a claim a reader can argue with; a single price hides how sensitive it is to two assumptions.',
+          cost: 'Readers who want one number get a range and a grid instead.',
+        },
+        {
+          choice: 'Four metric states instead of a value or zero',
+          why: 'Computed, not applicable, not computable and stale mean different things and must not sort together.',
+          cost: 'Every table, sort and chart has to handle four states, not one.',
+        },
+        {
+          choice: 'Append-only facts, enforced by a database trigger',
+          why: 'Any past date can be replayed exactly as it was known, before restatements.',
+          cost: 'Restatements add rows rather than replacing them, and every query has to pick the right as-of version.',
+        },
       ],
       outcomes: [
         '66 NSE large-caps across four sector packs',
@@ -83,6 +112,10 @@ export const PROJECTS = [
     url: 'https://fortyguard-thermotwin.vercel.app',
     repo: null,
     screenshot: '/screenshots/thermotwin/landing.png',
+    gallery: [
+      { src: '/screenshots/thermotwin/landing.png', caption: 'The headline finding up front: surface temperature and pedestrian UTCI move in opposite directions under reflective pavement.' },
+      { src: '/screenshots/thermotwin/pipeline.png', caption: 'The four-step chain the simulator runs: lock the site, drape the measured field, run the physics, answer the slider through the surrogate.' },
+    ],
     stack: ['Next.js', 'FastAPI', 'Cloud Run', 'LightGBM', 'SOLWEIG', 'DuckDB'],
     highlights: [
       { value: '0.992', label: 'R² of the surrogate on held-out data' },
@@ -112,6 +145,23 @@ export const PROJECTS = [
         'Picking the hard site: at 47.6°N the summer-noon sun sits near 66°, so shadows run long and the shade-versus-albedo trade-off is sharper than in a heat-adapted city.',
         'A no-dummy-data rule: nothing in the running tool is a typed-in number.',
       ],
+      decisions: [
+        {
+          choice: 'Real radiation physics, with a learned surrogate on top',
+          why: 'A heuristic would have reproduced the dashboard mistake; SOLWEIG captures the reflected radiation that makes the albedo trap visible.',
+          cost: 'The physics runs have to be generated up front, and the sliders answer from an approximation (0.992 R² held-out) rather than a fresh run.',
+        },
+        {
+          choice: 'Report surface temperature and pedestrian UTCI side by side',
+          why: 'The point of the tool is that the two can disagree; showing one would hide the finding.',
+          cost: 'A busier result panel that asks the reader to compare two numbers.',
+        },
+        {
+          choice: 'Cache the measured baseline once',
+          why: 'Simulation calls never go back to the upstream heat API, so the tool stays fast and within quota.',
+          cost: 'The baseline is a snapshot, not a live feed.',
+        },
+      ],
       outcomes: [
         'Shows the surface-versus-pedestrian reversal at a real design point',
         'Result is directionally consistent with published field measurements',
@@ -134,11 +184,17 @@ export const PROJECTS = [
     tier: 'flagship',
     domain: 'AI Tooling',
     status: 'private',
+    context: 'Live as “AI/ML Freelance Hub”',
     shipped: '2026-07',
     vercel: 'skillpilot',
     url: 'https://skillpilot-mauve.vercel.app',
     repo: null,
-    screenshot: '/screenshots/skillpilot/landing.png',
+    screenshot: '/screenshots/skillpilot/ranker.png',
+    gallery: [
+      { src: '/screenshots/skillpilot/ranker.png', caption: 'The personal ranker: a match score broken down into skill overlap, rate alignment and recency, with the matched skills listed.' },
+      { src: '/screenshots/skillpilot/proposals.png', caption: 'The proposal generator: three Claude-drafted variants per job, tuned to the platform’s style and capped per member per day.' },
+      { src: '/screenshots/skillpilot/modules.png', caption: 'Eight modules in one private tool, from daily ingestion to group intelligence.' },
+    ],
     stack: ['Next.js', 'Claude', 'Multi-source ingestion', 'Scoring engine'],
     highlights: [
       { value: '79', label: 'skills across 10 clusters' },
@@ -171,6 +227,23 @@ export const PROJECTS = [
         'Enforcing proposal quality by rule: a hook in the first sentence, fixed length bands, no filler.',
         "Sharing collective signal — win rates, agreed rates, platform rankings — without exposing any member's individual data.",
       ],
+      decisions: [
+        {
+          choice: 'A hard cap when a member matches under 40% of required skills',
+          why: 'Without it, a high rate or a fresh posting could float a job the member would not win.',
+          cost: 'Some well-paid stretch jobs rank lower than a member might want.',
+        },
+        {
+          choice: 'Claude drafts proposals; it does not choose jobs',
+          why: 'Ranking stays explainable and rule-based; the model does the one job it is good at.',
+          cost: 'Generation is capped at 15 a day per member to keep cost and quality in check.',
+        },
+        {
+          choice: 'Group statistics are aggregated and anonymised before display',
+          why: 'Members share win rates and agreed rates only if no individual can be identified.',
+          cost: 'Members learn from group trends rather than from each other’s individual applications.',
+        },
+      ],
       outcomes: [
         'Eight integrated modules, from discovery to tracked outcome',
         '79 skills in 10 clusters, each self-rated 1–5',
@@ -200,33 +273,40 @@ export const PROJECTS = [
     screenshot: '/screenshots/core-pragya-advanced/dashboard.png',
     tour: true,
     stack: ['Next.js', 'TypeScript', 'Supabase', 'OpenAI', 'Claude', 'Groq'],
+    gallery: [
+      { src: '/screenshots/core-pragya-advanced/research.png', caption: 'Research configuration: pick the provider and model per run, choose a depth, and optionally search the saved knowledge base before the web.' },
+      { src: '/screenshots/core-pragya-advanced/content-studio.png', caption: 'Content Studio: one topic, several target formats drafted in parallel, each in a chosen tone.' },
+      { src: '/screenshots/core-pragya-advanced/knowledge-base.png', caption: 'The knowledge base: saved articles, emails and pages, tagged by topic and searchable.' },
+    ],
     narrative: {
       challenge: 'Personal knowledge from articles, feeds, and PDFs is siloed — and the loop from curation to multi-platform publishing is a manual, full-time effort.',
-      solution: 'Three coordinated AI agents: a Curator that personalizes feeds, a Research Agent that synthesizes web sources into structured reports, and a Content Studio that formats output for 6 publishing platforms.',
+      solution: 'Three coordinated AI agents: a Curator that personalizes feeds, a Research Agent that combines saved knowledge with web sources into structured reports, and a Content Studio that drafts for seven publishing formats.',
     },
     features: [
-      { name: 'AI-Curated Feed', desc: 'Personalizes and ranks RSS articles based on your unique interest profile.' },
-      { name: 'Content Studio', desc: 'Multi-agent pipeline that drafts, refines, and formats content for 6 blogging and social platforms.' },
-      { name: 'Research Agent', desc: 'Autonomous agent that searches the web, synthesizes sources, and delivers structured reports.' },
+      { name: 'AI-Curated Feed', desc: 'Ranks RSS articles against your interest profile.' },
+      { name: 'Content Studio', desc: 'Drafts one topic for several formats at once — Medium, LinkedIn, X, Substack, Dev.to and blog — in a chosen tone.' },
+      { name: 'Research Agent', desc: 'Runs at three depths, searches your knowledge base first if asked, and returns a structured report.' },
     ],
     caseStudy: {
       problem: "Personal knowledge from articles, feeds, emails, and PDFs is fragmented across tools that don't talk to each other. Note apps store text; bookmark managers store URLs; reader apps store articles. None of them understand what you're trying to learn, and none can take the next step — synthesize, write, or publish. The full loop from input to output is broken.",
-      solution: 'Three AI agents in one workspace. A Curator that personalizes RSS feeds based on a learned interest profile. An autonomous Research Agent that synthesizes web sources into structured reports. A multi-agent Content Studio that drafts, refines, and formats content for 6 publishing platforms.',
-      architecture: 'Next.js + TypeScript on Supabase. Multi-LLM routing across OpenAI, Claude, and Groq based on task profile. Vector embeddings for semantic recall, a graph database for concept relationships, and an RSS ingestion pipeline with deduplication.',
+      solution: 'Three AI agents in one workspace. A Curator that ranks RSS feeds against an interest profile. A Research Agent that can search your saved knowledge before the web and returns a structured report. A Content Studio that drafts one topic for several publishing formats in parallel. A personal RAG bot answers questions from everything you have saved.',
+      architecture: 'Next.js + TypeScript on Supabase. Each research run picks its provider and model — Anthropic, OpenAI or Groq — and a depth from a quick overview to a five-sub-topic deep dive. Vector embeddings give semantic recall over the knowledge base, and an RSS ingestion pipeline deduplicates incoming articles.',
       hardParts: [
         'Multi-agent coordination — Curator, Research, and Studio agents share context without stepping on each other.',
         'Building a personalization model that learns from sparse interest signals.',
-        'Formatting content for 6 different platform conventions (length, tone, structure) from one draft.',
+        'Writing one topic for seven format conventions — length, tone and structure — without seven separate prompts drifting apart.',
       ],
       outcomes: [
-        'Personalized feed ranking across thousands of RSS sources',
-        'Autonomous research reports synthesizing 10+ web sources per query',
-        '6 platform formats: Twitter, LinkedIn, Medium, blog, newsletter, video script',
+        'Research at three depths, from a two-minute overview to a five-sub-topic deep dive',
+        'Provider and model chosen per run across Anthropic, OpenAI and Groq',
+        'Seven output formats: Medium, LinkedIn post and article, X thread, Substack, Dev.to and blog',
+        'A personal RAG bot over the saved knowledge base',
       ],
       benchmarks: [
-        { metric: 'Feed Ranking Latency', value: '< 120ms', detail: 'Personalized RSS feed ranking pipeline' },
-        { metric: 'Research Synthesis', value: '10+ sources', detail: 'Autonomous web research & structured reports' },
-        { metric: 'Platform Publishing', value: '6 formats', detail: 'Twitter, LinkedIn, Medium, Newsletter, Blog, Script' },
+        { metric: 'Agents', value: '3', detail: 'Curator, Research and Content Studio' },
+        { metric: 'LLM providers', value: '3', detail: 'Anthropic, OpenAI and Groq, selectable per run' },
+        { metric: 'Output formats', value: '7', detail: 'From an X thread to a Dev.to tutorial' },
+        { metric: 'Research depths', value: '3', detail: 'Quick overview, standard, deep dive' },
       ],
     },
   },
@@ -234,7 +314,7 @@ export const PROJECTS = [
     id: 'nlsql-pro',
     name: 'NLSQL Pro',
     tagline: 'Natural Language to SQL Database Query Engine',
-    description: 'Transform natural language into secure, production-ready SQL queries for PostgreSQL, MySQL, SQLite, and SQL Server. Features intelligent 24-hour schema caching, Business Glossary mapping, and Golden Query Memory learning.',
+    description: 'Turns plain-English questions into read-only SQL for PostgreSQL, MySQL, SQLite and SQL Server, with a 24-hour schema cache, a Business Glossary for domain terms, and a memory of validated queries.',
     tier: 'flagship',
     domain: 'AI Tooling',
     status: 'live',
@@ -247,39 +327,39 @@ export const PROJECTS = [
     stack: ['Next.js', 'TypeScript', 'Supabase', 'Claude', 'Vector Embeddings'],
     narrative: {
       challenge: "Non-technical stakeholders can't query their own data without SQL expertise, creating a permanent dependency on the engineering team.",
-      solution: 'NL-to-SQL engine with 24-hour schema caching, Business Glossary term mapping, Golden Query memory, and prompt injection protection across 30+ jailbreak patterns.',
+      solution: 'NL-to-SQL engine with a 24-hour schema cache, Business Glossary term mapping, a memory of validated queries, and prompt-injection screening against 30+ known patterns before anything reaches the database.',
     },
     features: [
       {
-        name: 'Smart Domain Translation',
-        desc: 'Maps user-defined business terms (Business Glossary) and feedback (Golden Query Memory) directly to database schemas.',
+        name: 'Domain vocabulary',
+        desc: 'A Business Glossary maps the words people use to the columns that exist; Golden Query Memory reuses queries a user has already validated.',
       },
-      { name: 'Lightning-Fast Generation', desc: 'Leverages production-hardened caching to achieve 50–200ms sub-second response times (10-100x faster).' },
+      { name: 'Schema cache', desc: 'Schemas are cached for 24 hours, so a question does not pay to re-read the database structure every time.' },
       {
-        name: 'Enterprise Security',
-        desc: 'Advanced prompt injection protection blocks 30+ jailbreak patterns, alongside read-only sandboxing and AES-256 encryption.',
+        name: 'Guardrails first',
+        desc: 'Prompt-injection screening against 30+ known patterns, and generated SQL runs read-only.',
       },
     ],
     caseStudy: {
       problem: "Most NL-to-SQL demos work in clean test schemas and fail under three production realities: schema drift, business vocabulary that doesn't match column names, and adversarial users probing for jailbreaks. The result is tools that are pitched to non-technical users but unsafe to put in front of them.",
-      solution: 'A production-hardened NL→SQL engine designed around the failure modes that kill demo-grade tools. A 24-hour schema cache to absorb drift. A Business Glossary mapping that lets users speak in domain terms. Golden Query Memory that learns from validated past queries. Prompt-injection defense against 30+ known jailbreak patterns plus read-only sandboxing and AES-256 encryption.',
-      architecture: 'Next.js + TypeScript on Supabase. Claude for natural language understanding. Vector embeddings power the glossary and query memory. Pluggable adapters generate dialect-specific SQL for PostgreSQL, MySQL, SQLite, and SQL Server.',
+      solution: 'An NL→SQL engine designed around the failure modes that sink demo-grade tools. A 24-hour schema cache absorbs drift without re-reading the database on every question. A Business Glossary lets users speak in domain terms. Golden Query Memory reuses queries a user has already validated. Prompt-injection screening runs before the model sees the question, and generated SQL is executed read-only.',
+      architecture: 'Next.js + TypeScript on Supabase. Claude translates intent into SQL. Vector embeddings power the glossary and query memory. Dialect adapters generate SQL for PostgreSQL, MySQL, SQLite and SQL Server.',
       hardParts: [
-        'Defending against 30+ prompt-injection patterns without breaking legitimate complex queries.',
-        'Hitting 50–200ms response times — 10-100x faster than uncached generation.',
-        'Cross-RDBMS dialect generation from a single canonical AST.',
+        'Screening 30+ prompt-injection patterns without rejecting legitimate complex questions.',
+        'Keeping answers correct when the schema changes under a cached copy.',
+        'Generating dialect-correct SQL for four database engines from one question.',
       ],
       outcomes: [
-        '30+ jailbreak patterns blocked · AES-256 encryption · read-only sandboxing',
-        '50–200ms response times (10-100x faster than uncached)',
-        'Production-ready for PostgreSQL, MySQL, SQLite, SQL Server',
-        'Business Glossary + Golden Query Memory close the user-vocabulary-to-schema gap',
+        'Four database engines: PostgreSQL, MySQL, SQLite and SQL Server',
+        'Prompt-injection screening and read-only execution on every query',
+        'Business Glossary and Golden Query Memory close the gap between user vocabulary and schema',
+        'Query history and dashboards built into the app',
       ],
       benchmarks: [
-        { metric: 'Query Latency', value: '50–200ms', detail: '10-100x faster execution via 24h schema caching' },
-        { metric: 'Jailbreak Defense', value: '30+ blocked', detail: 'Prompt injection protection & read-only sandboxing' },
-        { metric: 'RDBMS Support', value: '4 engines', detail: 'PostgreSQL, MySQL, SQLite, and SQL Server' },
-        { metric: 'Data Encryption', value: 'AES-256', detail: 'At-rest & in-transit connection key encryption' },
+        { metric: 'Database engines', value: '4', detail: 'PostgreSQL, MySQL, SQLite and SQL Server' },
+        { metric: 'Injection patterns', value: '30+', detail: 'Screened before the model sees the question' },
+        { metric: 'Schema cache', value: '24 h', detail: 'Absorbs drift without re-reading on every query' },
+        { metric: 'Execution', value: 'Read-only', detail: 'Generated SQL cannot modify data' },
       ],
     },
   },
@@ -296,6 +376,11 @@ export const PROJECTS = [
     url: null,
     repo: null,
     screenshot: '/screenshots/society-finance/landing.png',
+    gallery: [
+      { src: '/screenshots/society-finance/landing.png', caption: 'A phone-first overview for the treasurer: funds on hand, outstanding dues, collection progress and occupancy.' },
+      { src: '/screenshots/society-finance/features.png', caption: 'The financial year end to end: billing, numbered receipts, the collection register, expenses, statements, defaulter aging and imports.' },
+      { src: '/screenshots/society-finance/controls.png', caption: 'The controls, stated as product promises: append-only records, one ledger, roles in the database, an automatic audit trail.' },
+    ],
     stack: ['Next.js', 'Append-only ledger', 'Database-enforced rules', 'Excel & PDF export'],
     highlights: [
       { value: '1', label: 'ledger every balance derives from' },
@@ -330,6 +415,23 @@ export const PROJECTS = [
         'Gap-free receipt numbering alongside reversal-only corrections.',
         'Putting the controls in the database, not the interface, so they cannot be bypassed.',
         'Year-end reporting — Income & Expenditure, fund movements and a Balance Sheet on a receivables basis.',
+      ],
+      decisions: [
+        {
+          choice: 'Corrections are reversals, never edits or deletes',
+          why: 'Any month can be regenerated exactly, and an auditor can see every change that was made.',
+          cost: 'Mistakes stay visible as a pair of entries, and the ledger grows with every correction.',
+        },
+        {
+          choice: 'Every balance is derived from one ledger',
+          why: 'Cash cannot drift from the books, because there is no second copy to drift.',
+          cost: 'Balances are computed rather than read, so reports do more work per request.',
+        },
+        {
+          choice: 'Roles and approvals enforced in the database',
+          why: 'A bug or a hand-crafted request cannot skip the corpus-withdrawal approval.',
+          cost: 'Rule changes need a database migration, not just an interface change.',
+        },
       ],
       outcomes: [
         "Invitation-only access, granted by the society's treasurer",
@@ -372,7 +474,7 @@ export const PROJECTS = [
     caseStudy: {
       problem: "IIT JEE preparation requires mastering thousands of interconnected concepts across physics, chemistry, and math. Most prep platforms serve content linearly — chapter 1, then chapter 2 — ignoring the prerequisite gaps that actually block a student's progress. A student stuck on rotational dynamics doesn't need more rotational dynamics; they need angular momentum first.",
       solution: 'An adaptive learning engine that scores concept mastery from four signals — recent performance, overall accuracy, question difficulty, and recency decay. The engine maps a prerequisite DAG across the syllabus and automatically routes students to the blocking prerequisite when mastery stalls. Difficulty adjusts in real time based on streak.',
-      architecture: 'Next.js + TypeScript on Supabase. Per-user mastery state stored as a sparse matrix over concepts. Prerequisite graph encoded as a DAG. Question difficulty calibrated against item response theory baselines.',
+      architecture: 'Next.js + TypeScript on Supabase. Mastery is stored per user and per concept. The syllabus is encoded as a prerequisite graph, so a stalled concept can be traced back to the concept that blocks it. Question difficulty steps up or down with the student’s streak.',
       hardParts: [
         'Calibrating the 4-factor mastery model so it tracks real understanding, not just recent activity.',
         'Detecting blocking prerequisites without trapping students in remedial loops.',
@@ -384,9 +486,9 @@ export const PROJECTS = [
         'Adaptive difficulty with streak detection',
       ],
       benchmarks: [
-        { metric: 'Mastery Model Factors', value: '4-signal DAG', detail: 'Performance, overall accuracy, difficulty, recency decay' },
-        { metric: 'Prerequisite Routing', value: 'Real-time', detail: 'Auto-routes to blocking prerequisite concept when stalled' },
-        { metric: 'Difficulty Calibration', value: 'IRT Baseline', detail: 'Adaptive question difficulty with streak detection' },
+        { metric: 'Mastery signals', value: '4', detail: 'Recent performance, overall accuracy, difficulty, recency decay' },
+        { metric: 'Prerequisite routing', value: 'Graph', detail: 'Stalled concepts route to the prerequisite that blocks them' },
+        { metric: 'Difficulty', value: 'Adaptive', detail: 'Steps with the student’s streak' },
       ],
     },
   },
@@ -428,7 +530,7 @@ export const PROJECTS = [
     tour: true,
     stack: ['React', 'TypeScript', 'Supabase'],
     narrative: {
-      challenge: "Quality IGCSE exam prep sits behind paywalls, creating an access gap for millions of students who can't pay for structured study resources.",
+      challenge: "Quality IGCSE exam prep sits behind paywalls, creating an access gap for students who can't pay for structured study resources.",
       solution: 'Automated pipeline delivering curriculum-aligned study cards, adaptive quizzes, and topic guides — with multi-step accuracy verification built in.',
     },
     features: [
@@ -437,7 +539,7 @@ export const PROJECTS = [
       { name: 'Curated Topic Guides', desc: 'In-depth study guides aligned with the latest IGCSE syllabus standards.' },
     ],
     caseStudy: {
-      problem: "Quality IGCSE Grade 9–10 exam prep is paywalled, leaving millions of students from middle and lower-income families dependent on inconsistent free resources. The free content that exists is often factually wrong, off-syllabus, or shallow — and there's no scalable way for human authors to keep up with the breadth of subjects multiplied by curriculum updates.",
+      problem: "Quality IGCSE Grade 9–10 exam prep is paywalled, leaving many students dependent on inconsistent free resources. The free content that exists is often factually wrong, off-syllabus, or shallow — and there's no scalable way for human authors to keep up with the breadth of subjects multiplied by curriculum updates.",
       solution: 'A fully automated content generation pipeline that produces curriculum-aligned study cards, adaptive quizzes, and topic guides — with multi-step accuracy verification baked in. The output is free, structured, and broad enough to cover the full IGCSE syllabus.',
       architecture: 'React + TypeScript on Supabase. Content pipeline runs in stages: syllabus mapping → generation → fact-check → adversarial review → publish. Adaptive quiz engine tracks per-student confidence and routes to weak areas.',
       hardParts: [
@@ -451,9 +553,9 @@ export const PROJECTS = [
         'Adaptive quizzes with instant feedback and confidence tracking',
       ],
       benchmarks: [
-        { metric: 'Verification Steps', value: '3-stage pipeline', detail: 'Syllabus mapping → Fact-check → Adversarial review' },
-        { metric: 'Grade Coverage', value: 'Grade 9–10', detail: 'Full subject coverage across core IGCSE syllabus' },
-        { metric: 'Adaptive Quiz Latency', value: '< 50ms', detail: 'Real-time per-student confidence & confidence tracking' },
+        { metric: 'Quality gates', value: '3', detail: 'Syllabus mapping → fact-check → adversarial review' },
+        { metric: 'Grades', value: '9–10', detail: 'Core IGCSE subjects' },
+        { metric: 'Study formats', value: '3', detail: 'Study cards, adaptive quizzes and topic guides' },
       ],
     },
   },
@@ -461,7 +563,7 @@ export const PROJECTS = [
     id: 'bima-buddy-advanced',
     name: 'BimaBuddy',
     tagline: 'AI-Powered Health Insurance Suite',
-    description: 'Compare 50+ health insurance plans, predict claim approvals with AI Claim Intelligence, speak in your native language across 10 Indian languages using voice assistant, and earn wellness rewards.',
+    description: 'Compare health insurance plans side by side, check a claim for document gaps before filing, and ask questions by voice in 10 Indian languages.',
     tier: 'product',
     domain: 'Insurance',
     status: 'live',
@@ -474,35 +576,34 @@ export const PROJECTS = [
     stack: ['Next.js', 'TypeScript', 'Supabase', 'TailwindCSS', 'AI'],
     narrative: {
       challenge: "Health insurance in India spans dozens of providers with no local-language accessibility — driving high claim rejection among users who don't understand their own coverage.",
-      solution: 'AI suite with automated comparison across 50+ policies, an 85%+ accuracy claim predictor, and a voice interface supporting 10 Indian languages.',
+      solution: 'An insurance assistant that normalises plans into one comparable view, checks a claim against its policy before filing, and answers by voice in 10 Indian languages.',
     },
     features: [
-      { name: 'Claim Intelligence', desc: 'Predicts claim approval with 85%+ accuracy before filing policies using 50+ factor analysis.' },
+      { name: 'Claim Intelligence', desc: 'Checks a claim before filing: a document-gap checklist, similar past cases and an approval estimate.' },
       {
         name: 'Multilingual Voice Assistant',
-        desc: 'Speak in your native language across 10 Indian languages with 95%+ accuracy and emotion-aware responses.',
+        desc: 'Ask questions by voice in 10 Indian languages and get answers in the same language.',
       },
-      { name: 'Wellness Rewards', desc: 'Connect 150+ fitness trackers, earn points for physical activities, and get up to 12% off premium discounts.' },
+      { name: 'Plan comparison', desc: 'Individual, family and senior-citizen plans normalised into one view of premium and coverage.' },
     ],
     caseStudy: {
       problem: "Health insurance in India is fragmented across dozens of providers, each with opaque policy documents in English. For a population speaking 22+ official languages, this creates two compounding failures: people pick the wrong plan, and even when they pick correctly, they file claims that get rejected for procedural reasons they couldn't have predicted. The customer-service safety net is thin and language-blocked.",
-      solution: 'Three integrated AI capabilities that meet users at their actual decision points. A comparison engine that normalizes 50+ heterogeneous policies into a single schema. A claim-approval model that predicts approval probability before submission using 50+ factors. A multilingual voice assistant in 10 Indian languages with emotion-aware responses for high-stress claim conversations.',
-      architecture: 'Next.js + TypeScript front-end on Supabase. Vector store for semantic policy retrieval. Claim model is a 50+ factor classifier trained on historical filings. Voice pipeline uses streaming ASR + TTS with regional language models.',
+      solution: 'Three integrated AI capabilities that meet users at their actual decision points. A comparison engine that normalises plans from different insurers into one schema. A claim check that flags missing documents and estimates approval before submission. A multilingual voice assistant in 10 Indian languages for people who would rather speak than read a policy.',
+      architecture: 'Next.js + TypeScript front end on Supabase. A vector store supports semantic retrieval over policy text. The voice pipeline chains speech recognition, the assistant and speech synthesis per language.',
       hardParts: [
-        "Reconciling 50+ providers' inconsistent policy schemas into a single comparable structure.",
-        'Reaching 95%+ ASR accuracy across 10 Indian languages including code-mixed speech.',
+        "Reconciling insurers' inconsistent policy schemas into a single comparable structure.",
+        'Handling speech across 10 Indian languages, including code-mixed speech.',
         'Modeling claim rejection in a domain where ground-truth data is partial and adversarial.',
       ],
       outcomes: [
-        '85%+ claim approval prediction accuracy before filing',
-        '10 Indian languages with 95%+ voice recognition accuracy',
-        'Up to 12% premium discounts via 150+ wearable integrations',
+        'Plan comparison across individual, family and senior-citizen plans',
+        'Claim check with a document-gap checklist before filing',
+        'Voice assistant in 10 Indian languages',
       ],
       benchmarks: [
-        { metric: 'Claim Approval Accuracy', value: '85%+', detail: '50+ factor claim approval prediction model' },
-        { metric: 'Multilingual ASR Accuracy', value: '95%+', detail: 'Voice recognition across 10 Indian languages' },
-        { metric: 'Policy Schema Coverage', value: '50+ plans', detail: 'Normalized multi-provider policy comparative engine' },
-        { metric: 'Premium Savings', value: 'Up to 12%', detail: 'Wellness rewards via 150+ wearable integrations' },
+        { metric: 'Languages', value: '10', detail: 'Indian languages in the voice assistant' },
+        { metric: 'Plan types', value: '3', detail: 'Individual, family and senior-citizen' },
+        { metric: 'Claim check', value: 'Pre-filing', detail: 'Document gaps flagged before submission' },
       ],
     },
   },
@@ -521,14 +622,14 @@ export const PROJECTS = [
     features: [
       { name: 'On-Device Inference', desc: 'Completely private execution ensuring sensitive data never leaves your environment.' },
       { name: 'Multi-Format Ingestion', desc: 'Seamlessly extract and chunk text from PDFs, DOCX, and plain text files.' },
-      { name: 'Contextual Retrieval', desc: 'High-accuracy search utilizing vector embeddings for optimal prompt enrichment.' },
+      { name: 'Contextual Retrieval', desc: 'Vector search selects the passages that go into each prompt.' },
     ],
   },
   {
     id: 'wisecache-pro',
     name: 'WiseCache Pro',
     tagline: 'Production Knowledge Caching and Optimization',
-    description: 'High-performance, enterprise-grade semantic and exact caching layer designed specifically to optimize latency and minimize token costs for LLM applications.',
+    description: 'A semantic and exact-match caching layer for LLM applications, built to cut latency and token spend on repeated questions.',
     tier: 'product',
     domain: 'AI Tooling',
     status: 'source',
@@ -538,8 +639,8 @@ export const PROJECTS = [
     stack: ['TypeScript', 'Node.js'],
     features: [
       { name: 'Semantic Caching', desc: 'Avoids redundant API calls by matching semantically equivalent queries using embeddings.' },
-      { name: 'Exact Key Caching', desc: 'Ultra-fast exact string matching achieving sub-millisecond retrieval times.' },
-      { name: 'TTL & Eviction', desc: 'Intelligent cache lifecycle management preventing stale responses and resource bloat.' },
+      { name: 'Exact Key Caching', desc: 'Exact string matches are answered from cache before any embedding is computed.' },
+      { name: 'TTL & Eviction', desc: 'Entries expire and are evicted, so stale answers and memory growth stay bounded.' },
     ],
   },
   {
@@ -697,11 +798,15 @@ export function formatShipped(ym) {
 /** Counts shown on the home and about pages — computed, never typed in. */
 export function getPortfolioFacts(projects = PROJECTS) {
   const shipped = projects.map((p) => p.shipped).filter(Boolean).sort();
+  const products = projects.filter((p) => p.tier === 'flagship' || p.tier === 'product');
   return {
     total: projects.length,
+    products: products.length,
     flagships: projects.filter((p) => p.tier === 'flagship').length,
-    live: projects.filter((p) => p.status === 'live').length,
-    domains: new Set(projects.map((p) => p.domain)).size,
+    live: products.filter((p) => p.status !== 'source').length,
+    research: projects.filter((p) => p.tier === 'research').length,
+    heritage: projects.filter((p) => p.tier === 'heritage').length,
+    domains: new Set(products.map((p) => p.domain)).size,
     lastShipped: formatShipped(shipped[shipped.length - 1]),
   };
 }
@@ -716,4 +821,8 @@ export const PROFILE = {
   email: 'vasikarla.satish@outlook.com',
   location: 'India · UTC+5:30',
   github: 'https://github.com/svasikarla',
+  // Set these to show them on the About page and in the contact section.
+  linkedin: null,
+  resume: null,
+  availability: 'Open to AI product engineering roles and to freelance builds.',
 };

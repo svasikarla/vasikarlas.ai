@@ -14,6 +14,22 @@ const LIVE_DEMOS = {
 /* Typographic panel for projects without a screenshot: the key facts, large. */
 function SpecPanel({ project }) {
   const facts = getHighlights(project);
+  // No numbers to show: list what the product does instead of an empty grid.
+  if (facts.length === 0) {
+    return (
+      <div className="pv-spec">
+        <span className="pv-spec-label">{project.context || project.domain}</span>
+        <ul className="pv-spec-list">
+          {(project.features || []).slice(0, 3).map((f) => (
+            <li key={f.name}>
+              <strong>{f.name}</strong>
+              <span>{f.desc}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
   return (
     <div className="pv-spec">
       <span className="pv-spec-label">{project.context || project.domain}</span>

@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { PROJECTS, getProject, getHighlights, formatShipped } from '@/data/projects';
+import { PROJECTS, PROFILE, STATUS_LABELS, getProject, getHighlights, formatShipped } from '@/data/projects';
+import { getSkillsFor } from '@/data/skills';
 import { getProjects } from '@/lib/vercel';
 import { ARCHITECTURE } from '@/data/architecture';
 import ArchitectureDiagram from '@/components/ArchitectureDiagram';
@@ -18,7 +20,6 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return { title: 'Project not found' };
-
   const title = `${project.name} — ${project.tagline}`;
   const description = project.description;
   return {
@@ -30,6 +31,23 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/* The key numbers once: benchmark tiles (with their explanation) when the
+   project has them, otherwise its highlights. */
+function numbersFor(project) {
+  const b = project.caseStudy?.benchmarks;
+  if (b?.length) return b.map((x) => ({ value: x.value, label: x.metric, detail: x.detail }));
+  return getHighlights(project).map((h) => ({ value: h.value, label: h.label }));
+}
+
+function Section({ title, children }) {
+  return (
+    <section className="case-section">
+      <h2 className="section-label">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
 export default async function CaseStudyPage({ params }) {
   const { slug } = await params;
   const project = (await getProjects()).find((p) => p.id === slug);
@@ -37,8 +55,16 @@ export default async function CaseStudyPage({ params }) {
 
   const cs = project.caseStudy;
   const arch = ARCHITECTURE[project.id];
-  const highlights = getHighlights(project);
   const shipped = formatShipped(project.shipped);
+  const skills = getSkillsFor(project.id);
+  const numbers = numbersFor(project);
+  // Without a screenshot the hero panel already shows the highlights.
+  const showNumbers = numbers.length > 0 && (project.screenshot || cs?.benchmarks?.length);
+  // The hero panel lists the features itself when there is nothing else to show.
+  const featuresInHero = !project.screenshot && getHighlights(project).length === 0;
+  const problem = cs?.problem || project.narrative?.challenge;
+  const solution = cs?.solution || project.narrative?.solution;
+  const hasMain = Boolean(problem || solution || project.gallery?.length || cs || (project.features?.length && !featuresInHero));
 
   // Previous / next within the same ordering used on /work.
   const index = PROJECTS.findIndex((p) => p.id === project.id);
@@ -83,91 +109,152 @@ export default async function CaseStudyPage({ params }) {
           </div>
         </header>
 
-        {/* Without a screenshot the hero panel already shows these facts. */}
-        {project.screenshot && highlights.length > 0 && (
+        {showNumbers && (
           <dl className="case-highlights">
-            {highlights.map((h) => (
-              <div key={h.label} className="case-highlight">
-                <dt>{h.value}</dt>
-                <dd>{h.label}</dd>
+            {numbers.map((n) => (
+              <div key={n.label} className="case-highlight">
+                <dt>{n.value}</dt>
+                <dd>
+                  <span className="case-highlight-label">{n.label}</span>
+                  {n.detail && <span className="case-highlight-detail">{n.detail}</span>}
+                </dd>
               </div>
             ))}
           </dl>
         )}
 
-        {(cs?.problem || project.narrative?.challenge) && (
-          <section className="case-section">
-            <h2 className="section-label">The problem</h2>
-            <p className="case-prose">{cs?.problem || project.narrative.challenge}</p>
-          </section>
-        )}
+        <div className={`case-body ${hasMain ? '' : 'case-body--aside-only'}`}>
+          <div className="case-main">
+            {problem && (
+              <Section title="The problem">
+                <p className="case-prose">{problem}</p>
+              </Section>
+            )}
 
-        {(cs?.solution || project.narrative?.solution) && (
-          <section className="case-section">
-            <h2 className="section-label">The solution</h2>
-            <p className="case-prose">{cs?.solution || project.narrative.solution}</p>
-          </section>
-        )}
+            {solution && (
+              <Section title="The solution">
+                <p className="case-prose">{solution}</p>
+              </Section>
+            )}
 
-        {cs?.architecture && (
-          <section className="case-section">
-            <h2 className="section-label">Architecture</h2>
-            <p className="case-prose">{cs.architecture}</p>
-            {arch && <ArchitectureDiagram stages={arch.stages} caption={arch.caption} />}
-          </section>
-        )}
-
-        {cs?.hardParts?.length > 0 && (
-          <section className="case-section">
-            <h2 className="section-label">What made it hard</h2>
-            <ul className="case-list">
-              {cs.hardParts.map((h) => <li key={h}>{h}</li>)}
-            </ul>
-          </section>
-        )}
-
-        {cs?.outcomes?.length > 0 && (
-          <section className="case-section">
-            <h2 className="section-label">Outcomes</h2>
-            <ul className="case-outcomes">
-              {cs.outcomes.map((o) => <li key={o}>{o}</li>)}
-            </ul>
-          </section>
-        )}
-
-        {cs?.benchmarks?.length > 0 && (
-          <section className="case-section">
-            <h2 className="section-label">By the numbers</h2>
-            <div className="case-features case-features--metrics">
-              {cs.benchmarks.map((b) => (
-                <div key={b.metric} className="case-feature">
-                  <div className="case-metric-value">{b.value}</div>
-                  <div className="case-feature-name">{b.metric}</div>
-                  <div className="case-feature-desc">{b.detail}</div>
+            {project.gallery?.length > 0 && (
+              <Section title="Inside the product">
+                <div className="case-gallery">
+                  {project.gallery.map((g, i) => (
+                    <figure key={g.src} className={`case-shot ${i === 0 ? 'case-shot--lead' : ''}`}>
+                      <a href={g.src} target="_blank" rel="noopener noreferrer" className="case-shot-frame">
+                        <Image
+                          src={g.src}
+                          alt={`${project.name}: ${g.caption}`}
+                          fill
+                          sizes={i === 0 ? '(max-width: 960px) 100vw, 760px' : '(max-width: 960px) 100vw, 380px'}
+                          className="case-shot-img"
+                        />
+                      </a>
+                      <figcaption>{g.caption}</figcaption>
+                    </figure>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+              </Section>
+            )}
 
-        {project.features?.length > 0 && (
-          <section className="case-section">
-            <h2 className="section-label">Key features</h2>
-            <div className="case-features">
-              {project.features.map((f) => (
-                <div key={f.name} className="case-feature">
-                  <div className="case-feature-name">{f.name}</div>
-                  <div className="case-feature-desc">{f.desc}</div>
+            {cs?.architecture && (
+              <Section title="Architecture">
+                <p className="case-prose">{cs.architecture}</p>
+                {arch && <ArchitectureDiagram stages={arch.stages} caption={arch.caption} />}
+              </Section>
+            )}
+
+            {cs?.decisions?.length > 0 && (
+              <Section title="Decisions and trade-offs">
+                <ol className="case-decisions">
+                  {cs.decisions.map((d) => (
+                    <li key={d.choice} className="case-decision">
+                      <h3>{d.choice}</h3>
+                      <p><span>Why</span>{d.why}</p>
+                      <p><span>Cost</span>{d.cost}</p>
+                    </li>
+                  ))}
+                </ol>
+              </Section>
+            )}
+
+            {cs?.hardParts?.length > 0 && (
+              <Section title="What made it hard">
+                <ul className="case-list">
+                  {cs.hardParts.map((h) => <li key={h}>{h}</li>)}
+                </ul>
+              </Section>
+            )}
+
+            {cs?.outcomes?.length > 0 && (
+              <Section title="Outcomes">
+                <ul className="case-outcomes">
+                  {cs.outcomes.map((o) => <li key={o}>{o}</li>)}
+                </ul>
+              </Section>
+            )}
+
+            {project.features?.length > 0 && !featuresInHero && (
+              <Section title="Key features">
+                <div className="case-features">
+                  {project.features.map((f) => (
+                    <div key={f.name} className="case-feature">
+                      <div className="case-feature-name">{f.name}</div>
+                      <div className="case-feature-desc">{f.desc}</div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+              </Section>
+            )}
+          </div>
 
-        <section className="case-section">
-          <h2 className="section-label">Stack</h2>
-          <div className="case-stack">
-            {project.stack.map((s) => <span key={s} className="case-chip">{s}</span>)}
+          <aside className="case-aside" aria-label="At a glance">
+            <div className="case-aside-inner">
+              <h2 className="section-label">At a glance</h2>
+              <dl className="case-facts">
+                <div><dt>Status</dt><dd>{STATUS_LABELS[project.status]}</dd></div>
+                <div><dt>Domain</dt><dd>{project.domain}</dd></div>
+                {shipped && <div><dt>Last shipped</dt><dd>{shipped}</dd></div>}
+                {project.role && <div><dt>My role</dt><dd>{project.role}</dd></div>}
+                {project.context && <div><dt>Context</dt><dd>{project.context}</dd></div>}
+              </dl>
+
+              <h3 className="case-aside-label">Stack</h3>
+              <div className="case-stack">
+                {project.stack.map((s) => <span key={s} className="case-chip">{s}</span>)}
+              </div>
+
+              {skills.length > 0 && (
+                <>
+                  <h3 className="case-aside-label">Skills this demonstrates</h3>
+                  <ul className="case-skills">
+                    {skills.map((s) => (
+                      <li key={s.skill}>
+                        <strong>{s.skill}</strong>
+                        <span>{s.point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          </aside>
+        </div>
+
+        <section className="case-cta">
+          <div>
+            <h2>Hiring for this kind of work, or need something like it built?</h2>
+            <p>{PROFILE.availability} Tell me what you are working on.</p>
+          </div>
+          <div className="case-cta-actions">
+            <a
+              className="btn-primary"
+              href={`mailto:${PROFILE.email}?subject=${encodeURIComponent(`About ${project.name}`)}`}
+            >
+              Email me
+            </a>
+            <Link className="btn-ghost" href="/about">About me</Link>
           </div>
         </section>
 
