@@ -20,13 +20,13 @@ export function Hero({ facts }) {
 
         <div className="hero-ctas">
           <Link className="btn-primary" href="/work">See the work →</Link>
-          <a className="btn-ghost" href={PROFILE.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <a className="hero-link" href={`mailto:${PROFILE.email}`}>or email me</a>
+          <a className="btn-ghost" href="#contact">Hire me or start a project</a>
         </div>
+        <p className="hero-availability"><span className="hero-dot" aria-hidden="true" />{PROFILE.availability}</p>
 
         {facts && (
           <dl className="hero-facts">
-            <div><dt>{facts.total}</dt><dd>products &amp; studies</dd></div>
+            <div><dt>{facts.products}</dt><dd>shipped products</dd></div>
             <div><dt>{facts.flagships}</dt><dd>full case studies</dd></div>
             <div><dt>{facts.lastShipped}</dt><dd>last shipped</dd></div>
           </dl>
@@ -145,18 +145,47 @@ export function CapabilitiesSection() {
 }
 
 /* ─── Contact ─── */
+const mail = (subject) => `mailto:${PROFILE.email}?subject=${encodeURIComponent(subject)}`;
+
 export function ContactSection() {
   return (
     <section id="contact" className="contact-section">
       <div className="contact-inner">
         <span className="contact-label">Work with me</span>
         <h2>Have a system where the numbers matter?</h2>
-        <p>I build AI products, internal tools and decision systems for teams that need working software they can stand behind.</p>
-        <div className="contact-actions">
-          <a href={`mailto:${PROFILE.email}`} className="btn-primary">{PROFILE.email}</a>
-          <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" className="btn-ghost">GitHub ↗</a>
+        <p>{PROFILE.availability}</p>
+      </div>
+      <div className="contact-paths">
+        <div className="contact-path">
+          <h3>Hiring</h3>
+          <p>
+            For AI product engineering roles. The quickest read on how I work is two case studies:
+            {' '}<Link href="/work/stock-analyst">StockAnalyst</Link> and{' '}
+            <Link href="/work/thermotwin">ThermoTwin AI</Link>.
+          </p>
+          <div className="contact-path-actions">
+            <a className="btn-primary small" href={mail('Role enquiry')}>Email about a role</a>
+            {PROFILE.resume && (
+              <a className="btn-ghost small" href={PROFILE.resume} target="_blank" rel="noopener noreferrer">Résumé ↗</a>
+            )}
+            {PROFILE.linkedin && (
+              <a className="btn-ghost small" href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            )}
+          </div>
+        </div>
+        <div className="contact-path">
+          <h3>Building something</h3>
+          <p>
+            For freelance builds: analytics tools, LLM features with guardrails, and internal finance or
+            operations systems. Send the problem, the data you have, and when you need it.
+          </p>
+          <div className="contact-path-actions">
+            <a className="btn-primary small" href={mail('Project enquiry')}>Email about a project</a>
+            <a className="btn-ghost small" href={PROFILE.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
         </div>
       </div>
+      <p className="contact-direct">Or write directly: <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a></p>
     </section>
   );
 }

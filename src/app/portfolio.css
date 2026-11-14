@@ -391,6 +391,185 @@
 /* ─── Contact ─── */
 .contact-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
+/* ─── Availability line (hero, about) ─── */
+.hero-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 32px;
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+}
+.page-header .hero-availability { margin: 20px 0 0; }
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: oklch(0.72 0.17 150);
+  box-shadow: 0 0 0 4px color-mix(in oklab, oklch(0.72 0.17 150) 22%, transparent);
+  flex-shrink: 0;
+}
+
+/* ─── Spec panel without numbers ─── */
+.pv-spec-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.pv-spec-list li { display: flex; flex-direction: column; gap: 4px; padding-left: 14px; border-left: 2px solid var(--accent); }
+.pv-spec-list strong { font-size: var(--text-md); font-weight: 600; color: var(--fg); }
+.pv-spec-list span { font-size: var(--text-sm); line-height: 1.45; color: var(--fg-3); }
+
+/* ─── Case study: numbers, body + aside ─── */
+.case-highlight dd { display: flex; flex-direction: column; gap: 4px; }
+.case-highlight-label { color: var(--fg-2); font-weight: 500; }
+.case-highlight-detail { color: var(--fg-3); font-size: var(--text-xs); line-height: 1.45; }
+
+.case-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 56px;
+  align-items: start;
+}
+.case-main { min-width: 0; }
+.case-body--aside-only { grid-template-columns: minmax(0, 560px); }
+.case-body--aside-only .case-main { display: none; }
+.case-body--aside-only .case-aside { position: static; }
+.case-main .case-section:last-child { border-bottom: 0; }
+.case-aside { position: sticky; top: 88px; padding-top: 32px; }
+.case-aside-inner {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-1);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.case-aside h2.section-label { margin: 0; font-weight: 500; }
+.case-facts { margin: 0; display: flex; flex-direction: column; }
+.case-facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: var(--text-sm);
+}
+.case-facts dt { color: var(--fg-3); }
+.case-facts dd { margin: 0; color: var(--fg); text-align: right; }
+.case-aside-label {
+  margin: 6px 0 0;
+  font-family: var(--f-mono);
+  font-size: var(--text-xxs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.case-aside .case-stack { display: flex; flex-wrap: wrap; gap: 6px; }
+.case-skills { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.case-skills li { display: flex; flex-direction: column; gap: 3px; }
+.case-skills strong { font-size: var(--text-sm); font-weight: 600; color: var(--fg); }
+.case-skills span { font-size: var(--text-xs); line-height: 1.45; color: var(--fg-3); }
+
+/* In the case-study column the pipeline reads as numbered steps on a grid,
+   so a wrap never leaves an arrow pointing at nothing. */
+.case-main .arch-flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; counter-reset: stage; }
+.case-main .arch-conn { display: none; }
+.case-main .arch-node { max-width: none; min-width: 0; counter-increment: stage; }
+.case-main .arch-node-kind::before { content: counter(stage, decimal-leading-zero) ' · '; color: var(--fg-3); }
+.case-main .case-features { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+/* ─── Case study: gallery ─── */
+.case-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.case-shot { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.case-shot--lead { grid-column: 1 / -1; }
+.case-shot-frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #080c14;
+  transition: border-color 0.15s ease;
+}
+.case-shot-frame:hover { border-color: var(--accent); }
+.case-shot-img { object-fit: cover; object-position: top left; }
+.case-shot figcaption { font-size: var(--text-sm); line-height: 1.5; color: var(--fg-3); }
+
+/* ─── Case study: decisions ─── */
+.case-decisions { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: decision; }
+.case-decision {
+  counter-increment: decision;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg-1);
+  padding: 18px 20px 18px 56px;
+  position: relative;
+}
+.case-decision::before {
+  content: counter(decision, decimal-leading-zero);
+  position: absolute;
+  left: 20px;
+  top: 19px;
+  font-family: var(--f-mono);
+  font-size: var(--text-xs);
+  color: var(--accent);
+}
+.case-decision h3 { margin: 0 0 10px; font-size: var(--text-md); font-weight: 600; color: var(--fg); }
+.case-decision p { margin: 6px 0 0; font-size: var(--text-sm); line-height: 1.55; color: var(--fg-2); display: grid; grid-template-columns: 44px 1fr; gap: 8px; }
+.case-decision p span {
+  font-family: var(--f-mono);
+  font-size: var(--text-xxs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding-top: 3px;
+}
+
+/* ─── Case study: closing call to action ─── */
+.case-cta {
+  margin: 40px 0 8px;
+  padding: 28px 32px;
+  border: 1px solid color-mix(in oklab, var(--accent) 40%, var(--line));
+  border-radius: 16px;
+  background:
+    radial-gradient(480px 200px at 0% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 70%),
+    var(--bg-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.case-cta h2 { margin: 0 0 6px; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--fg); }
+.case-cta p { margin: 0; color: var(--fg-2); font-size: var(--text-md); }
+.case-cta-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ─── Contact: two paths ─── */
+.contact-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 880px;
+  margin: 32px auto 0;
+  text-align: left;
+}
+.contact-path {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-1);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.contact-path h3 { margin: 0; font-size: var(--text-lg); font-weight: 600; color: var(--fg); }
+.contact-path p { margin: 0; flex: 1; font-size: var(--text-sm); line-height: 1.6; color: var(--fg-2); }
+.contact-path p a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.contact-path-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.contact-direct { margin: 20px 0 0; font-size: var(--text-sm); color: var(--fg-3); }
+.contact-direct a { color: var(--fg-2); }
+.contact-direct a:hover { color: var(--accent); }
+
 /* ─── Responsive ─── */
 @media (max-width: 960px) {
   .flagship-visual { min-height: 0; aspect-ratio: 16 / 10; }
@@ -398,6 +577,8 @@
   .flagship-visual:has(.pv-spec) { aspect-ratio: auto; }
   .case-hero { grid-template-columns: 1fr; gap: 28px; }
   .case-hero-visual { min-height: 240px; }
+  .case-body { grid-template-columns: 1fr; gap: 0; }
+  .case-aside { position: static; padding-top: 8px; order: -1; }
 }
 @media (max-width: 600px) {
   .v4-content { padding: 0 16px; }
@@ -408,5 +589,11 @@
   .page-header { padding-top: 36px; }
   .pv-spec { padding: 20px 16px; }
   .v4-footer { flex-direction: column; }
+  .case-gallery { grid-template-columns: 1fr; }
+  .case-main .arch-flow { grid-template-columns: 1fr 1fr; }
+  .contact-paths { grid-template-columns: 1fr; }
+  .case-cta { padding: 22px 20px; }
+  .case-decision { padding: 16px 16px 16px 48px; }
+  .case-decision::before { left: 16px; top: 17px; }
 }
 .about-bio-body { margin-bottom: 28px; }

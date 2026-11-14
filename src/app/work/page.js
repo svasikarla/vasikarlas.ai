@@ -20,8 +20,9 @@ export default async function WorkPage() {
           <span className="section-label">Work</span>
           <h1>Everything I have shipped</h1>
           <p className="page-lede">
-            {facts.total} projects across {facts.domains} domains. {facts.flagships} have full case studies;
-            the rest are grouped by what they are. Most recent release: {facts.lastShipped}.
+            {facts.products} products across {facts.domains} domains, {facts.flagships} of them written up as full
+            case studies — plus {facts.research} research briefings and {facts.heritage} heritage sites. Most recent
+            release: {facts.lastShipped}.
           </p>
         </header>
         <WorkExplorer projects={projects} />

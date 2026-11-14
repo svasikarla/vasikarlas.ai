@@ -22,7 +22,14 @@ export default async function AboutPage() {
           <div className="hero-ctas page-header-ctas">
             <a className="btn-primary" href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
             <a className="btn-ghost" href={PROFILE.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            {PROFILE.linkedin && (
+              <a className="btn-ghost" href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            )}
+            {PROFILE.resume && (
+              <a className="btn-ghost" href={PROFILE.resume} target="_blank" rel="noopener noreferrer">Résumé ↗</a>
+            )}
           </div>
+          <p className="hero-availability"><span className="hero-dot" aria-hidden="true" />{PROFILE.availability}</p>
         </header>
 
         <section className="v4-section about-bio">
@@ -46,12 +53,12 @@ export default async function AboutPage() {
           </div>
           <dl className="about-stats">
             <div className="about-stat">
-              <dt className="about-stat-num">{facts.total}</dt>
-              <dd className="about-stat-label">Products &amp; studies</dd>
+              <dt className="about-stat-num">{facts.products}</dt>
+              <dd className="about-stat-label">Shipped products</dd>
             </div>
             <div className="about-stat">
-              <dt className="about-stat-num">{facts.flagships}</dt>
-              <dd className="about-stat-label">Full case studies</dd>
+              <dt className="about-stat-num">{facts.live}</dt>
+              <dd className="about-stat-label">Running today</dd>
             </div>
             <div className="about-stat">
               <dt className="about-stat-num">{facts.domains}</dt>
@@ -61,16 +68,6 @@ export default async function AboutPage() {
         </section>
 
         <CapabilitiesSection />
-
-        <section className="v4-section">
-          <div className="section-header">
-            <span className="section-label">Specializations</span>
-            <h2>What I work on</h2>
-          </div>
-          <div className="spec-chips">
-            {PROFILE.specializations.map((s) => <span key={s} className="spec-chip">{s}</span>)}
-          </div>
-        </section>
 
         <ContactSection />
       </div>

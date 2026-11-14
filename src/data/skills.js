@@ -65,3 +65,11 @@ export const SKILL_PROOFS = [
     ],
   },
 ];
+
+/** Skills a project is cited as proof for, with the proof line for each. */
+export function getSkillsFor(id) {
+  return SKILL_PROOFS.flatMap((s) => {
+    const proof = s.proofs.find((pr) => pr.id === id);
+    return proof ? [{ skill: s.skill, point: proof.point }] : [];
+  });
+}
