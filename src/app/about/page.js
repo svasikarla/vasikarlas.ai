@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { PROFILE, getPortfolioFacts } from '@/data/projects';
 import { getProjects } from '@/lib/vercel';
 import { CapabilitiesSection, ContactSection } from '@/components/Sections';
+import SkillsMatrix from '@/components/SkillsMatrix';
 
 export const metadata = {
   title: 'About',
@@ -66,6 +67,8 @@ export default async function AboutPage() {
             </div>
           </dl>
         </section>
+
+        <SkillsMatrix />
 
         <CapabilitiesSection />
 

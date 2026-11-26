@@ -32,7 +32,7 @@ export default function Image() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div style={{ fontSize: '66px', fontWeight: 800, lineHeight: 1.08, color: '#ffffff', maxWidth: '960px' }}>
+          <div style={{ fontSize: '54px', fontWeight: 800, lineHeight: 1.12, color: '#ffffff', maxWidth: '1040px' }}>
             {PROFILE.headline}
           </div>
           <div style={{ fontSize: '30px', color: '#a7a7b4' }}>
@@ -42,8 +42,8 @@ export default function Image() {
 
         <div style={{ display: 'flex', gap: '40px', fontSize: '24px', color: '#c8c8d4' }}>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <span style={{ color: '#ffffff', fontWeight: 700 }}>{facts.total}</span>
-            <span>products &amp; studies</span>
+            <span style={{ color: '#ffffff', fontWeight: 700 }}>{facts.products}</span>
+            <span>shipped products</span>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <span style={{ color: '#ffffff', fontWeight: 700 }}>{facts.flagships}</span>
