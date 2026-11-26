@@ -1,36 +1,67 @@
 import Link from 'next/link';
-import { PROFILE } from '@/data/projects';
+import Image from 'next/image';
+import { PROFILE, getProject } from '@/data/projects';
+import { HERO_PROOF } from '@/data/skills';
 import RevealOnScroll from './RevealOnScroll';
 import FlagshipCard from './FlagshipCard';
 
-/* ─── Hero ─── */
+/* ─── Hero ───
+   Left: who I am and what I build. Right: the four skill areas, each backed
+   by a shipped project and a figure from its case study. */
 export function Hero({ facts }) {
   return (
     <section className="v4-hero">
       <div className="v4-hero-glow" />
-      <div className="v4-hero-inner">
-        <div className="hero-topline">
-          <span>{PROFILE.name}</span>
-          <span className="hero-topline-sep" />
-          <span>{PROFILE.role}</span>
+      <div className="v4-hero-inner hero-split">
+        <div className="hero-copy">
+          <div className="hero-topline">
+            <span>{PROFILE.name}</span>
+            <span className="hero-topline-sep" />
+            <span>{PROFILE.role}</span>
+          </div>
+
+          <h1>{PROFILE.headline}</h1>
+          <p className="hero-sub">
+            {facts ? `${facts.products} shipped products` : 'Shipped products'}, including an LLM research studio,
+            an NL-to-SQL engine, a forensic equity screener and a heat-physics simulator with a machine-learning model.
+          </p>
+
+          <ul className="hero-stack" aria-label="Technologies">
+            {PROFILE.stack.map((t) => <li key={t}>{t}</li>)}
+          </ul>
+
+          <div className="hero-ctas">
+            <Link className="btn-primary" href="/work">See the work →</Link>
+            <a className="btn-ghost" href="#contact">Hire me or start a project</a>
+          </div>
+          <p className="hero-availability"><span className="hero-dot" aria-hidden="true" />{PROFILE.availability}</p>
         </div>
 
-        <h1>{PROFILE.headline}</h1>
-        <p className="hero-sub">{PROFILE.bio}</p>
-
-        <div className="hero-ctas">
-          <Link className="btn-primary" href="/work">See the work →</Link>
-          <a className="btn-ghost" href="#contact">Hire me or start a project</a>
+        <div className="hero-proof" aria-label="Skills, with the projects that demonstrate them">
+          {HERO_PROOF.map((group) => (
+            <div key={group.skill} className="hero-proof-group">
+              <span className="hero-proof-skill">{group.skill}</span>
+              {group.items.map(({ id, point }) => {
+                const p = getProject(id);
+                if (!p) return null;
+                return (
+                  <Link key={id} href={`/work/${id}`} className="hero-proof-row">
+                    <span className="hero-proof-thumb">
+                      {p.screenshot && (
+                        <Image src={p.screenshot} alt="" fill sizes="72px" className="hero-proof-img" />
+                      )}
+                    </span>
+                    <span className="hero-proof-text">
+                      <strong>{p.name}</strong>
+                      <span>{point}</span>
+                    </span>
+                    <span className="hero-proof-arrow" aria-hidden="true">→</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </div>
-        <p className="hero-availability"><span className="hero-dot" aria-hidden="true" />{PROFILE.availability}</p>
-
-        {facts && (
-          <dl className="hero-facts">
-            <div><dt>{facts.products}</dt><dd>shipped products</dd></div>
-            <div><dt>{facts.flagships}</dt><dd>full case studies</dd></div>
-            <div><dt>{facts.lastShipped}</dt><dd>last shipped</dd></div>
-          </dl>
-        )}
       </div>
     </section>
   );

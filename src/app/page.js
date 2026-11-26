@@ -1,7 +1,6 @@
 import { getPortfolioFacts } from '@/data/projects';
 import { getProjects } from '@/lib/vercel';
 import { Hero, PrinciplesSection, FeaturedWork, ContactSection } from '@/components/Sections';
-import SkillsMatrix from '@/components/SkillsMatrix';
 
 export default async function HomePage() {
   const projects = await getProjects();
@@ -11,7 +10,6 @@ export default async function HomePage() {
       <div className="v4-content">
         <FeaturedWork projects={projects} limit={3} />
         <PrinciplesSection />
-        <SkillsMatrix />
         <ContactSection />
       </div>
     </div>

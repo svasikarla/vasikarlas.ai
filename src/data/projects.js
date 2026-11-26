@@ -815,7 +815,9 @@ export const PROFILE = {
   name: 'Satish Vasikarla',
   brand: 'Vasikarla · AI',
   role: 'AI Product Engineer',
-  headline: 'AI and data products where the numbers have to be defensible.',
+  headline: 'I build AI products end to end — from the data pipeline and the model to the interface people use.',
+  // The technologies the shipped products are built with (see each project's stack).
+  stack: ['Python', 'TypeScript', 'Next.js', 'React', 'FastAPI', 'PostgreSQL / Supabase', 'LightGBM', 'Claude · OpenAI · Groq'],
   bio: 'I design and ship full-stack products — forensic analytics, physics-backed simulation and LLM workflows — and build them so that every figure can be traced, reproduced or challenged.',
   specializations: ['Forensic analytics', 'Simulation & ML surrogates', 'LLM workflows', 'RAG & knowledge systems', 'NL→SQL', 'Auditable ledgers'],
   email: 'vasikarla.satish@outlook.com',

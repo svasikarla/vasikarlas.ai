@@ -2,6 +2,30 @@
 // demonstrate it, with a concrete one-line proof point. `id` references a
 // project in PROJECTS; every project has a /work/<id> page.
 
+// The four skill areas shown in the home-page hero, each backed by a shipped
+// project and a figure that appears on that project's case-study page.
+export const HERO_PROOF = [
+  {
+    skill: 'LLM apps & agents',
+    items: [
+      { id: 'core-pragya-advanced', point: '3 coordinated agents across 3 LLM providers' },
+      { id: 'nlsql-pro', point: 'Plain English to SQL on 4 database engines, injection-screened' },
+    ],
+  },
+  {
+    skill: 'Machine learning & simulation',
+    items: [{ id: 'thermotwin', point: 'LightGBM surrogate over SOLWEIG physics, 0.992 R² held-out' }],
+  },
+  {
+    skill: 'Data engineering & analytics',
+    items: [{ id: 'stock-analyst', point: '27,314 filed facts, 75 declared metrics, 13 forensic gates' }],
+  },
+  {
+    skill: 'Full-stack systems',
+    items: [{ id: 'society-finance', point: 'Append-only ledger, with roles enforced in the database' }],
+  },
+];
+
 export const SKILL_PROOFS = [
   {
     skill: 'Traceable analytics',
